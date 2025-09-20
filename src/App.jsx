@@ -5,9 +5,7 @@ import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import UnderConstruction from "./pages/UnderConstruction.jsx";
-
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "./theme";
+import ColorModeProvider from "./theme/ColorModeProvider.jsx";
 
 function shouldShowMaintenance() {
   const envFlag = String(import.meta.env.VITE_MAINTENANCE ?? "0").toLowerCase();
@@ -26,13 +24,10 @@ function shouldShowMaintenance() {
 
 export default function App() {
   const maintenance = useMemo(shouldShowMaintenance, []);
-
-  // ❗ No ThemeProvider/CssBaseline here -> UC page is unaffected
   if (maintenance) return <UnderConstruction />;
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <ColorModeProvider>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
@@ -41,6 +36,6 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-    </ThemeProvider>
+    </ColorModeProvider>
   );
 }
