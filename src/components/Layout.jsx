@@ -9,48 +9,18 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { useTheme } from "@mui/material/styles";
-import Brightness4Icon from "@mui/icons-material/Brightness4"; // moon
-import Brightness7Icon from "@mui/icons-material/Brightness7"; // sun
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useColorMode } from "../theme/ColorModeProvider.jsx";
+import SystemAnnouncements from "./SystemAnnouncements.jsx";  // ← new
 
 export default function Layout() {
-  const preview =
-    typeof window !== "undefined" && localStorage.getItem("previewMode") === "1";
-
   const theme = useTheme();
-  const { mode, toggleColorMode } = useColorMode();
+  const { toggleColorMode } = useColorMode();
 
   return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      {preview && (
-        <Box
-          sx={{
-            bgcolor: "warning.main",
-            color: "warning.contrastText",
-            textAlign: "center",
-            py: 0.5,
-            fontSize: 12,
-          }}
-        >
-          Preview Mode — site is under construction.
-          <Button
-            variant="outlined"
-            size="small"
-            sx={{
-              ml: 1,
-              borderColor: "rgba(0,0,0,.35)",
-              color: "inherit",
-              "&:hover": { borderColor: "rgba(0,0,0,.6)" },
-            }}
-            onClick={() => {
-              localStorage.removeItem("previewMode");
-              location.reload();
-            }}
-          >
-            Exit
-          </Button>
-        </Box>
-      )}
+      <SystemAnnouncements />  {/* ← renders any active banners */}
 
       <AppBar position="static" color="secondary" enableColorOnDark>
         <Toolbar sx={{ gap: 1 }}>
@@ -67,7 +37,12 @@ export default function Layout() {
           <Button color="inherit" component={RouterLink} to="/about">About</Button>
 
           <Tooltip title={`Switch to ${theme.palette.mode === "dark" ? "light" : "dark"} mode`}>
-            <IconButton color="inherit" onClick={toggleColorMode} size="large" aria-label="toggle color mode">
+            <IconButton
+              color="inherit"
+              onClick={toggleColorMode}
+              size="large"
+              aria-label="toggle color mode"
+            >
               {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </Tooltip>
