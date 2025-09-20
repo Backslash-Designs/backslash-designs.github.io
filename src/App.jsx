@@ -6,11 +6,12 @@ import About from "./pages/About.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import UnderConstruction from "./pages/UnderConstruction.jsx";
 
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import theme from "./theme";
+
 function shouldShowMaintenance() {
   const envFlag = String(import.meta.env.VITE_MAINTENANCE ?? "0").toLowerCase();
-  const maintenanceOn = envFlag === "1" || envFlag === "true";
-
-  // Allow ?preview=1 to bypass (persist in localStorage)
+  const on = envFlag === "1" || envFlag === "true";
   try {
     const url = new URL(window.location.href);
     if (url.searchParams.get("preview") === "1") {
@@ -18,27 +19,28 @@ function shouldShowMaintenance() {
       url.searchParams.delete("preview");
       window.history.replaceState({}, "", url.toString());
     }
-  } catch { /* noop */ }
-
+  } catch {}
   const preview = typeof window !== "undefined" && localStorage.getItem("previewMode") === "1";
-  return maintenanceOn && !preview;
+  return on && !preview;
 }
 
 export default function App() {
   const maintenance = useMemo(shouldShowMaintenance, []);
 
-  if (maintenance) {
-    return <UnderConstruction />;
-  }
+  // ❗ No ThemeProvider/CssBaseline here -> UC page is unaffected
+  if (maintenance) return <UnderConstruction />;
 
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </ThemeProvider>
   );
 }
