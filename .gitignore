@@ -1,0 +1,4 @@
+node_modules/
+dist/
+.env.development
+# (keep .env.production tracked since it has only non-secret VITE_ vars)

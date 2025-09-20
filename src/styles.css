@@ -1,0 +1,16 @@
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+
+.app-shell { min-height: 100%; display: flex; flex-direction: column; }
+.toolbar {
+  background: #f45b47; /* placeholder for now (MUI AppBar later) */
+  color: #222;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+.routable { flex: 1; display: grid; place-items: center; }
+.page { font-size: 1.25rem; color: #444; }
