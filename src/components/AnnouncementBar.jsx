@@ -33,7 +33,7 @@ export default function AnnouncementBar({
 
   return (
     <Collapse in={open} unmountOnExit>
-      <Box sx={{ position: "sticky", top: 0, zIndex: (t) => t.zIndex.appBar + 1 }}>
+      <Box sx={{ position: "static" }}>
         <Alert
           severity={severity}
           variant="filled"
