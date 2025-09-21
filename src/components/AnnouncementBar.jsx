@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
  * - storageKey?: string  // if set, “Dismiss” persists in localStorage
  * - defaultOpen?: boolean
  */
+
 export default function AnnouncementBar({
   severity = "info",
   message,

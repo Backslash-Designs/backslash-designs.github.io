@@ -40,12 +40,12 @@ export default function SystemAnnouncements() {
     }
 
     //Example: planned maintenance (dismiss persists)
-    //   announcements.push({
+    // announcements.push({
     //     key: "planned-maintenance-2025-09-30",
     //     severity: "info",
     //     message: "Planned maintenance Sept 30, 9–10 PM ET.",
     //     storageKey: "maint-2025-09-30"
-    //   });
+    // });
 
     if (!announcements.length) return null;
 
