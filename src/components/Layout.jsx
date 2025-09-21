@@ -12,7 +12,7 @@ import { useTheme } from "@mui/material/styles";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useColorMode } from "../theme/ColorModeProvider.jsx";
-import SystemAnnouncements from "./SystemAnnouncements.jsx";  // ← new
+import SystemAnnouncements from "./SystemAnnouncements.jsx";
 
 export default function Layout() {
   const theme = useTheme();
@@ -20,38 +20,47 @@ export default function Layout() {
 
   return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <SystemAnnouncements />  {/* ← renders any active banners */}
-
-      <AppBar position="static" color="secondary" enableColorOnDark>
-        <Toolbar sx={{ gap: 1 }}>
-          <Typography
-            variant="h6"
-            component={RouterLink}
-            to="/"
-            sx={{ color: "inherit", textDecoration: "none", flexGrow: 1 }}
-          >
-            Backslash Designs
-          </Typography>
-
-          <Button color="inherit" component={RouterLink} to="/home">Home</Button>
-          <Button color="inherit" component={RouterLink} to="/about">About</Button>
-
-          <Tooltip title={`Switch to ${theme.palette.mode === "dark" ? "light" : "dark"} mode`}>
-            <IconButton
-              color="inherit"
-              onClick={toggleColorMode}
-              size="large"
-              aria-label="toggle color mode"
+      {/* Sticky header wrapper keeps banner + app bar at top */}
+      <Box
+        sx={{
+          position: "sticky",
+          top: 0,
+          zIndex: (t) => t.zIndex.appBar + 1,
+          bgcolor: (t) => t.palette.background.paper,
+        }}
+      >
+        <SystemAnnouncements />
+        <AppBar position="static" color="secondary" enableColorOnDark>
+          <Toolbar sx={{ gap: 1 }}>
+            <Typography
+              variant="h6"
+              component={RouterLink}
+              to="/"
+              sx={{ color: "inherit", textDecoration: "none", flexGrow: 1 }}
             >
-              {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
-          </Tooltip>
-        </Toolbar>
-      </AppBar>
+              Backslash Designs
+            </Typography>
 
-      <Container component="main" sx={{ flex: 1, display: "grid", placeItems: "center", py: 4 }}>
+            <Button color="inherit" component={RouterLink} to="/home">Home</Button>
+            <Button color="inherit" component={RouterLink} to="/about">About</Button>
+            <Button color="primary" component={RouterLink} variant="contained" to="/contact">Contact US</Button>
+            <Tooltip title={`Switch to ${theme.palette.mode === "dark" ? "light" : "dark"} mode`}>
+              <IconButton
+                color="inherit"
+                onClick={toggleColorMode}
+                size="large"
+                aria-label="toggle color mode"
+              >
+                {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+              </IconButton>
+            </Tooltip>
+          </Toolbar>
+        </AppBar>
+      </Box>
+
+      {/*<Container component="main" sx={{ flex: 1, display: "grid", placeItems: "center", py: 4 }}>*/}
         <Outlet />
-      </Container>
+      {/*</Container>*/}
     </Box>
   );
 }
