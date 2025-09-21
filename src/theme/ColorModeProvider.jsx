@@ -33,7 +33,7 @@ export default function ColorModeProvider({ children }) {
       palette: {
         mode,
         primary: { main: "#1f6feb" },
-        secondary: { main: "#f45b47" },
+        secondary: { main: "#525252ff" },
         warning: { main: amber[500], dark: amber[700], light: amber[300], contrastText: "#111" },
         background: isDark
           ? { default: "#0f1216", paper: "#12161c" }
