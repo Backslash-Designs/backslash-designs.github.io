@@ -2,6 +2,7 @@ import React, { createContext, useContext, useMemo, useState, useEffect } from "
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { amber } from "@mui/material/colors";
+import Fonts from "./Fonts"
 
 const LOCAL_KEY = "color-scheme"; // 'light' | 'dark'
 
@@ -52,6 +53,7 @@ export default function ColorModeProvider({ children }) {
     <ColorModeContext.Provider value={value}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <Fonts />
         {children}
       </ThemeProvider>
     </ColorModeContext.Provider>

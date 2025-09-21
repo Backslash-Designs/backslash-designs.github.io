@@ -1,4 +1,6 @@
-import React from "react";  // optional with automatic runtime
+import React from "react";
+import Hero from "../components/Hero.jsx";
+
 export default function Home() {
-  return <div className="page">Home</div>;
+  return <Hero />;
 }
