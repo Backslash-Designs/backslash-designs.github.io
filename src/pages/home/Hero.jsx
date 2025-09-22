@@ -120,7 +120,7 @@ export default function Hero() {
       ? "/backslash-icon-dark.png"
       : "/backslash-icon-light.png";
 
-  const ROTATE_WORDS = ["Web", "Media", "Support", "Designs"];
+  const ROTATE_WORDS = [ "Media","Security", "Support", "Designs"];
   const TAGLINE = "Scalable | Reliable | Secure";
 
   /* ---- Timings (ms) ---- */

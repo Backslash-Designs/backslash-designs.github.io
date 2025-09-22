@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function UnderConstruction() {
+export default function Construction() {
   return (
     <>
       {/* Local reset so we don't need styles.css */}

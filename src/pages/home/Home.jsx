@@ -1,6 +1,6 @@
 import React from "react";
-import Hero from "../components/Hero.jsx";
-import Values from "../components/Values.jsx";
+import Hero from "./Hero.jsx";
+import Values from "./Values.jsx";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
