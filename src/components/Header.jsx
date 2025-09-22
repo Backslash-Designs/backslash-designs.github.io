@@ -15,7 +15,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Divider from "@mui/material/Divider";
-import { SERVICES } from "../pages/home/Services.jsx";
+import { SERVICES } from "../pages/services/ServicesPage.jsx";
 
 export default function Header({ onOpenMobileMenu }) {
     const theme = useTheme();

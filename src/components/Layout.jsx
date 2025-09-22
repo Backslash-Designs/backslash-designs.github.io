@@ -12,7 +12,7 @@ import Collapse from "@mui/material/Collapse";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { SERVICES } from "../pages/home/Services.jsx";
+import { SERVICES } from "../pages/services/ServicesPage.jsx";
 
 // New: Drawer component that appears below the sticky top area
 function MobileNavDrawer({ open, onClose, topOffset = 0 }) {
@@ -132,8 +132,6 @@ export default function Layout() {
         <SystemAnnouncements />
         <Header onOpenMobileMenu={openMobileMenu} />
       </Box>
-
-      {/* Drawer opens beneath the sticky announcements + header */}
       <MobileNavDrawer open={drawerOpen} onClose={closeMobileMenu} topOffset={topOffset} />
       <Outlet />
     </Box>

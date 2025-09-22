@@ -1,7 +1,7 @@
 import React from "react";
 import Hero from "./Hero.jsx";
 import Values from "./Values.jsx";
-import Services from "./Services.jsx";
+import Services from "../services/ServicesPage.jsx";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
