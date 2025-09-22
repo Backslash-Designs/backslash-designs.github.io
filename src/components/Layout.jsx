@@ -8,9 +8,17 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
+import Collapse from "@mui/material/Collapse";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import { SERVICES } from "../pages/home/Services.jsx";
 
 // New: Drawer component that appears below the sticky top area
 function MobileNavDrawer({ open, onClose, topOffset = 0 }) {
+  const [svcOpen, setSvcOpen] = React.useState(false);
+  const toggleServices = () => setSvcOpen((v) => !v);
+
   return (
     <Drawer
       anchor="left"
@@ -29,6 +37,41 @@ function MobileNavDrawer({ open, onClose, topOffset = 0 }) {
           <ListItemButton component={RouterLink} to="/home" onClick={onClose}>
             <ListItemText primary="Home" />
           </ListItemButton>
+
+          {/* Services parent (toggles nested list) */}
+          <ListItemButton onClick={toggleServices} aria-expanded={svcOpen ? "true" : "false"}>
+            <ListItemText primary="Services" />
+            {svcOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={svcOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton
+                component={RouterLink}
+                to="/services"
+                onClick={onClose}
+                sx={{ pl: 4 }}
+              >
+                <ListItemText primary="All Services" />
+              </ListItemButton>
+              {SERVICES.map(({ key, title, Icon }) => (
+                <ListItemButton
+                  key={key}
+                  component={RouterLink}
+                  to={`/services#${key}`}
+                  onClick={onClose}
+                  sx={{ pl: 4 }}
+                >
+                  {Icon && (
+                    <ListItemIcon sx={{ minWidth: 34 }}>
+                      <Icon fontSize="small" />
+                    </ListItemIcon>
+                  )}
+                  <ListItemText primary={title} />
+                </ListItemButton>
+              ))}
+            </List>
+          </Collapse>
+
           <ListItemButton component={RouterLink} to="/about" onClick={onClose}>
             <ListItemText primary="About" />
           </ListItemButton>
@@ -69,7 +112,14 @@ export default function Layout() {
   const closeMobileMenu = () => setDrawerOpen(false);
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        "--top-offset": `${topOffset}px`, // expose sticky height
+      }}
+    >
       <Box
         ref={topRef}
         sx={{
@@ -84,11 +134,8 @@ export default function Layout() {
       </Box>
 
       {/* Drawer opens beneath the sticky announcements + header */}
-      
       <MobileNavDrawer open={drawerOpen} onClose={closeMobileMenu} topOffset={topOffset} />
-        
-        <Outlet />
-
+      <Outlet />
     </Box>
   );
 }

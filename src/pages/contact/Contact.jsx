@@ -12,7 +12,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { submitQuoteRequest, submitWaitlistEmail } from "../../components/QuoteRequestHandler.jsx";
 
-const TICKET_URL = "https://support.backslash.designs"; // replace with your ticket system URL
+const TICKET_URL = "https://backslashdesigns.ITClientPortal.com/"; // replace with your ticket system URL
 const INTAKE_PAUSED = ["1", "true", "yes", "on"].includes(
   String(import.meta.env.VITE_PAUSE_INTAKE ?? "0").toLowerCase()
 );
