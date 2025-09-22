@@ -10,6 +10,7 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { submitQuoteRequest, submitWaitlistEmail } from "../../components/QuoteRequestHandler.jsx";
 
 const TICKET_URL = "https://support.backslash.designs"; // replace with your ticket system URL
 const INTAKE_PAUSED = ["1", "true", "yes", "on"].includes(
@@ -28,11 +29,14 @@ export default function Contact() {
     });
     const [errors, setErrors] = React.useState({});
     const [snackOpen, setSnackOpen] = React.useState(false);
-    const [snackMsg, setSnackMsg] = React.useState(""); // NEW
+    const [snackMsg, setSnackMsg] = React.useState("");
+    const [snackSeverity, setSnackSeverity] = React.useState("success"); // NEW
+    const [submitting, setSubmitting] = React.useState(false); // NEW
 
     // NEW: waitlist state
     const [waitlistEmail, setWaitlistEmail] = React.useState("");
     const [waitlistErr, setWaitlistErr] = React.useState("");
+    const [waitSubmitting, setWaitSubmitting] = React.useState(false); // NEW
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -49,42 +53,63 @@ export default function Contact() {
         return er;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const er = validate();
         if (Object.keys(er).length) {
-        setErrors(er);
-        return;
+            setErrors(er);
+            return;
         }
-        // Simulate submission (no backend connected yet)
-        // You can POST to your API here.
-        console.log("Quote request:", form);
-        setSnackMsg("Thanks! We’ll be in touch shortly."); // NEW
-        setSnackOpen(true);
-        setForm({
-        name: "",
-        company: "",
-        email: "",
-        phone: "",
-        type: "",
-        budget: "",
-        message: "",
-        });
+
+        try {
+            setSubmitting(true);
+            await submitQuoteRequest(form);
+            setSnackSeverity("success");
+            setSnackMsg("Thanks! We’ll be in touch shortly.");
+            setSnackOpen(true);
+            setForm({
+                name: "",
+                company: "",
+                email: "",
+                phone: "",
+                type: "",
+                budget: "",
+                message: "",
+            });
+        } catch (err) {
+            console.error("Quote request failed:", err);
+            setSnackSeverity("error");
+            setSnackMsg("Could not send your request. Please try again later.");
+            setSnackOpen(true);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
-        // NEW: waitlist submit
-        const handleWaitlistSubmit = (e) => {
+        // NEW: waitlist submit via n8n webhook
+        const handleWaitlistSubmit = async (e) => {
         e.preventDefault();
         if (!/^\S+@\S+\.\S+$/.test(waitlistEmail)) {
             setWaitlistErr("Enter a valid email.");
             return;
         }
-        console.log("Waitlist signup:", waitlistEmail);
-        setSnackMsg("Thanks! We’ll notify you when we’re accepting new projects.");
-        setSnackOpen(true);
-        setWaitlistEmail("");
-        setWaitlistErr("");
-        };
+        try {
+            setWaitSubmitting(true);
+            await submitWaitlistEmail(waitlistEmail);
+            setSnackSeverity("success");
+            setSnackMsg("Thanks! We’ll notify you when we’re accepting new projects.");
+            setSnackOpen(true);
+            setWaitlistEmail("");
+            setWaitlistErr("");
+        } catch (err) {
+            console.error("Waitlist signup failed:", err);
+            setSnackSeverity("error");
+            setSnackMsg("Could not join the waitlist. Please try again later.");
+            setSnackOpen(true);
+        } finally {
+            setWaitSubmitting(false);
+        }
+    };
 
     return (
         <Box component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
@@ -154,14 +179,13 @@ export default function Contact() {
                         sx={{ flex: 1, width: { xs: "100%", sm: "auto" } }}
                         autoComplete="email"
                         />
-                        <Button type="submit" variant="contained" color="primary" sx={{ whiteSpace: "nowrap" }}>
-                        Notify Me
+                        <Button type="submit" variant="contained" color="primary" sx={{ whiteSpace: "nowrap" }} disabled={waitSubmitting}>
+                        {waitSubmitting ? "Submitting..." : "Notify Me"}
                         </Button>
                     </Stack>
                     </Box>
                 </Paper>
             ) : (
-              // ...existing code (the Request a Quote Paper + form)...
                 <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
                     <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                     Request a Quote
@@ -269,12 +293,12 @@ export default function Contact() {
                         </Grid>
 
                         <Stack direction="row" spacing={1.5} sx={{ mt: 2 }} alignItems="center">
-                        <Button type="submit" variant="contained" color="primary">
-                            Request Quote
-                        </Button>
-                        <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                            By submitting, you agree to be contacted about your request.
-                        </Typography>
+                            <Button type="submit" variant="contained" color="primary" disabled={submitting}>
+                                {submitting ? "Sending..." : "Request Quote"}
+                            </Button>
+                            <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                                By submitting, you agree to be contacted about your request.
+                            </Typography>
                         </Stack>
                     </Box>
                 </Paper>
@@ -287,7 +311,7 @@ export default function Contact() {
             onClose={() => setSnackOpen(false)}
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-            <Alert onClose={() => setSnackOpen(false)} severity="success" variant="filled" sx={{ width: "100%" }}>
+            <Alert onClose={() => setSnackOpen(false)} severity={snackSeverity} variant="filled" sx={{ width: "100%" }}>
                 {snackMsg || "Thanks! We’ll be in touch shortly."}
             </Alert>
         </Snackbar>
