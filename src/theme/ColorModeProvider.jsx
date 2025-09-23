@@ -23,7 +23,6 @@ export default function ColorModeProvider({ children }) {
 
   useEffect(() => {
     localStorage.setItem(LOCAL_KEY, mode);
-    // Optional: expose on <html> for any non-MUI CSS you might add later
     document.documentElement.dataset.theme = mode;
   }, [mode]);
 
@@ -42,6 +41,35 @@ export default function ColorModeProvider({ children }) {
       },
       shape: { borderRadius: 12 },
     });
+  }, [mode]);
+
+  // Update favicon + theme-color to match current mode (runtime override)
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const href =
+      mode === "dark"
+        ? "/backslash-icon-square-trans-dark.png"
+        : "/backslash-icon-square-trans-light.png";
+
+    let link = document.querySelector('link#app-favicon');
+    if (!link) {
+      link = document.createElement("link");
+      link.id = "app-favicon";
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.href = href;
+
+    // Also update theme-color meta dynamically (nice for Android address bar)
+    const color = mode === "dark" ? "#0f1216" : "#fafafa";
+    let meta = document.querySelector('meta#app-theme-color[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.id = "app-theme-color";
+      meta.setAttribute("name", "theme-color");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", color);
   }, [mode]);
 
   const value = useMemo(
