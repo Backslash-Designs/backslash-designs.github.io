@@ -123,7 +123,7 @@ export const SERVICES = [
 ];
 
 /* Home: summary grid (keeps existing layout/behavior) */
-export default function Services() {
+export default function ServicesSummary() {
   return (
     <Box component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
       <Box sx={{ maxWidth: 1100, width: "100%", mx: "auto" }}>

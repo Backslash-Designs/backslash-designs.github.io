@@ -162,7 +162,7 @@ export default function Header({ onOpenMobileMenu }) {
             </Menu>
 
             <Button color="inherit" component={RouterLink} to="/about" sx={{ display: { xs: "none", sm: "inline-flex" } }}>About</Button>
-            <Button color="primary" component={RouterLink} variant="contained" to="/contact" >Contact US</Button>
+            <Button color="primary" component={RouterLink} variant="contained" to="/contact" >Contact</Button>
             <Tooltip title={`Switch to ${theme.palette.mode === "dark" ? "light" : "dark"} mode`}>
             <IconButton
                 color="inherit"
