@@ -11,6 +11,7 @@ import Divider from "@mui/material/Divider";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { submitQuoteRequest, submitWaitlistEmail } from "../../components/QuoteRequestHandler.jsx";
+import { SERVICES } from "../services/ServicesPage.jsx";
 
 const TICKET_URL = "https://backslashdesigns.ITClientPortal.com/"; // replace with your ticket system URL
 const INTAKE_PAUSED = ["1", "true", "yes", "on"].includes(
@@ -253,10 +254,13 @@ export default function Contact() {
                             fullWidth
                             >
                             <MenuItem value="">Select…</MenuItem>
-                            <MenuItem value="web">Web App / Website</MenuItem>
-                            <MenuItem value="security">Security / Hardening</MenuItem>
-                            <MenuItem value="automation">Automation / Integrations</MenuItem>
-                            <MenuItem value="support">Ongoing Support</MenuItem>
+                            {/* Build options from SERVICES */}
+                            {SERVICES.map(({ key, title }) => (
+                                <MenuItem key={key} value={key}>
+                                    {title}
+                                </MenuItem>
+                            ))}
+                            {/* Always include a catch‑all */}
                             <MenuItem value="other">Other</MenuItem>
                             </TextField>
                         </Grid>

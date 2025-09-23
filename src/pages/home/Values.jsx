@@ -9,11 +9,17 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import SecurityIcon from "@mui/icons-material/Security";
 
-const values = [
+export const values = [
     {
         title: "Scalable",
         description:
         "From day one, architectures are designed to handle growth—traffic bursts, data volume, and evolving features—without costly rework.",
+        details: [
+            "Modular boundaries and stateless services enable horizontal scaling with containers and serverless.",
+            "Async workloads via queues and scheduled jobs prevent hotspots and keep latency predictable.",
+            "Smart data patterns: read replicas, partitioning, caching layers, and CQRS where it pays off.",
+            "Infra-as-code and autoscaling policies keep environments reproducible and cost-aware."
+        ],
         Icon: QueryStatsIcon,
         href: "/about#scalable",
     },
@@ -21,6 +27,12 @@ const values = [
         title: "Reliable",
         description:
         "We build for uptime with redundancy, observability, and testing pipelines that keep changes safe and rollouts smooth.",
+        details: [
+            "Clear SLOs, health checks, and end-to-end tracing to detect and resolve issues fast.",
+            "Defense-in-depth testing: unit, integration, contract, and smoke/e2e in CI.",
+            "Progressive delivery: feature flags, canaries, and blue/green for safe rollouts.",
+            "Resiliency patterns: retries with backoff, timeouts, idempotency, and circuit breakers."
+        ],
         Icon: VerifiedIcon,
         href: "/about#reliable",
     },
@@ -28,6 +40,12 @@ const values = [
         title: "Secure",
         description:
         "Security is built-in: least-privilege access, encryption standards, and continuous hardening—not bolted on later.",
+        details: [
+            "Least-privilege IAM, scoped service accounts, and audited access paths.",
+            "Encryption in transit (TLS) and at rest; robust secrets management and rotation.",
+            "Shift-left: dependency scanning, SAST/DAST, and threat modeling in the SDLC.",
+            "Continuous patching, hardening baselines, and proactive monitoring/alerting."
+        ],
         Icon: SecurityIcon,
         href: "/about#secure",
     },
@@ -41,7 +59,7 @@ export default function Values() {
             Our Values
             </Typography>
             <Grid container spacing={2} alignItems="stretch">
-            {values.map(({ title, description, Icon, href }) => (
+            {values.map(({ title, description, details, Icon, href }) => (
                 <Grid key={title} item size={{ xs: 12, sm: 6, md: 4 }}>
                 <Paper variant="outlined" sx={{ height: "100%", p: 2 }}>
                     <Stack spacing={1.25}>

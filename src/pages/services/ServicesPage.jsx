@@ -10,89 +10,115 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import SecurityIcon from "@mui/icons-material/Security";
 import DesignServicesIcon from "@mui/icons-material/DesignServices";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import VideocamIcon from "@mui/icons-material/Videocam";
 import { useLocation } from "react-router-dom"; // + add
 
 // Shared data source for both Home and Detailed views
 export const SERVICES = [
   {
     key: "web",
-    title: "Web & App Development",
-    summary: "Modern, performant React frontends and robust backends built for growth.",
+    title: "Web Development",
+    summary: "Modern, lightweight sites and apps—this site is an example.",
     details:
-      "We deliver responsive, accessible UIs and resilient APIs. Our stacks emphasize DX, testing, and CI/CD so features ship faster with confidence.",
+      "React + Vite + MUI builds with clean components, accessible UI, and simple deploys to static hosting/CDN.",
     bullets: [
-      "React, Vite, and MUI for performant, accessible UIs",
-      "CI/CD, preview deploys, and automated testing",
-      "TypeScript-first, API contracts, and docs",
-      "Edge-ready and cloud-native architectures",
+      "React, Vite, and MUI implementation",
+      "SEO basics, analytics, and sitemaps",
+      "CI/CD and preview deploys",
+      "Straightforward content updates",
     ],
     Icon: DesignServicesIcon,
     contactHref: "/contact?service=web",
   },
   {
-    key: "security",
-    title: "Security Hardening",
-    summary: "Threat modeling, hardening, and policies to keep systems resilient.",
+    key: "identity",
+    title: "Identity & SaaS Management",
+    summary: "Tenant management, SSO integrations, and password management you can trust.",
     details:
-      "We take a defense-in-depth approach—least privilege, encryption, secrets management, and continuous hardening across environments.",
+      "Hands-on with Microsoft 365 and Google Workspace, integrating SAML/OAuth apps (Adobe, Canva, Amazon Business) and rolling out 1Password.",
     bullets: [
-      "Threat modeling and secure-by-default patterns",
-      "Secrets management and key rotation",
-      "Hardening guides, reviews, and policy templates",
-      "Security headers, SSO, and 2FA enablement",
+      "M365/Google Workspace tenant and policy management",
+      "SSO integrations for Adobe, Canva, Amazon Business",
+      "1Password provisioning, groups, and vault policies",
+      "User lifecycle and periodic access reviews",
     ],
     Icon: SecurityIcon,
-    contactHref: "/contact?service=security",
+    contactHref: "/contact?service=identity",
   },
   {
-    key: "automation",
-    title: "Automation & Integrations",
-    summary: "Connect tools and streamline workflows with reliable automation.",
+    key: "clinical",
+    title: "Clinical Systems Implementation",
+    summary: "Clinical charting setup and operations centered on Jane App.",
     details:
-      "Reduce toil with reliable automations that connect your SaaS, data, and deployments. We design observability into every integration.",
+      "Implementations tailored to workflows, permissions, templates, and integrations to keep practices running smoothly.",
     bullets: [
-      "Event-driven workflows, webhooks, and queues",
-      "SaaS integrations (GitHub, Slack, Stripe, etc.)",
-      "Runbooks and failure-safe fallbacks",
-      "Telemetry and alerting built-in",
-    ],
-    Icon: QueryStatsIcon,
-    contactHref: "/contact?service=automation",
-  },
-  {
-    key: "qa",
-    title: "Quality & Compliance",
-    summary: "Testing pipelines, observability, and compliance-friendly practices.",
-    details:
-      "Level up delivery quality with layered testing, linting, and traceability. We align processes to support audits and compliance standards.",
-    bullets: [
-      "Unit, integration, and E2E pipelines",
-      "Coverage, linting, and type safety",
-      "Release notes and change management",
-      "Dashboards for uptime and SLOs",
+      "Jane App setup, roles, and permissions",
+      "Clinical templates and intake forms",
+      "Calendar, payments, and email integrations",
+      "Training and change management",
     ],
     Icon: VerifiedIcon,
-    contactHref: "/contact?service=qa",
+    contactHref: "/contact?service=clinical",
+  },
+  {
+    key: "hosting",
+    title: "Managed Containerized Services",
+    summary: "Deploy and keep small containerized services running reliably (e.g., Mealie).",
+    details:
+      "Dockerized services behind a secure reverse proxy with automatic TLS, updates, monitoring, and backups.",
+    bullets: [
+      "Docker Compose deployments and maintenance",
+      "Reverse proxy and HTTPS/TLS setup",
+      "Automated backups and restore testing",
+      "Health checks and upgrade workflows",
+    ],
+    Icon: QueryStatsIcon,
+    contactHref: "/contact?service=hosting",
+  },
+  {
+    key: "networking",
+    title: "Networking, Cameras, and Cabling",
+    summary: "Copper runs, PoE, and camera systems (Ubiquiti) done cleanly and tested.",
+    details:
+      "From planning and pulling CAT5/6 to terminating, labeling, testing, and bringing PoE devices and NVR/DVR online.",
+    bullets: [
+      "CAT5/6 planning, pulling, termination, testing",
+      "PoE switches and patch management",
+      "Ubiquiti security camera and NVR/DVR setup",
+      "Basic VLANs and Wi‑Fi planning",
+    ],
+    Icon: VerifiedIcon,
+    contactHref: "/contact?service=networking",
+  },
+  {
+    key: "pro-av",
+    title: "Pro A/V & Live Broadcast",
+    summary: "Planning and delivering live production—NDI/SDI pipelines, switching, and reliable streaming.",
+    details:
+      "End‑to‑end project work: signal‑flow design, equipment selection, staging, and show‑day operation with documented runbooks.",
+    bullets: [
+      "NDI/SDI video workflows and routing",
+      "Audio integration (Dante, mixers) and sync",
+      "Switchers, capture, graphics, and multiview",
+      "Streaming, recording, redundancy, and comms",
+    ],
+    Icon: VideocamIcon,
+    contactHref: "/contact?service=pro-av",
   },
   {
     key: "support",
-    title: "Ongoing Support",
-    summary: "Proactive maintenance and responsive help when you need it.",
+    title: "Endpoint Management & Support",
+    summary: "Remote/on‑site support plus endpoint backup.",
     details:
-      "Stay focused on your roadmap while we handle updates, patches, and reliable support with clear SLAs.",
+      "Datto RMM and RustDesk for remote access; Autotask for tickets and SLAs; proactive maintenance for dependable devices.",
     bullets: [
-      "Transparent SLAs and ticket triage",
-      "Proactive patching and dependency care",
-      "Monitoring and incident response",
-      "Knowledge base and handover docs",
+      "Remote endpoint management (Datto RMM, RustDesk)",
+      "Remote & on‑site support (Autotask)",
+      "Endpoint backup configuration and checks",
+      "Patch and update management",
     ],
     Icon: SupportAgentIcon,
     contactHref: "/contact?service=support",
-    testimonial: {
-      quote:
-        "Backslash kept our stack fast and secure while we scaled—issues were resolved before customers noticed.",
-      author: "Ops Lead, SaaS Company",
-    },
   },
 ];
 
