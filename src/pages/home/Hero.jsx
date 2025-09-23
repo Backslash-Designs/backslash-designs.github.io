@@ -144,6 +144,15 @@ export default function Hero() {
     return () => clearTimeout(id);
   }, []);
 
+  // After all animations complete, fade background from Paper -> Secondary
+  const [bgToSecondary, setBgToSecondary] = React.useState(false);
+  React.useEffect(() => {
+    // End of tagline typing = when to start fading background
+    const endOfAnimationsMs = taglineStart + TAGLINE.length * tagSpeed;
+    const id = setTimeout(() => setBgToSecondary(true), endOfAnimationsMs);
+    return () => clearTimeout(id);
+  }, [taglineStart, TAGLINE.length, tagSpeed]);
+
   return (
     <Box
       component="section"
@@ -152,11 +161,11 @@ export default function Hero() {
         display: "grid",
         placeItems: "center",
         px: 2,
-        background: `linear-gradient(
-          180deg,
-          ${theme.palette.background.default} 0%,
-          ${theme.palette.mode === "dark" ? "#0b0e12" : "#f4f6f8"} 100%
-        )`,
+        // Fade the hero backdrop from paper -> secondary once intro animations finish
+        backgroundColor: bgToSecondary
+          ? theme.palette.secondary.main
+          : theme.palette.background.paper,
+        transition: "background-color 1200ms ease",
       }}
     >
       <Box sx={{ width: "min(1200px, 100%)", mx: "auto" }}>
@@ -198,7 +207,7 @@ export default function Hero() {
               <Typography
                 variant="h2"
                 sx={{
-                  fontSize: { xs: 26, sm: 36, md: 48 },
+                  fontSize: { xs: 26, sm: 36, md: 80   },
                   lineHeight: 1.05,
                   fontWeight: 800,
                   letterSpacing: "-0.015em",

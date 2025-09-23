@@ -28,15 +28,25 @@ export default function ColorModeProvider({ children }) {
 
   const theme = useMemo(() => {
     const isDark = mode === "dark";
+
+    // Blue accent as primary
+    const primaryMain = "#1f6feb";
+    const primaryContrastText = "#ffffff";
+
+    // Neutral secondary that flips for readability
+    const secondaryMain = isDark ? "#1f2937" /* gray-800 */ : "#e5e7eb" /* gray-200 */;
+    const secondaryContrastText = isDark ? "#ffffff" : "#111111";
+
+    const backgroundDefault = isDark ? "#0f1216" : "#fafafa";
+    const backgroundPaper = isDark ? "#12161c" : "#ffffff";
+
     return createTheme({
       palette: {
         mode,
-        primary: { main: "#1f6feb" },
-        secondary: { main: "#525252ff" },
+        primary: { main: primaryMain, contrastText: primaryContrastText },
+        secondary: { main: secondaryMain, contrastText: secondaryContrastText },
         warning: { main: amber[500], dark: amber[700], light: amber[300], contrastText: "#111" },
-        background: isDark
-          ? { default: "#0f1216", paper: "#12161c" }
-          : { default: "#fafafa", paper: "#ffffff" },
+        background: { default: backgroundDefault, paper: backgroundPaper },
         text: isDark ? { primary: "#ffffff" } : { primary: "#111111" },
       },
       shape: { borderRadius: 12 },
