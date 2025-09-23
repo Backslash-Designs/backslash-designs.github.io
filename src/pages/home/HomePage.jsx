@@ -1,6 +1,6 @@
 import React from "react";
 import Hero from "./Hero.jsx";
-import Values from "./Values.jsx";
+import Values from "../about/Values.jsx";
 import Services from "../services/ServicesPage.jsx";
 
 import Box from "@mui/material/Box";
@@ -19,8 +19,8 @@ export default function Home() {
   return (
     <Box sx={{ width: "100%", justifySelf: "stretch", alignSelf: "stretch" }}>
       <Hero />
-      <Values />
       <Services />
+      <Values />
     </Box>
   );
 }

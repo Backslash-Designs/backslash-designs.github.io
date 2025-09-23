@@ -28,7 +28,7 @@ export const SERVICES = [
       "Straightforward content updates",
     ],
     Icon: DesignServicesIcon,
-    contactHref: "/contact?service=web",
+    contactHref: "/services#web",
   },
   {
     key: "identity",
@@ -43,7 +43,7 @@ export const SERVICES = [
       "User lifecycle and periodic access reviews",
     ],
     Icon: SecurityIcon,
-    contactHref: "/contact?service=identity",
+    contactHref: "/services#identity",
   },
   {
     key: "clinical",
@@ -58,7 +58,7 @@ export const SERVICES = [
       "Training and change management",
     ],
     Icon: VerifiedIcon,
-    contactHref: "/contact?service=clinical",
+    contactHref: "/services#clinical",
   },
   {
     key: "hosting",
@@ -73,7 +73,7 @@ export const SERVICES = [
       "Health checks and upgrade workflows",
     ],
     Icon: QueryStatsIcon,
-    contactHref: "/contact?service=hosting",
+    contactHref: "/services#hosting",
   },
   {
     key: "networking",
@@ -103,7 +103,7 @@ export const SERVICES = [
       "Streaming, recording, redundancy, and comms",
     ],
     Icon: VideocamIcon,
-    contactHref: "/contact?service=pro-av",
+    contactHref: "/services#pro-av",
   },
   {
     key: "support",
@@ -118,7 +118,7 @@ export const SERVICES = [
       "Patch and update management",
     ],
     Icon: SupportAgentIcon,
-    contactHref: "/contact?service=support",
+    contactHref: "/services#support",
   },
 ];
 
@@ -128,7 +128,7 @@ export default function Services() {
     <Box component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
       <Box sx={{ maxWidth: 1100, width: "100%", mx: "auto" }}>
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-          Services
+          Our Services
         </Typography>
         <Grid container spacing={2} alignItems="stretch">
           {SERVICES.map(({ key, title, summary, Icon, contactHref }) => (

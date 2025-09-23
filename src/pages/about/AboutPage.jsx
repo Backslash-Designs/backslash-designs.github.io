@@ -3,7 +3,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 // Reuse the same array from the Home page
-import { values } from "../home/Values.jsx";
+import { values } from "./Values.jsx";
+import Team from "./Team.jsx"; // <-- import Team from new file
 
 // New, concise summaries for the About page only
 const aboutSummaries = {
@@ -16,8 +17,11 @@ export default function About() {
   return (
     <Box component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
       <Box sx={{ maxWidth: 1100, mx: "auto" }}>
+        {/* Team section */}
+        <Team />
+
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-          About our values
+          About Our Values
         </Typography>
 
         {values.map(({ title, details = [], Icon, href }) => {
