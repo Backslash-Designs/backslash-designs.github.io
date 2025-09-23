@@ -18,6 +18,8 @@ export async function submitQuoteRequest(form) {
         pageUrl: typeof window !== "undefined" ? window.location.href : undefined,
         userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
       },
+      // Pass recaptchaToken if present
+      recaptchaToken: form.recaptchaToken || undefined,
     };
 
     const res = await fetch(url, {

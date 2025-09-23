@@ -17,6 +17,7 @@ const TICKET_URL = "https://backslashdesigns.ITClientPortal.com/"; // replace wi
 const INTAKE_PAUSED = ["1", "true", "yes", "on"].includes(
   String(import.meta.env.VITE_PAUSE_INTAKE ?? "0").toLowerCase()
 );
+const RECAPTCHA_SITE_KEY = "6LcfotIrAAAAAE2av-qpoBGQekxbPVBwQgIDXQHl"; // <-- replace with your actual site key
 
 export default function Contact() {
     const [form, setForm] = React.useState({
@@ -39,6 +40,38 @@ export default function Contact() {
     const [waitlistErr, setWaitlistErr] = React.useState("");
     const [waitSubmitting, setWaitSubmitting] = React.useState(false); // NEW
 
+    const [recaptchaToken, setRecaptchaToken] = React.useState("");
+    const [recaptchaReady, setRecaptchaReady] = React.useState(false);
+
+    // Load reCAPTCHA script once
+    React.useEffect(() => {
+        if (window.grecaptcha) {
+            setRecaptchaReady(true);
+            return;
+        }
+        const script = document.createElement("script");
+        script.src = "https://www.google.com/recaptcha/api.js";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => setRecaptchaReady(true);
+        document.body.appendChild(script);
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
+
+    // Render reCAPTCHA widget and handle token
+    React.useEffect(() => {
+        if (!recaptchaReady || !window.grecaptcha) return;
+        if (document.getElementById("recaptcha-widget").children.length) return; // already rendered
+        window.grecaptcha.render("recaptcha-widget", {
+            sitekey: RECAPTCHA_SITE_KEY,
+            callback: (token) => setRecaptchaToken(token),
+            "expired-callback": () => setRecaptchaToken(""),
+            "error-callback": () => setRecaptchaToken(""),
+        });
+    }, [recaptchaReady]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((f) => ({ ...f, [name]: value }));
@@ -57,14 +90,16 @@ export default function Contact() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const er = validate();
+        if (!recaptchaToken) {
+            er.recaptcha = "Please complete the CAPTCHA.";
+        }
         if (Object.keys(er).length) {
             setErrors(er);
             return;
         }
-
         try {
             setSubmitting(true);
-            await submitQuoteRequest(form);
+            await submitQuoteRequest({ ...form, recaptchaToken }); // send token
             setSnackSeverity("success");
             setSnackMsg("Thanks! We’ll be in touch shortly.");
             setSnackOpen(true);
@@ -295,7 +330,16 @@ export default function Contact() {
                             />
                         </Grid>
                         </Grid>
-
+                        {/* --- CAPTCHA widget --- */}
+                        <Box sx={{ mt: 2 }}>
+                            <div id="recaptcha-widget"></div>
+                            {errors.recaptcha && (
+                                <Typography color="error" variant="caption">
+                                    {errors.recaptcha}
+                                </Typography>
+                            )}
+                        </Box>
+                        {/* --- end CAPTCHA --- */}
                         <Stack direction="row" spacing={1.5} sx={{ mt: 2 }} alignItems="center">
                             <Button type="submit" variant="contained" color="primary" disabled={submitting}>
                                 {submitting ? "Sending..." : "Request Quote"}
