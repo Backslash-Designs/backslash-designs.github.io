@@ -13,11 +13,24 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { SERVICES } from "../pages/services/ServicesPage.jsx";
+import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
+import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+import VideocamIcon from "@mui/icons-material/Videocam";
+
+const SECTORS = [
+  { key: "broadcast", title: "Live Broadcast & Pro A/V", Icon: VideocamIcon },
+  { key: "mental-health", title: "Mental Health & Clinical Practices", Icon: LocalHospitalIcon },
+  { key: "non-profit", title: "Non-Profit Organizations", Icon: VolunteerActivismIcon },
+];
 
 // New: Drawer component that appears below the sticky top area
 function MobileNavDrawer({ open, onClose, topOffset = 0 }) {
   const [svcOpen, setSvcOpen] = React.useState(false);
   const toggleServices = () => setSvcOpen((v) => !v);
+
+  // Add sectors collapse state
+  const [sectorsOpen, setSectorsOpen] = React.useState(false);
+  const toggleSectors = () => setSectorsOpen((v) => !v);
 
   return (
     <Drawer
@@ -37,6 +50,40 @@ function MobileNavDrawer({ open, onClose, topOffset = 0 }) {
           <ListItemButton component={RouterLink} to="/home" onClick={onClose}>
             <ListItemText primary="Home" />
           </ListItemButton>
+
+          {/* Sectors parent (toggles nested list) */}
+          <ListItemButton onClick={toggleSectors} aria-expanded={sectorsOpen ? "true" : "false"}>
+            <ListItemText primary="Sectors" />
+            {sectorsOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={sectorsOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton
+                component={RouterLink}
+                to="/sectors"
+                onClick={onClose}
+                sx={{ pl: 4 }}
+              >
+                <ListItemText primary="All Sectors" />
+              </ListItemButton>
+              {SECTORS.map(({ key, title, Icon }) => (
+                <ListItemButton
+                  key={key}
+                  component={RouterLink}
+                  to={`/sectors#${key}`}
+                  onClick={onClose}
+                  sx={{ pl: 4 }}
+                >
+                  {Icon && (
+                    <ListItemIcon sx={{ minWidth: 34 }}>
+                      <Icon fontSize="small" />
+                    </ListItemIcon>
+                  )}
+                  <ListItemText primary={title} />
+                </ListItemButton>
+              ))}
+            </List>
+          </Collapse>
 
           {/* Services parent (toggles nested list) */}
           <ListItemButton onClick={toggleServices} aria-expanded={svcOpen ? "true" : "false"}>

@@ -16,6 +16,15 @@ import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Divider from "@mui/material/Divider";
 import { SERVICES } from "../pages/services/ServicesPage.jsx";
+import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
+import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+import VideocamIcon from "@mui/icons-material/Videocam";
+
+const SECTORS = [
+  { key: "broadcast", title: "Live Broadcast & Pro A/V", Icon: VideocamIcon },
+  { key: "mental-health", title: "Mental Health & Clinical Practices", Icon: LocalHospitalIcon },
+  { key: "non-profit", title: "Non-Profit Organizations", Icon: VolunteerActivismIcon },
+];
 
 export default function Header({ onOpenMobileMenu }) {
     const theme = useTheme();
@@ -29,6 +38,11 @@ export default function Header({ onOpenMobileMenu }) {
     const svcOpen = Boolean(svcAnchor);
     const openServicesMenu = (e) => setSvcAnchor(e.currentTarget);
     const closeServicesMenu = () => setSvcAnchor(null);
+
+    const [sectorAnchor, setSectorAnchor] = React.useState(null);
+    const sectorOpen = Boolean(sectorAnchor);
+    const openSectorMenu = (e) => setSectorAnchor(e.currentTarget);
+    const closeSectorMenu = () => setSectorAnchor(null);
 
     return (
         <AppBar position="static" color="secondary" enableColorOnDark>
@@ -66,8 +80,47 @@ export default function Header({ onOpenMobileMenu }) {
             />
             </Box>
 
+            {/* Reordered menu buttons */}
             <Button color="inherit" component={RouterLink} to="/home" sx={{ display: { xs: "none", sm: "inline-flex" } }}>Home</Button>
-            <Button color="inherit" component={RouterLink} to="/about" sx={{ display: { xs: "none", sm: "inline-flex" } }}>About</Button>
+
+            {/* Sectors dropdown (desktop only) */}
+            <Button
+                color="inherit"
+                onClick={openSectorMenu}
+                endIcon={<KeyboardArrowDownIcon />}
+                sx={{ display: { xs: "none", sm: "inline-flex" } }}
+                aria-haspopup="menu"
+                aria-controls={sectorOpen ? "sectors-menu" : undefined}
+                aria-expanded={sectorOpen ? "true" : undefined}
+            >
+                Sectors
+            </Button>
+            <Menu
+                id="sectors-menu"
+                anchorEl={sectorAnchor}
+                open={sectorOpen}
+                onClose={closeSectorMenu}
+                keepMounted
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                transformOrigin={{ vertical: "top", horizontal: "left" }}
+                MenuListProps={{ dense: true }}
+            >
+                <MenuItem component={RouterLink} to="/sectors" onClick={closeSectorMenu}>
+                    All Sectors
+                </MenuItem>
+                <Divider />
+                {SECTORS.map(({ key, title, Icon }) => (
+                    <MenuItem
+                        key={key}
+                        component={RouterLink}
+                        to={`/sectors#${key}`}
+                        onClick={closeSectorMenu}
+                    >
+                        {Icon && <Icon fontSize="small" style={{ marginRight: 8 }} />}
+                        {title}
+                    </MenuItem>
+                ))}
+            </Menu>
 
             {/* Services dropdown (desktop only) */}
             <Button
@@ -93,20 +146,22 @@ export default function Header({ onOpenMobileMenu }) {
             >
             <MenuItem component={RouterLink} to="/services" onClick={closeServicesMenu}>
                 All Services
-              </MenuItem>
-              <Divider />
-              {SERVICES.map(({ key, title }) => (
+            </MenuItem>
+            <Divider />
+            {SERVICES.map(({ key, title, Icon }) => (
                 <MenuItem
-                  key={key}
-                  component={RouterLink}
-                  to={`/services#${key}`}
-                  onClick={closeServicesMenu}
+                    key={key}
+                    component={RouterLink}
+                    to={`/services#${key}`}
+                    onClick={closeServicesMenu}
                 >
-                  {title}
+                    {Icon && <Icon fontSize="small" style={{ marginRight: 8 }} />}
+                    {title}
                 </MenuItem>
-              ))}
+            ))}
             </Menu>
 
+            <Button color="inherit" component={RouterLink} to="/about" sx={{ display: { xs: "none", sm: "inline-flex" } }}>About</Button>
             <Button color="primary" component={RouterLink} variant="contained" to="/contact" >Contact US</Button>
             <Tooltip title={`Switch to ${theme.palette.mode === "dark" ? "light" : "dark"} mode`}>
             <IconButton

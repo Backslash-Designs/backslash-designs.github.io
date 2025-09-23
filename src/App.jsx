@@ -8,6 +8,7 @@ import Construction from "./pages/construction/ConstructionPage.jsx";
 import ColorModeProvider from "./theme/ColorModeProvider.jsx";
 import Contact from "./pages/contact/ContactPage.jsx"; 
 import { ServicesPage } from "./pages/services/ServicesPage.jsx"; 
+import SectorsPage from "./pages/sectors/SectorsPage.jsx";
 
 function shouldShowMaintenance() {
   const envFlag = String(import.meta.env.VITE_MAINTENANCE ?? "0").toLowerCase();
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} /> 
           <Route path="/services" element={<ServicesPage />} />
+          <Route path="/sectors" element={<SectorsPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
