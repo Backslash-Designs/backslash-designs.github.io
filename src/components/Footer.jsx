@@ -17,8 +17,8 @@ export default function Footer() {
   const theme = useTheme();
   const logoSrc =
     theme.palette.mode === "dark"
-      ? "/backslash-logo.png"
-      : "/backslash-logo.png";
+      ? "/backslash-icon-dark.png"
+      : "/backslash-icon-light.png";
 
   return (
     <Box
@@ -84,8 +84,37 @@ export default function Footer() {
 
                 {/* Contact text */}
                 <Box>
-                  <Typography variant="h6" sx={{ mb: 1 }}>
-                    Contact
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      mb: 1,
+                      fontWeight: 700,
+                      letterSpacing: "-0.015em",
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: 0.5,
+                    }}
+                  >
+                    <Box
+                      component="span"
+                      sx={{
+                        fontFamily: `"GoBold", system-ui, sans-serif`,
+                        fontStyle: "italic",
+                      }}
+                    >
+                      Backslash
+                    </Box>
+                    <Box
+                      component="span"
+                      sx={{
+                        fontFamily: `"Hack", ui-monospace, SFMono-Regular, Menlo, monospace`,
+                        fontStyle: "italic",
+                        fontWeight: 400,
+                        ml: 0.5,
+                      }}
+                    >
+                      Designs
+                    </Box>
                   </Typography>
 
                   <Typography variant="body1" sx={{ opacity: 0.9 }}>
@@ -172,6 +201,9 @@ export default function Footer() {
                   </Link>
                   <Link component={RouterLink} to="/contact" underline="hover">
                     Contact
+                  </Link>
+                  <Link component={RouterLink} to="/sos" underline="hover">
+                    SOS RustDesk
                   </Link>
                 </Stack>
 

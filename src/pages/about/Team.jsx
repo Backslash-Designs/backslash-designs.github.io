@@ -9,28 +9,42 @@ export default function Team() {
       <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
         About Our Team
       </Typography>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-        {/* Placeholder avatar */}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: { xs: "stretch", sm: "center" },
+          gap: 3,
+          flexDirection: { xs: "column", sm: "row" },
+          textAlign: { xs: "center", sm: "left" },
+        }}
+      >
+        {/* Avatar */}
         <Box
           sx={{
-            width: 80,
-            height: 80,
-            borderRadius: "50%",
+            width: { xs: "100%", sm: "50%" },
+            maxWidth: { xs: "340px", sm: "none" },
+            aspectRatio: "1 / 1",
+            borderRadius: 2,
             overflow: "hidden",
             bgcolor: (t) => t.palette.action.hover,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            mb: { xs: 2, sm: 0 },
           }}
         >
-          {/* Replace src with actual photo if available */}
           <img
-            src="https://ui-avatars.com/api/?name=Josiah+Ledua&background=0D8ABC&color=fff&size=160"
+            src="/josiah-ledua.JPEG"
             alt="Josiah Ledua"
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
           />
         </Box>
-        <Box>
+        <Box sx={{ flex: 1 }}>
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
             Josiah Ledua
           </Typography>

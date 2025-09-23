@@ -99,7 +99,7 @@ export function SectorsSummary() {
   return (
     <Box sx={{ maxWidth: 1100, mx: "auto", my: 4 }}>
       <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-        Sectors We Serve
+        Our Sectors
       </Typography>
       <Grid container spacing={2} justifyContent="center">
         {SECTORS.map(({ key, title, short, Icon, href }) => (
