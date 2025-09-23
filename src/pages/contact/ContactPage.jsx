@@ -17,7 +17,7 @@ const TICKET_URL = "https://backslashdesigns.ITClientPortal.com/"; // replace wi
 const INTAKE_PAUSED = ["1", "true", "yes", "on"].includes(
   String(import.meta.env.VITE_PAUSE_INTAKE ?? "0").toLowerCase()
 );
-const RECAPTCHA_SITE_KEY = "6LcfotIrAAAAAE2av-qpoBGQekxbPVBwQgIDXQHl"; // <-- replace with your actual site key
+const RECAPTCHA_SITE_KEY = "6LcfotIrAAAAAE2av-qpoBGQekxbPVBwQgIDXQHl";
 
 export default function Contact() {
     const [form, setForm] = React.useState({
@@ -35,12 +35,15 @@ export default function Contact() {
     const [snackSeverity, setSnackSeverity] = React.useState("success"); // NEW
     const [submitting, setSubmitting] = React.useState(false); // NEW
 
-    // NEW: waitlist state
+    // Waitlist state
+    const [waitlistName, setWaitlistName] = React.useState("");
     const [waitlistEmail, setWaitlistEmail] = React.useState("");
+    const [waitlistMarketing, setWaitlistMarketing] = React.useState(false);
     const [waitlistErr, setWaitlistErr] = React.useState("");
-    const [waitSubmitting, setWaitSubmitting] = React.useState(false); // NEW
+    const [waitSubmitting, setWaitSubmitting] = React.useState(false);
 
-    const [recaptchaToken, setRecaptchaToken] = React.useState("");
+    // reCAPTCHA for waitlist
+    const [waitRecaptchaToken, setWaitRecaptchaToken] = React.useState("");
     const [recaptchaReady, setRecaptchaReady] = React.useState(false);
 
     // Load reCAPTCHA script once
@@ -69,6 +72,18 @@ export default function Contact() {
             callback: (token) => setRecaptchaToken(token),
             "expired-callback": () => setRecaptchaToken(""),
             "error-callback": () => setRecaptchaToken(""),
+        });
+    }, [recaptchaReady]);
+
+    // Render reCAPTCHA widget for waitlist
+    React.useEffect(() => {
+        if (!recaptchaReady || !window.grecaptcha) return;
+        if (document.getElementById("waitlist-recaptcha-widget").children.length) return;
+        window.grecaptcha.render("waitlist-recaptcha-widget", {
+            sitekey: RECAPTCHA_SITE_KEY,
+            callback: (token) => setWaitRecaptchaToken(token),
+            "expired-callback": () => setWaitRecaptchaToken(""),
+            "error-callback": () => setWaitRecaptchaToken(""),
         });
     }, [recaptchaReady]);
 
@@ -122,21 +137,35 @@ export default function Contact() {
         }
     };
 
-        // NEW: waitlist submit via n8n webhook
-        const handleWaitlistSubmit = async (e) => {
+    // Waitlist submit
+    const handleWaitlistSubmit = async (e) => {
         e.preventDefault();
-        if (!/^\S+@\S+\.\S+$/.test(waitlistEmail)) {
-            setWaitlistErr("Enter a valid email.");
+        let err = "";
+        if (!waitlistName.trim()) err = "Name is required.";
+        else if (!/^\S+@\S+\.\S+$/.test(waitlistEmail)) err = "Enter a valid email.";
+        else if (!waitRecaptchaToken) err = "Please complete the CAPTCHA.";
+        if (err) {
+            setWaitlistErr(err);
             return;
         }
         try {
             setWaitSubmitting(true);
-            await submitWaitlistEmail(waitlistEmail);
+            await submitWaitlistEmail(waitlistEmail, {
+                name: waitlistName,
+                acceptMarketing: waitlistMarketing ? "yes" : "no",
+                recaptchaToken: waitRecaptchaToken,
+            });
             setSnackSeverity("success");
             setSnackMsg("Thanks! We’ll notify you when we’re accepting new projects.");
             setSnackOpen(true);
+            setWaitlistName("");
             setWaitlistEmail("");
+            setWaitlistMarketing(false);
             setWaitlistErr("");
+            setWaitRecaptchaToken("");
+            if (window.grecaptcha && document.getElementById("waitlist-recaptcha-widget")) {
+                window.grecaptcha.reset();
+            }
         } catch (err) {
             console.error("Waitlist signup failed:", err);
             setSnackSeverity("error");
@@ -201,24 +230,48 @@ export default function Contact() {
                     <Typography variant="body2" sx={{ opacity: 0.85, mb: 2 }}>
                     We’re not taking on new work right now. Leave your email and we’ll reach out when intake reopens.
                     </Typography>
-
                     <Box component="form" noValidate onSubmit={handleWaitlistSubmit}>
-                    <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} alignItems="flex-start">
-                        <TextField
-                        type="email"
-                        label="Email address"
-                        value={waitlistEmail}
-                        onChange={(e) => { setWaitlistEmail(e.target.value); setWaitlistErr(""); }}
-                        error={!!waitlistErr}
-                        helperText={waitlistErr}
-                        required
-                        sx={{ flex: 1, width: { xs: "100%", sm: "auto" } }}
-                        autoComplete="email"
-                        />
-                        <Button type="submit" variant="contained" color="primary" sx={{ whiteSpace: "nowrap" }} disabled={waitSubmitting}>
-                        {waitSubmitting ? "Submitting..." : "Notify Me"}
-                        </Button>
-                    </Stack>
+                        <Stack spacing={1.5}>
+                            <TextField
+                                label="Name"
+                                value={waitlistName}
+                                onChange={(e) => { setWaitlistName(e.target.value); setWaitlistErr(""); }}
+                                required
+                                autoComplete="name"
+                            />
+                            <TextField
+                                type="email"
+                                label="Email address"
+                                value={waitlistEmail}
+                                onChange={(e) => { setWaitlistEmail(e.target.value); setWaitlistErr(""); }}
+                                required
+                                autoComplete="email"
+                            />
+                            <Box>
+                                <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={waitlistMarketing}
+                                        onChange={(e) => setWaitlistMarketing(e.target.checked)}
+                                        style={{ accentColor: "#1976d2" }}
+                                    />
+                                    <Typography variant="body2">
+                                        I agree to receive occasional updates and marketing emails.
+                                    </Typography>
+                                </label>
+                            </Box>
+                            <Box>
+                                <div id="waitlist-recaptcha-widget"></div>
+                                {waitlistErr && (
+                                    <Typography color="error" variant="caption">
+                                        {waitlistErr}
+                                    </Typography>
+                                )}
+                            </Box>
+                            <Button type="submit" variant="contained" color="primary" disabled={waitSubmitting}>
+                                {waitSubmitting ? "Submitting..." : "Notify Me"}
+                            </Button>
+                        </Stack>
                     </Box>
                 </Paper>
             ) : (

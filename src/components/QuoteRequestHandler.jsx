@@ -64,7 +64,7 @@ export async function submitWaitlistEmail(email, extra = {}) {
   try {
     const payload = {
       email,
-      ...extra,
+      ...extra, // includes name, acceptMarketing, recaptchaToken
       _type: "waitlist",
       _meta: {
         ts: new Date().toISOString(),
