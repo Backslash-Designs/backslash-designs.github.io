@@ -16,6 +16,7 @@ import { SERVICES } from "../pages/services/ServicesPage.jsx";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import VideocamIcon from "@mui/icons-material/Videocam";
+import Footer from "./Footer.jsx";
 
 const SECTORS = [
   { key: "broadcast", title: "Live Broadcast & Pro A/V", Icon: VideocamIcon },
@@ -164,7 +165,7 @@ export default function Layout() {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        "--top-offset": `${topOffset}px`, // expose sticky height
+        "--top-offset": `${topOffset}px`,
       }}
     >
       <Box
@@ -181,6 +182,7 @@ export default function Layout() {
       </Box>
       <MobileNavDrawer open={drawerOpen} onClose={closeMobileMenu} topOffset={topOffset} />
       <Outlet />
+      <Footer />
     </Box>
   );
 }
