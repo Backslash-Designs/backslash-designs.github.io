@@ -265,8 +265,8 @@ export function ServicesPage() {
                 )}
 
                 <Box sx={{ pt: 0.5 }}>
-                  <Button variant="contained" size="small" component="a" href={contactHref}>
-                    Get in touch
+                  <Button variant="contained" size="small" component="a" href="/contact">
+                    Request a Quote
                   </Button>
                 </Box>
               </Stack>

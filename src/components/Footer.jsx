@@ -89,19 +89,17 @@ export default function Footer() {
                   </Typography>
 
                   <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                    <Link href="mailto:hello@backslashdesigns.ca" underline="hover">
-                      hello@backslashdesigns.ca
+                    <Link href="mailto:business@backslashdesigns.ca" underline="hover">
+                      business@backslashdesigns.ca
                     </Link>
                     <br />
-                    <Link href="tel:+18075551234" underline="hover">
-                      (807) 555-1234
-                    </Link>
+
                   </Typography>
                   {/* Social Media Links */}
                   <Box sx={{ mt: 1 }}>
                     <Stack direction="row" spacing={2}>
                       <Link
-                        href="https://x.com/backslashdesigns"
+                        href="https://x.com/backslash_dsgn"
                         target="_blank"
                         rel="noopener"
                         aria-label="X"
@@ -111,7 +109,7 @@ export default function Footer() {
                         <XIcon fontSize="medium" />
                       </Link>
                       <Link
-                        href="https://instagram.com/backslashdesigns"
+                        href="https://www.instagram.com/backslashdesigns.ca"
                         target="_blank"
                         rel="noopener"
                         aria-label="Instagram"
@@ -232,7 +230,7 @@ export default function Footer() {
               >
                 <Box>
                   <Typography variant="h6" sx={{ mb: 1 }}>
-                    Thunder Bay
+                    Thunder Bay, ON
                   </Typography>
                   <Box sx={{ borderRadius: 2, overflow: "hidden" }}>
                     <iframe
@@ -249,7 +247,7 @@ export default function Footer() {
 
                 <Box>
                   <Typography variant="h6" sx={{ mb: 1 }}>
-                    Kelowna
+                    Kelowna, BC
                   </Typography>
                   <Box sx={{ borderRadius: 2, overflow: "hidden" }}>
                     <iframe
