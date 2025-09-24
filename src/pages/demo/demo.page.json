@@ -1,0 +1,33 @@
+{
+    "name": "Demo",
+    "path": "/demo",
+    "version": "0.1.0",
+    "lastUpdated": "2025-09-24T00:00:00.000Z",
+    "description": "This page is generated from JSON. We will add generic components later.",
+    "sections": [
+        {
+        "type": "hero",
+        "props": {
+            "title": "JSON-driven Demo",
+            "subtitle": "Built from data, ready for runtime editing later."
+        }
+        },
+        {
+        "type": "text",
+        "props": {
+            "body": "All content here is defined in a JSON file. The renderer is intentionally minimal for now."
+        }
+        },
+        {
+        "type": "list",
+        "props": {
+            "title": "What’s next",
+            "items": [
+            "Add generic, typed components",
+            "Fetch JSON at runtime (CMS, file, or API)",
+            "Version, preview and publish workflow"
+            ]
+        }
+        }
+    ]
+}

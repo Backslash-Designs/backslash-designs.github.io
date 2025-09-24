@@ -10,6 +10,7 @@ import Contact from "./pages/contact/ContactPage.jsx";
 import { ServicesPage } from "./pages/services/ServicesPage.jsx"; 
 import SectorsPage from "./pages/sectors/SectorsPage.jsx";
 import SOSPage from "./pages/sos/SOSPage.jsx";
+import DemoPage from "./pages/demo/DemoPage.jsx";
 
 function shouldShowMaintenance() {
   const envFlag = String(import.meta.env.VITE_MAINTENANCE ?? "0").toLowerCase();
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/sectors" element={<SectorsPage />} />
           <Route path="/sos" element={<SOSPage />} />
+          <Route path="/demo" element={<DemoPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
