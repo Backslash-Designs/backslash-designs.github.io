@@ -11,7 +11,7 @@ import { useTheme } from "@mui/material/styles";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import XIcon from "@mui/icons-material/X"; // If not available, use TwitterIcon as fallback
+import XIcon from "@mui/icons-material/X";
 
 export default function Footer() {
   const theme = useTheme();
@@ -33,270 +33,250 @@ export default function Footer() {
       }}
     >
       <Box sx={{ maxWidth: 1100, mx: "auto" }}>
-        {/* ---- Top row: Contact (left) + Nav grid (right) ---- */}
-        <Stack
-          direction={{ xs: "column", md: "row" }}
-          spacing={{ xs: 3, md: 4 }}
+        {/* === GRID LAYOUT (order matches mockup numbers on mobile) === */}
+        <Box
           sx={{
+            display: "grid",
+            gap: { xs: 3, md: 4 },
+            gridTemplateAreas: {
+              xs: `"contact"
+                   "map_tb"
+                   "map_kel"
+                   "sitemap"
+                   "sectors"
+                   "services"`,
+              md: `"contact sitemap sectors services"
+                   "maps    sitemap sectors services"`,
+            },
+            gridTemplateColumns: {
+              xs: "1fr",
+              md: "minmax(320px, 520px) repeat(3, minmax(180px, 1fr))",
+            },
+            alignItems: "start",
             mb: 2,
-            alignItems: "flex-start",
           }}
         >
-          {/* ---- Grid that matches your mockup ---- */}
-          <Box
-            sx={{
-              mb: 2,
-              display: "grid",
-              // 1st col = left panel; next 3 = the three right columns
-              gridTemplateColumns: {
-                xs: "1fr",
-                md: "minmax(320px, 520px) repeat(3, minmax(180px, 1fr))",
-              },
-              // two rows on desktop: (1) logo+contact vs right columns, (2) maps row
-              gridTemplateRows: { xs: "auto", md: "auto auto" },
-              columnGap: { xs: 0, md: 4 },
-              rowGap: { xs: 3, md: 2 },
-              alignItems: "start",
-            }}
-          >
-            {/* LEFT TOP: logo + contact text side-by-side */}
+          {/* 1. Contact / Brand */}
+          <Box sx={{ gridArea: "contact" }}>
             <Box
               sx={{
-                gridColumn: { xs: "1 / -1", md: "1 / 2" },
-                gridRow: { xs: "auto", md: "1 / 2" },
+                display: "grid",
+                gridTemplateColumns: "auto 1fr",
+                columnGap: 3,
+                alignItems: "center",
               }}
             >
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "auto 1fr",
-                  columnGap: 3,
-                  alignItems: "center",
-                }}
-              >
-                <Box>
-                  <img
-                    src={logoSrc}
-                    alt="Backslash Designs"
-                    style={{ width: 200, height: "auto", display: "block" }}
-                  />
-                </Box>
+              <Box>
+                <img
+                  src={logoSrc}
+                  alt="Backslash Designs"
+                  style={{ width: 200, height: "auto", display: "block", maxWidth: "100%" }}
+                />
+              </Box>
 
-                {/* Contact text */}
-                <Box>
-                  <Typography
-                    variant="h6"
+              <Box>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    mb: 1,
+                    fontWeight: 700,
+                    letterSpacing: "-0.015em",
+                    display: "flex",
+                    alignItems: "baseline",
+                    gap: 0.5,
+                  }}
+                >
+                  <Box component="span" sx={{ fontStyle: "italic" }}>
+                    Backslash
+                  </Box>
+                  <Box
+                    component="span"
                     sx={{
-                      mb: 1,
-                      fontWeight: 700,
-                      letterSpacing: "-0.015em",
-                      display: "flex",
-                      alignItems: "baseline",
-                      gap: 0.5,
+                      fontFamily:
+                        '"Hack", ui-monospace, SFMono-Regular, Menlo, monospace',
+                      fontStyle: "italic",
+                      fontWeight: 400,
+                      ml: 0.5,
                     }}
                   >
-                    <Box
-                      component="span"
-                      sx={{
-                        fontFamily: `"GoBold", system-ui, sans-serif`,
-                        fontStyle: "italic",
-                      }}
-                    >
-                      Backslash
-                    </Box>
-                    <Box
-                      component="span"
-                      sx={{
-                        fontFamily: `"Hack", ui-monospace, SFMono-Regular, Menlo, monospace`,
-                        fontStyle: "italic",
-                        fontWeight: 400,
-                        ml: 0.5,
-                      }}
-                    >
-                      Designs
-                    </Box>
-                  </Typography>
-
-                  <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                    <Link href="mailto:business@backslashdesigns.ca" underline="hover">
-                      business@backslashdesigns.ca
-                    </Link>
-                    <br />
-
-                  </Typography>
-                  {/* Social Media Links */}
-                  <Box sx={{ mt: 1 }}>
-                    <Stack direction="row" spacing={2}>
-                      <Link
-                        href="https://x.com/backslash_dsgn"
-                        target="_blank"
-                        rel="noopener"
-                        aria-label="X"
-                        color="inherit"
-                      >
-                        {/* Use XIcon if available, otherwise TwitterIcon */}
-                        <XIcon fontSize="medium" />
-                      </Link>
-                      <Link
-                        href="https://www.instagram.com/backslashdesigns.ca"
-                        target="_blank"
-                        rel="noopener"
-                        aria-label="Instagram"
-                        color="inherit"
-                      >
-                        <InstagramIcon fontSize="medium" />
-                      </Link>
-                      <Link
-                        href="https://linkedin.com/company/backslashdesigns"
-                        target="_blank"
-                        rel="noopener"
-                        aria-label="LinkedIn"
-                        color="inherit"
-                      >
-                        <LinkedInIcon fontSize="medium" />
-                      </Link>
-                      <Link
-                        href="https://github.com/backslash-designs"
-                        target="_blank"
-                        rel="noopener"
-                        aria-label="GitHub"
-                        color="inherit"
-                      >
-                        <GitHubIcon fontSize="medium" />
-                      </Link>
-                    </Stack>
+                    Designs
                   </Box>
-                </Box>
-              </Box>
-            </Box>
+                </Typography>
 
-            {/* RIGHT: three columns that span both rows */}
-            <Box
-              sx={{
-                gridColumn: { xs: "1 / -1", md: "2 / 5" },
-                gridRow: { xs: "auto", md: "1 / 3" },
-                pr: { md: 1 },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: {
-                    xs: "1fr",
-                    sm: "repeat(2, 1fr)",
-                    md: "repeat(3, 1fr)",
-                  },
-                  columnGap: 4,
-                  rowGap: 2,
-                }}
-              >
-                {/* Site Map */}
-                <Stack spacing={1}>
-                  <Typography variant="h6">Site Map</Typography>
-                  <Link component={RouterLink} to="/" underline="hover">
-                    Home
+                <Typography variant="body1" sx={{ opacity: 0.9 }}>
+                  <Link href="mailto:business@backslashdesigns.ca" underline="hover">
+                    business@backslashdesigns.ca
                   </Link>
-                  <Link component={RouterLink} to="/about" underline="hover">
-                    About
-                  </Link>
-                  <Link component={RouterLink} to="/contact" underline="hover">
-                    Contact
-                  </Link>
-                  <Link component={RouterLink} to="/sos" underline="hover">
-                    SOS RustDesk
-                  </Link>
-                </Stack>
+                </Typography>
 
-                {/* Sectors */}
-                <Stack spacing={1}>
-                  <Typography variant="h6">Sectors</Typography>
-                  <Link component={RouterLink} to="/sectors" underline="hover">
-                    All Sectors
-                  </Link>
-                  {SECTORS.map(({ key, title, href }) => (
+                <Box sx={{ mt: 1 }}>
+                  <Stack direction="row" spacing={2}>
                     <Link
-                      key={key}
-                      component={RouterLink}
-                      to={href || `/sectors#${key}`}
-                      underline="hover"
+                      href="https://x.com/backslash_dsgn"
+                      target="_blank"
+                      rel="noopener"
+                      aria-label="X"
+                      color="inherit"
                     >
-                      {title}
+                      <XIcon fontSize="medium" />
                     </Link>
-                  ))}
-                </Stack>
-
-                {/* Services */}
-                <Stack spacing={1}>
-                  <Typography variant="h6">Services</Typography>
-                  <Link component={RouterLink} to="/services" underline="hover">
-                    All Services
-                  </Link>
-                  {SERVICES.map(({ key, title }) => (
                     <Link
-                      key={key}
-                      component={RouterLink}
-                      to={`/services#${key}`}
-                      underline="hover"
+                      href="https://www.instagram.com/backslashdesigns.ca"
+                      target="_blank"
+                      rel="noopener"
+                      aria-label="Instagram"
+                      color="inherit"
                     >
-                      {title}
+                      <InstagramIcon fontSize="medium" />
                     </Link>
-                  ))}
-                </Stack>
-              </Box>
-            </Box>
-
-            {/* LEFT BOTTOM: two maps side-by-side */}
-            <Box
-              sx={{
-                gridColumn: { xs: "1 / -1", md: "1 / 2" },
-                gridRow: { xs: "auto", md: "2 / 3" },
-                mt: { xs: 0, md: 1 },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" },
-                  gap: 3,
-                }}
-              >
-                <Box>
-                  <Typography variant="h6" sx={{ mb: 1 }}>
-                    Thunder Bay, ON
-                  </Typography>
-                  <Box sx={{ borderRadius: 2, overflow: "hidden" }}>
-                    <iframe
-                      title="Thunder Bay Map"
-                      src="https://www.google.com/maps?q=Thunder+Bay,+ON&output=embed"
-                      width="100%"
-                      height="140"
-                      style={{ border: 0 }}
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    />
-                  </Box>
-                </Box>
-
-                <Box>
-                  <Typography variant="h6" sx={{ mb: 1 }}>
-                    Kelowna, BC
-                  </Typography>
-                  <Box sx={{ borderRadius: 2, overflow: "hidden" }}>
-                    <iframe
-                      title="Kelowna Map"
-                      src="https://www.google.com/maps?q=Kelowna,+BC&output=embed"
-                      width="100%"
-                      height="140"
-                      style={{ border: 0 }}
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    />
-                  </Box>
+                    <Link
+                      href="https://linkedin.com/company/backslashdesigns"
+                      target="_blank"
+                      rel="noopener"
+                      aria-label="LinkedIn"
+                      color="inherit"
+                    >
+                      <LinkedInIcon fontSize="medium" />
+                    </Link>
+                    <Link
+                      href="https://github.com/backslash-designs"
+                      target="_blank"
+                      rel="noopener"
+                      aria-label="GitHub"
+                      color="inherit"
+                    >
+                      <GitHubIcon fontSize="medium" />
+                    </Link>
+                  </Stack>
                 </Box>
               </Box>
             </Box>
           </Box>
-        </Stack>
+
+          {/* Wrapper area for maps on desktop */}
+          <Box
+            sx={{
+              gridArea: { xs: "map_tb", md: "maps" },
+              // On desktop this contains both maps; on mobile the second map is its own area (below)
+            }}
+          >
+            {/* 2. Thunder Bay (always first map) + 3. Kelowna (conditionally here on md+) */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" },
+                gap: 3,
+              }}
+            >
+              {/* Thunder Bay (2) */}
+              <Box sx={{ gridArea: "auto" }}>
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  Thunder Bay, ON
+                </Typography>
+                <Box sx={{ borderRadius: 2, overflow: "hidden" }}>
+                  <iframe
+                    title="Thunder Bay Map"
+                    src="https://www.google.com/maps?q=Thunder+Bay,+ON&output=embed"
+                    width="100%"
+                    height="140"
+                    style={{ border: 0, display: "block" }}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </Box>
+              </Box>
+
+              {/* Kelowna (3) — shown here on ≥sm; on xs it's rendered below in its own grid area to keep strict order */}
+              <Box sx={{ display: { xs: "none", sm: "block" } }}>
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  Kelowna, BC
+                </Typography>
+                <Box sx={{ borderRadius: 2, overflow: "hidden" }}>
+                  <iframe
+                    title="Kelowna Map"
+                    src="https://www.google.com/maps?q=Kelowna,+BC&output=embed"
+                    width="100%"
+                    height="140"
+                    style={{ border: 0, display: "block" }}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+
+          {/* Kelowna map (3) only for xs to preserve exact order 1→6 */}
+          <Box sx={{ gridArea: "map_kel", display: { xs: "block", sm: "none" } }}>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              Kelowna, BC
+            </Typography>
+            <Box sx={{ borderRadius: 2, overflow: "hidden" }}>
+              <iframe
+                title="Kelowna Map (mobile)"
+                src="https://www.google.com/maps?q=Kelowna,+BC&output=embed"
+                width="100%"
+                height="140"
+                style={{ border: 0, display: "block" }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </Box>
+          </Box>
+
+          {/* 4. Site Map */}
+          <Stack spacing={1} sx={{ gridArea: "sitemap" }}>
+            <Typography variant="h6">Site Map</Typography>
+            <Link component={RouterLink} to="/" underline="hover">
+              Home
+            </Link>
+            <Link component={RouterLink} to="/about" underline="hover">
+              About
+            </Link>
+            <Link component={RouterLink} to="/contact" underline="hover">
+              Contact
+            </Link>
+            <Link component={RouterLink} to="/sos" underline="hover">
+              SOS RustDesk
+            </Link>
+          </Stack>
+
+          {/* 5. Sectors */}
+          <Stack spacing={1} sx={{ gridArea: "sectors" }}>
+            <Typography variant="h6">Sectors</Typography>
+            <Link component={RouterLink} to="/sectors" underline="hover">
+              All Sectors
+            </Link>
+            {SECTORS.map(({ key, title, href }) => (
+              <Link
+                key={key}
+                component={RouterLink}
+                to={href || `/sectors#${key}`}
+                underline="hover"
+              >
+                {title}
+              </Link>
+            ))}
+          </Stack>
+
+          {/* 6. Services */}
+          <Stack spacing={1} sx={{ gridArea: "services" }}>
+            <Typography variant="h6">Services</Typography>
+            <Link component={RouterLink} to="/services" underline="hover">
+              All Services
+            </Link>
+            {SERVICES.map(({ key, title }) => (
+              <Link
+                key={key}
+                component={RouterLink}
+                to={`/services#${key}`}
+                underline="hover"
+              >
+                {title}
+              </Link>
+            ))}
+          </Stack>
+        </Box>
 
         <Divider sx={{ mb: 2 }} />
 
