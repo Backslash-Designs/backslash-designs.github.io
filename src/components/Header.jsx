@@ -19,6 +19,7 @@ import { SERVICES } from "../pages/services/ServicesPage.jsx";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import VideocamIcon from "@mui/icons-material/Videocam";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const SECTORS = [
   { key: "broadcast", title: "Live Broadcast & Pro A/V", Icon: VideocamIcon },
@@ -47,12 +48,23 @@ export default function Header({ onOpenMobileMenu }) {
     return (
         <AppBar position="static" color="secondary" enableColorOnDark>
         <Toolbar sx={{ gap: 1 }}>
-            {/* Logo — on desktop go home, on mobile open Drawer */}
+            {/* Mobile hamburger button */}
+            <IconButton
+                color="inherit"
+                onClick={onOpenMobileMenu}
+                size="large"
+                edge="start"
+                aria-label="Open menu"
+                sx={{ display: { xs: "inline-flex", sm: "none" } }}
+            >
+                <MenuIcon />
+            </IconButton>
+
+            {/* Logo — always go home */}
             <Box
-            component={smUp ? RouterLink : "button"}
-            to={smUp ? "/" : undefined}
-            onClick={smUp ? undefined : onOpenMobileMenu}
-            aria-label={smUp ? "Go to home" : "Open menu"}
+            component={RouterLink}
+            to="/"
+            aria-label="Go to home"
             sx={{
                 color: "inherit",
                 textDecoration: "none",
