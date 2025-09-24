@@ -2,12 +2,12 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
 import pageData from "./demo.page.json";
 import HeroSection from "./sections/HeroSection.jsx";
 import TextSection from "./sections/TextSection.jsx";
 import ListSection from "./sections/ListSection.jsx";
+import { Container } from "@mui/material";
+import Columns3Section from "./sections/Columns3Section.jsx"; // new
 
 // Tiny, placeholder renderer. Expand with real generic components later.
 function RenderSection({ section }) {
@@ -21,6 +21,15 @@ function RenderSection({ section }) {
 
         case "list":
             return <ListSection {...props} />;
+
+        // NEW: delegate to Columns3Section component
+        case "columns3":
+            return (
+                <Columns3Section
+                    {...props}
+                    renderSection={(sub) => <RenderSection section={sub} />}
+                />
+            );
 
         default:
             return (
@@ -39,20 +48,20 @@ export default function DemoPage() {
     }, []);
 
     return (
-        <Box component="section" sx={{ py: { xs: 3, sm: 4 } }}>
-        <Stack spacing={2}>
-        {(pageData.sections || []).map((section, i) => {
-            const fullBleed = section.type === "hero" && (section.props?.fullBleed ?? true);
-            if (fullBleed) {
-                return <RenderSection key={i} section={section} />;
-            }
-            return (
-                <Box key={i} sx={{ maxWidth: 1100, mx: "auto", width: "100%", px: { xs: 2, sm: 3 } }}>
-                    <RenderSection section={section} />
-                </Box>
-            );
-        })}
-        </Stack>
+        <Box component="section">
+        <Container className="DemoPage" maxWidth={false} disableGutters>
+            {(pageData.sections || []).map((section, i) => {
+                const fullBleed = section.type === "hero" && (section.props?.fullBleed ?? true);
+                if (fullBleed) {
+                    return <RenderSection key={i} section={section} />;
+                }
+                return (
+                    <Box key={i} sx={{ maxWidth: 1100, mx: "auto", width: "100%", px: { xs: 2, sm: 3 }, py: 2 }}>
+                        <RenderSection section={section} />
+                    </Box>
+                );
+            })}
+        </Container>
         </Box>
     );
 }
