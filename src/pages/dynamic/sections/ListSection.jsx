@@ -1,9 +1,10 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import EditView from "../views/EditView.jsx";
 
-export default function ListSection({ title, items = [] }) {
-  return (
+export default function ListSection({ title, items = [], edit = false  }) {
+  const content = (
     <Box sx={{ width: '100%', boxSizing: 'border-box' }}>
       {title && (
         <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
@@ -19,4 +20,5 @@ export default function ListSection({ title, items = [] }) {
       </Box>
     </Box>
   );
+  return <EditView edit={!!edit}>{content}</EditView>;
 }

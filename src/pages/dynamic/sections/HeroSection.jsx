@@ -1,9 +1,10 @@
 import React from "react";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import EditView from "../views/EditView.jsx";
 
-export default function HeroSection({ title, subtitle }) {
-    return (
+export default function HeroSection({ title, subtitle, edit = false }) {
+    const content = (
         <Paper
             sx={{
                 px: { xs: 2, sm: 3 },
@@ -29,4 +30,5 @@ export default function HeroSection({ title, subtitle }) {
             )}
         </Paper>
     );
+    return <EditView edit={edit}>{content}</EditView>;
 }

@@ -2,7 +2,7 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import pageData from "./demo.page.json";
+import pageData from "./dynamic.page.json";
 import HeroSection from "./sections/HeroSection.jsx";
 import TextSection from "./sections/TextSection.jsx";
 import ListSection from "./sections/ListSection.jsx";
@@ -42,7 +42,7 @@ function RenderSection({ section }) {
     }
 }
 
-export default function DemoPage() {
+export default function DynamicPage() {
     React.useEffect(() => {
         if (pageData?.name) document.title = pageData.name;
     }, []);

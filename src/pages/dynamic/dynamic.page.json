@@ -1,0 +1,79 @@
+{
+    "name": "Dynamic",
+    "path": "/dynamic",
+    "version": "0.1.0",
+    "lastUpdated": "2025-09-24T00:00:00.000Z",
+    "description": "This page is generated from JSON. We will add generic components later.",
+    "sections": [
+        {
+            "type": "hero",
+            "props": {
+                "title": "JSON-driven Demo",
+                "subtitle": "Built from data, ready for runtime editing later.",
+                "edit": true
+            }
+        },
+        {
+            "type": "text",
+            "props": {
+                "body": "All content here is defined in a JSON file. The renderer is intentionally minimal for now.",
+                "edit": true
+            }
+        },
+        {
+            "type": "list",
+            "props": {
+                "title": "What’s next",
+                "items": [
+                    "Add generic, typed components",
+                    "Fetch JSON at runtime (CMS, file, or API)",
+                    "Version, preview and publish workflow"
+                ],
+                "edit": true
+            }
+        },
+        {
+            "type": "columns",
+            "props": {
+                "title": "Three-column Section (JSON-defined)",
+                "gap": 2,
+                "itemSpacing": 1.25,
+                "withCards": true,
+                "edit": true,
+                "columns": [
+                    [
+                        { "type": "text", "props": { "body": "Column 1 — intro text.", "edit": true } },
+                        { "type": "hero", "props": { "title": "JSON-driven Demo", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } }
+                    ],
+                    [
+                        { "type": "text", "props": { "body": "Column 2 — body content.", "edit": true } },
+                        { "type": "list", "props": { "title": "Column 2 tasks", "items": ["Alpha", "Beta"], "edit": true } }
+                    ],
+                    [
+                        { "type": "text", "props": { "body": "Column 3 — notes go here.", "edit": true } },
+                        { "type": "text", "props": { "body": "Any supported section type can be used.", "edit": true } }
+                    ],
+                    [
+                        { "type": "text", "props": { "body": "Column 4 — notes go here.", "edit": true } },
+                        { "type": "text", "props": { "body": "Any supported section type can be used.", "edit": true } }
+                    ],
+                    [
+                        { "type": "text", "props": { "body": "Column 5 — body content.", "edit": true } },
+                        { "type": "list", "props": { "title": "Column 5 tasks", "items": ["Alpha", "Beta"], "edit": true } }
+                    ],
+                    [
+                        { "type": "text", "props": { "body": "Column 6 — notes go here.", "edit": true } },
+                        { "type": "text", "props": { "body": "Any supported section type can be used.", "edit": true } }
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "text",
+            "props": {
+                "body": "This is the end of the demo page. More components and features coming soon!",
+                "edit": true
+            }
+        }
+    ]
+}

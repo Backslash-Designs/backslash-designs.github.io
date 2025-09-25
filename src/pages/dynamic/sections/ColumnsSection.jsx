@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import EditView from "../views/EditView.jsx";
 
 // Fallback minimal renderer if no renderSection prop is provided
 import HeroSection from "./HeroSection.jsx";
@@ -51,6 +52,7 @@ export default function ColumnsSection({
     itemSpacing = 1.25,
     withCards = false,
     renderSection,
+    edit = false,
 }) {
     const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n || 0));
     const requested = Number.isFinite(Number(cols)) && Number(cols) > 0 ? Number(cols) : (Array.isArray(columns) ? columns.length : 0);
@@ -63,9 +65,13 @@ export default function ColumnsSection({
 
     const render =
         renderSection ||
-        ((sub) => (
-            <DefaultRenderer section={sub} />
-        ));
+        ((sub) => {
+            // Pass edit prop to nested sections if possible
+            if (sub && typeof sub === 'object' && sub.type && ['hero','text','list'].includes(sub.type)) {
+                return <DefaultRenderer section={{...sub, props: {...sub.props, edit}}} />;
+            }
+            return <DefaultRenderer section={sub} />;
+        });
 
     const renderItem = (sub, i) =>
         withCards ? (
@@ -77,34 +83,36 @@ export default function ColumnsSection({
         );
 
     return (
-        <Box sx={{ width: '100%', boxSizing: 'border-box' }}>
-            {title && (
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5 }}>
-                    {title}
-                </Typography>
-            )}
-            <Box
-                sx={{
-                    display: "grid",
-                    gap,
-                    gridTemplateColumns: {
-                        xs: "1fr",
-                        sm: `repeat(${smCols}, 1fr)`,
-                        md: `repeat(${colCount}, 1fr)`,
-                    },
-                    alignItems: "start",
-                    width: '100%',
-                    boxSizing: 'border-box',
-                }}
-            >
-                {colsData.map((col, idx) => (
-                    <Stack key={idx} spacing={itemSpacing} sx={{ width: '100%' }}>
-                        {col.map((sub, i) => (
-                            <Box key={i} sx={{ width: '100%' }}>{renderItem(sub, i)}</Box>
-                        ))}
-                    </Stack>
-                ))}
+        <EditView edit={edit}>
+            <Box sx={{ width: '100%', boxSizing: 'border-box' }}>
+                {title && (
+                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5 }}>
+                        {title}
+                    </Typography>
+                )}
+                <Box
+                    sx={{
+                        display: "grid",
+                        gap,
+                        gridTemplateColumns: {
+                            xs: "1fr",
+                            sm: `repeat(${smCols}, 1fr)`,
+                            md: `repeat(${colCount}, 1fr)`,
+                        },
+                        alignItems: "start",
+                        width: '100%',
+                        boxSizing: 'border-box',
+                    }}
+                >
+                    {colsData.map((col, idx) => (
+                        <Stack key={idx} spacing={itemSpacing} sx={{ width: '100%' }}>
+                            {col.map((sub, i) => (
+                                <Box key={i} sx={{ width: '100%' }}>{renderItem(sub, i)}</Box>
+                            ))}
+                        </Stack>
+                    ))}
+                </Box>
             </Box>
-        </Box>
+        </EditView>
     );
 }
