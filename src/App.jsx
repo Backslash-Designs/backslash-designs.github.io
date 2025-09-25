@@ -10,7 +10,8 @@ import Contact from "./pages/contact/ContactPage.jsx";
 import { ServicesPage } from "./pages/services/ServicesPage.jsx"; 
 import SectorsPage from "./pages/sectors/SectorsPage.jsx";
 import SOSPage from "./pages/sos/SOSPage.jsx";
-import DynamicPage from "./pages/dynamic/DynamicPage.jsx";
+import MultiDynamicPage from "./pages/dynamic/MultiDynamicPage.jsx";
+import { getPages } from "./pages/dynamic/pageRegistry.js";
 
 function shouldShowMaintenance() {
   const envFlag = String(import.meta.env.VITE_MAINTENANCE ?? "0").toLowerCase();
@@ -29,6 +30,20 @@ function shouldShowMaintenance() {
 
 export default function App() {
   const maintenance = useMemo(shouldShowMaintenance, []);
+
+  const dynamicPages = useMemo(() => getPages(), []);
+  const dynamicRoutes = useMemo(
+    () =>
+      dynamicPages.map(p => (
+        <Route
+          key={p.path}
+          path={p.path}
+          element={<MultiDynamicPage path={p.path} />}
+        />
+      )),
+    [dynamicPages]
+  );
+
   if (maintenance) return <Construction />;
 
   return (
@@ -42,7 +57,8 @@ export default function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/sectors" element={<SectorsPage />} />
           <Route path="/sos" element={<SOSPage />} />
-          <Route path="/dynamic" element={<DynamicPage />} />
+          {/* Removed explicit /dynamic route; now auto-generated */}
+          {dynamicRoutes}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

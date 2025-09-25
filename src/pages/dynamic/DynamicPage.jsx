@@ -11,7 +11,7 @@ import ColumnsSection from "./sections/ColumnsSection.jsx"; // new
 import ButtonSection from "./sections/ButtonSection.jsx";
 
 // Tiny, placeholder renderer. Expand with real generic components later.
-function RenderSection({ section }) {
+export function RenderSection({ section }) {
     const { type, props = {} } = section || {};
     switch (type) {
         case "hero":
@@ -46,15 +46,17 @@ function RenderSection({ section }) {
     }
 }
 
-export default function DynamicPage() {
+export default function DynamicPage({ data }) {
+    const activeData = data || pageData;
+
     React.useEffect(() => {
-        if (pageData?.name) document.title = pageData.name;
-    }, []);
+        if (activeData?.name) document.title = activeData.name;
+    }, [activeData?.name]);
 
     return (
         <Box component="section" sx={{ width: '100%', boxSizing: 'border-box' }}>
             <Container className="DemoPage" maxWidth={false} disableGutters sx={{ width: '100%', boxSizing: 'border-box', px: 0 }}>
-                {(pageData.sections || []).map((section, i) => {
+                {(activeData.sections || []).map((section, i) => {
                     const fullBleed = section.type === "hero" && (section.props?.fullBleed ?? true);
                     if (fullBleed) {
                         return <RenderSection key={i} section={section} />;

@@ -1,0 +1,111 @@
+{
+  "pages": [
+    {
+      "name": "Dynamic",
+      "path": "/dynamic",
+      "version": "0.1.0",
+      "lastUpdated": "2025-09-24T00:00:00.000Z",
+      "description": "Primary dynamic page.",
+      "sections": [
+        { "type": "hero", "props": { "title": "JSON-driven Demo", "subtitle": "Built from multi-page JSON.", "edit": true } },
+        { "type": "text", "props": { "body": "This instance is sourced from multi.pages.json instead of dynamic.page.json.", "edit": true } },
+        {
+            "type": "columns",
+            "props": {
+                "title": "Three-column Section (JSON-defined)",
+                "gap": 2,
+                "itemSpacing": 1.25,
+                "withCards": true,
+                "edit": true,
+                "columns": [
+                    [
+                        { "type": "hero", "props": { "title": "Dynamic", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
+                        {  "type": "button", "props": { "label": "Dynamic", "to": "/dynamic", "variant": "outlined", "size": "small", "edit": true } }
+                    ],
+                    [
+                        { "type": "hero", "props": { "title": "Dynamic Alt", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
+                        {  "type": "button", "props": { "label": "Dynamic Alt", "to": "/dynamic-alt", "variant": "outlined", "size": "small", "edit": true } }
+                    ],
+                    [
+                        { "type": "hero", "props": { "title": "Dynamic Extra", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
+                        {  "type": "button", "props": { "label": "Dynamic Extra", "to": "/dynamic-extra", "variant": "outlined", "size": "small", "edit": true } }
+                    ]
+                ]
+            }
+        }
+
+      ]
+    },
+    {
+      "name": "Dynamic Alt",
+      "path": "/dynamic-alt",
+      "version": "0.1.0",
+      "lastUpdated": "2025-09-24T00:00:00.000Z",
+      "description": "Alternate sample page.",
+      "sections": [
+        { "type": "hero", "props": { "title": "Alt Page", "subtitle": "Second page from the multi JSON.", "edit": true } },
+        { "type": "text", "props": { "body": "Served through automatic route generation in App.jsx.", "edit": true } },
+        {
+            "type": "columns",
+            "props": {
+                "title": "Three-column Section (JSON-defined)",
+                "gap": 2,
+                "itemSpacing": 1.25,
+                "withCards": true,
+                "edit": true,
+                "columns": [
+                    [
+                        { "type": "hero", "props": { "title": "Dynamic", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
+                        {  "type": "button", "props": { "label": "Dynamic", "to": "/dynamic", "variant": "outlined", "size": "small", "edit": true } }
+                    ],
+                    [
+                        { "type": "hero", "props": { "title": "Dynamic Alt", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
+                        {  "type": "button", "props": { "label": "Dynamic Alt", "to": "/dynamic-alt", "variant": "outlined", "size": "small", "edit": true } }
+                    ],
+                    [
+                        { "type": "hero", "props": { "title": "Dynamic Extra", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
+                        {  "type": "button", "props": { "label": "Dynamic Extra", "to": "/dynamic-extra", "variant": "outlined", "size": "small", "edit": true } }
+                    ]
+                ]
+            }
+        }
+      ]
+    },
+    {
+        "name": "Dynamic Extra",
+        "path": "/dynamic-extra",
+        "version": "0.1.0",
+        "lastUpdated": "2025-09-24T00:00:00.000Z",
+        "description": "Extra sample page.",
+        "sections": [
+            { "type": "hero", "props": { "title": "Extra Page", "subtitle": "Third page from the multi JSON.", "edit": true } },
+            { "type": "text", "props": { "body": "Also served through automatic route generation in App.jsx.", "edit": true } },
+            {
+            "type": "columns",
+            "props": {
+                "title": "Three-column Section (JSON-defined)",
+                "gap": 2,
+                "itemSpacing": 1.25,
+                "withCards": true,
+                "edit": true,
+                "columns": [
+                    [
+                        { "type": "hero", "props": { "title": "Dynamic", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
+                        {  "type": "button", "props": { "label": "Dynamic", "to": "/dynamic", "variant": "outlined", "size": "small", "edit": true } }
+                    ],
+                    [
+                        { "type": "hero", "props": { "title": "Dynamic Alt", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
+                        {  "type": "button", "props": { "label": "Dynamic Alt", "to": "/dynamic-alt", "variant": "outlined", "size": "small", "edit": true } }
+                    ],
+                    [
+                        { "type": "hero", "props": { "title": "Dynamic Extra", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
+                        {  "type": "button", "props": { "label": "Dynamic Extra", "to": "/dynamic-extra", "variant": "outlined", "size": "small", "edit": true } }
+                    ]
+                ]
+            }
+        }
+
+        ]
+    }
+  ]
+}
