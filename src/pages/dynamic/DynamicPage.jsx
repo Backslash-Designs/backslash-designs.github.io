@@ -8,6 +8,7 @@ import TextSection from "./sections/TextSection.jsx";
 import ListSection from "./sections/ListSection.jsx";
 import { Container } from "@mui/material";
 import ColumnsSection from "./sections/ColumnsSection.jsx"; // new
+import ButtonSection from "./sections/ButtonSection.jsx";
 
 // Tiny, placeholder renderer. Expand with real generic components later.
 function RenderSection({ section }) {
@@ -21,6 +22,9 @@ function RenderSection({ section }) {
 
         case "list":
             return <ListSection {...props} />;
+
+        case "button":
+            return <ButtonSection {...props} />;
 
 
         case "columns":

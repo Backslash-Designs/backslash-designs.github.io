@@ -47,7 +47,8 @@
                     ],
                     [
                         { "type": "text", "props": { "body": "Column 2 — body content.", "edit": true } },
-                        { "type": "list", "props": { "title": "Column 2 tasks", "items": ["Alpha", "Beta"], "edit": true } }
+                        { "type": "list", "props": { "title": "Column 2 tasks", "items": ["Alpha", "Beta"], "edit": true } },
+                        { "type": "button", "props": { "label": "Go Home", "to": "/", "variant": "outlined", "size": "small", "edit": true } }
                     ],
                     [
                         { "type": "text", "props": { "body": "Column 3 — notes go here.", "edit": true } },

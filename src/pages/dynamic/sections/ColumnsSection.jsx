@@ -9,6 +9,7 @@ import EditView from "../views/EditView.jsx";
 import HeroSection from "./HeroSection.jsx";
 import TextSection from "./TextSection.jsx";
 import ListSection from "./ListSection.jsx";
+import ButtonSection from "./ButtonSection.jsx";
 
 function DefaultRenderer({ section }) {
     const { type, props = {} } = section || {};
@@ -19,6 +20,8 @@ function DefaultRenderer({ section }) {
             return <TextSection {...props} />;
         case "list":
             return <ListSection {...props} />;
+        case "button":
+            return <ButtonSection {...props} />;
         default:
             return (
                 <Paper variant="outlined" sx={{ p: 2 }}>
@@ -73,14 +76,12 @@ export default function ColumnsSection({
             return <DefaultRenderer section={sub} />;
         });
 
-    const renderItem = (sub, i) =>
-        withCards ? (
-            <Paper key={i} variant="outlined" sx={{ p: 2 }}>
-                {render(sub)}
-            </Paper>
-        ) : (
-            <Box key={i}>{render(sub)}</Box>
-        );
+    // Removed per-item card wrapping; now only columns get wrapped when withCards is true
+    const renderItem = (sub, i) => (
+        <Box key={i} sx={{ width: '100%' }}>
+            {render(sub)}
+        </Box>
+    );
 
     return (
         <EditView edit={edit}>
@@ -104,13 +105,26 @@ export default function ColumnsSection({
                         boxSizing: 'border-box',
                     }}
                 >
-                    {colsData.map((col, idx) => (
-                        <Stack key={idx} spacing={itemSpacing} sx={{ width: '100%' }}>
-                            {col.map((sub, i) => (
-                                <Box key={i} sx={{ width: '100%' }}>{renderItem(sub, i)}</Box>
-                            ))}
-                        </Stack>
-                    ))}
+                    {colsData.map((col, idx) => {
+                        const content = (
+                            <Stack spacing={itemSpacing} sx={{ width: '100%' }}>
+                                {col.map(renderItem)}
+                            </Stack>
+                        );
+                        return withCards ? (
+                            <Paper
+                                key={idx}
+                                variant="outlined"
+                                sx={{ p: 2, width: '100%', boxSizing: 'border-box' }}
+                            >
+                                {content}
+                            </Paper>
+                        ) : (
+                            <Box key={idx} sx={{ width: '100%' }}>
+                                {content}
+                            </Box>
+                        );
+                    })}
                 </Box>
             </Box>
         </EditView>
