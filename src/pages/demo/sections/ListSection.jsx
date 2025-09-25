@@ -4,9 +4,9 @@ import Typography from "@mui/material/Typography";
 
 export default function ListSection({ title, items = [] }) {
   return (
-    <Box>
+    <Box sx={{ width: '100%', boxSizing: 'border-box' }}>
       {title && (
-        <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+        <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
           {title}
         </Typography>
       )}

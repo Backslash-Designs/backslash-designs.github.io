@@ -13,19 +13,19 @@ function DefaultRenderer({ section }) {
     const { type, props = {} } = section || {};
     switch (type) {
         case "hero":
-        return <HeroSection {...props} />;
+            return <HeroSection {...props} />;
         case "text":
-        return <TextSection {...props} />;
+            return <TextSection {...props} />;
         case "list":
-        return <ListSection {...props} />;
+            return <ListSection {...props} />;
         default:
-        return (
-            <Paper variant="outlined" sx={{ p: 2 }}>
-            <Typography variant="body2" sx={{ opacity: 0.7 }}>
-                Unknown section type: {String(type)}
-            </Typography>
-            </Paper>
-        );
+            return (
+                <Paper variant="outlined" sx={{ p: 2 }}>
+                    <Typography variant="body2" sx={{ opacity: 0.7 }}>
+                        Unknown section type: {String(type)}
+                    </Typography>
+                </Paper>
+            );
     }
 }
 
@@ -41,7 +41,7 @@ function DefaultRenderer({ section }) {
  * - withCards?: boolean      // wrap each nested section in Paper
  * - renderSection?: (section) => ReactNode // optional custom renderer
  */
-export default function Columns3Section({
+export default function ColumnsSection({
     title,
     columns = [],
     cols,
@@ -77,7 +77,7 @@ export default function Columns3Section({
         );
 
     return (
-        <Box>
+        <Box sx={{ width: '100%', boxSizing: 'border-box' }}>
             {title && (
                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5 }}>
                     {title}
@@ -93,11 +93,15 @@ export default function Columns3Section({
                         md: `repeat(${colCount}, 1fr)`,
                     },
                     alignItems: "start",
+                    width: '100%',
+                    boxSizing: 'border-box',
                 }}
             >
                 {colsData.map((col, idx) => (
-                    <Stack key={idx} spacing={itemSpacing}>
-                        {col.map(renderItem)}
+                    <Stack key={idx} spacing={itemSpacing} sx={{ width: '100%' }}>
+                        {col.map((sub, i) => (
+                            <Box key={i} sx={{ width: '100%' }}>{renderItem(sub, i)}</Box>
+                        ))}
                     </Stack>
                 ))}
             </Box>

@@ -30,16 +30,16 @@
             }
         },
         {
-            "type": "columns3",
+            "type": "columns",
             "props": {
                 "title": "Three-column Section (JSON-defined)",
                 "gap": 2,
                 "itemSpacing": 1.25,
-                "withCards": true,
+                "withCards": false,
                 "columns": [
                     [
-                        { "type": "hero", "props": { "body": "Column 1 — intro text." } },
-                        { "type": "list", "props": { "title": "JSON-driven Demo", "subtitle": "Built from data, ready for runtime editing later." } }
+                        { "type": "text", "props": { "body": "Column 1 — intro text." } },
+                        { "type": "hero", "props": { "title": "JSON-driven Demo", "subtitle": "Built from data, ready for runtime editing later." } }
                     ],
                     [
                         { "type": "text", "props": { "body": "Column 2 — body content." } },
@@ -47,74 +47,6 @@
                     ],
                     [
                         { "type": "text", "props": { "body": "Column 3 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 4 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 5 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 6 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 7 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 8 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 9 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 10 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 11 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 12 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 13 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 14 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 15 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 16 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 17 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 18 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 19 — notes go here." } },
-                        { "type": "text", "props": { "body": "Any supported section type can be used." } }
-                    ],
-                    [
-                        { "type": "text", "props": { "body": "Column 20 — notes go here." } },
                         { "type": "text", "props": { "body": "Any supported section type can be used." } }
                     ]
 

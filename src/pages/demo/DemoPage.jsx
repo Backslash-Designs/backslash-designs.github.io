@@ -7,7 +7,7 @@ import HeroSection from "./sections/HeroSection.jsx";
 import TextSection from "./sections/TextSection.jsx";
 import ListSection from "./sections/ListSection.jsx";
 import { Container } from "@mui/material";
-import Columns3Section from "./sections/Columns3Section.jsx"; // new
+import ColumnsSection from "./sections/ColumnsSection.jsx"; // new
 
 // Tiny, placeholder renderer. Expand with real generic components later.
 function RenderSection({ section }) {
@@ -22,10 +22,10 @@ function RenderSection({ section }) {
         case "list":
             return <ListSection {...props} />;
 
-        // NEW: delegate to Columns3Section component
-        case "columns3":
+
+        case "columns":
             return (
-                <Columns3Section
+                <ColumnsSection
                     {...props}
                     renderSection={(sub) => <RenderSection section={sub} />}
                 />
@@ -48,20 +48,20 @@ export default function DemoPage() {
     }, []);
 
     return (
-        <Box component="section">
-        <Container className="DemoPage" maxWidth={false} disableGutters>
-            {(pageData.sections || []).map((section, i) => {
-                const fullBleed = section.type === "hero" && (section.props?.fullBleed ?? true);
-                if (fullBleed) {
-                    return <RenderSection key={i} section={section} />;
-                }
-                return (
-                    <Box key={i} sx={{ maxWidth: 1100, mx: "auto", width: "100%", px: { xs: 2, sm: 3 }, py: 2 }}>
-                        <RenderSection section={section} />
-                    </Box>
-                );
-            })}
-        </Container>
+        <Box component="section" sx={{ width: '100%', boxSizing: 'border-box' }}>
+            <Container className="DemoPage" maxWidth={false} disableGutters sx={{ width: '100%', boxSizing: 'border-box', px: 0 }}>
+                {(pageData.sections || []).map((section, i) => {
+                    const fullBleed = section.type === "hero" && (section.props?.fullBleed ?? true);
+                    if (fullBleed) {
+                        return <RenderSection key={i} section={section} />;
+                    }
+                    return (
+                        <Box key={i} sx={{ width: '100%', boxSizing: 'border-box', px: { xs: 2, sm: 3 }, py: 2 }}>
+                            <RenderSection section={section} />
+                        </Box>
+                    );
+                })}
+            </Container>
         </Box>
     );
 }

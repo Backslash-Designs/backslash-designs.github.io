@@ -7,14 +7,16 @@ export default function HeroSection({ title, subtitle }) {
         <Paper
             sx={{
                 px: { xs: 2, sm: 3 },
-                py: 0,
+                py: 4,
                 borderRadius: 0,
-                height: "50vh",
+                width: '100%',
+                minHeight: 180,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 textAlign: "center",
+                boxSizing: 'border-box',
             }}
         >
             <Typography variant="h4" sx={{ fontWeight: 800 }}>
