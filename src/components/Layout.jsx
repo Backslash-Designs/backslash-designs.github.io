@@ -159,6 +159,25 @@ export default function Layout() {
   const openMobileMenu = () => setDrawerOpen(true);
   const closeMobileMenu = () => setDrawerOpen(false);
 
+  // NEW: global keyboard toggle for Edit Mode (Ctrl+Shift+E)
+  React.useEffect(() => {
+    const onKeyDown = (e) => {
+      const key = e.key?.toLowerCase?.() || "";
+      if (e.ctrlKey && e.shiftKey && key === "e") {
+        e.preventDefault();
+        const enabled = localStorage.getItem("editMode") === "1";
+        if (enabled) {
+          localStorage.removeItem("editMode");
+        } else {
+          localStorage.setItem("editMode", "1");
+        }
+        window.dispatchEvent(new Event("editmode-change"));
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   return (
     <Box
       sx={{

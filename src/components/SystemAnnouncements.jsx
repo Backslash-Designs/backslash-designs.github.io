@@ -8,9 +8,27 @@ import AnnouncementBar from "./AnnouncementBar";
  * Add new ones by pushing into the `announcements` array.
  */
 export default function SystemAnnouncements() {
+    // NEW: track edit mode with state so banner hides immediately
+    const [editMode, setEditMode] = React.useState(
+        () => typeof window !== "undefined" && localStorage.getItem("editMode") === "1"
+    );
+
+    React.useEffect(() => {
+        const read = () =>
+            setEditMode(typeof window !== "undefined" && localStorage.getItem("editMode") === "1");
+        const onStorage = (e) => { if (!e || e.key === "editMode") read(); };
+        const onCustom = () => read();
+        window.addEventListener("storage", onStorage);
+        window.addEventListener("editmode-change", onCustom);
+        return () => {
+            window.removeEventListener("storage", onStorage);
+            window.removeEventListener("editmode-change", onCustom);
+        };
+    }, []);
+
     const announcements = [];
 
-  // Preview Mode banner (uses theme.palette.warning)
+    // Preview Mode banner (uses theme.palette.warning)
     const preview =
         typeof window !== "undefined" && localStorage.getItem("previewMode") === "1";
     if (preview) {
@@ -39,13 +57,28 @@ export default function SystemAnnouncements() {
         });
     }
 
-    //Example: planned maintenance (dismiss persists)
-    // announcements.push({
-    //     key: "planned-maintenance-2025-09-30",
-    //     severity: "info",
-    //     message: "Planned maintenance Sept 30, 9–10 PM ET.",
-    //     storageKey: "maint-2025-09-30"
-    // });
+    // Edit Mode banner
+    if (editMode) {
+        announcements.push({
+            key: "edit-mode",
+            severity: "info",
+            message: "Edit Mode — inline edit borders are visible.",
+            action: (
+                <Button
+                    variant="outlined"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                        localStorage.removeItem("editMode");
+                        window.dispatchEvent(new Event("editmode-change"));
+                        setEditMode(false); // hide immediately without refresh
+                    }}
+                >
+                    Exit
+                </Button>
+            ),
+        });
+    }
 
     if (!announcements.length) return null;
 

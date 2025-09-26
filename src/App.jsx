@@ -23,6 +23,22 @@ function shouldShowMaintenance() {
       url.searchParams.delete("preview");
       window.history.replaceState({}, "", url.toString());
     }
+
+    // NEW: handle ?edit=1 / ?edit=0
+    const editParam = url.searchParams.get("edit");
+    if (editParam !== null) {
+      const onValues = ["1", "true", "yes", "on"];
+      const enable = onValues.includes(editParam.toLowerCase());
+      if (enable) {
+        localStorage.setItem("editMode", "1");
+      } else {
+        localStorage.removeItem("editMode");
+      }
+      // notify listeners (same-tab)
+      window.dispatchEvent(new Event("editmode-change"));
+      url.searchParams.delete("edit");
+      window.history.replaceState({}, "", url.toString());
+    }
   } catch {}
   const preview = typeof window !== "undefined" && localStorage.getItem("previewMode") === "1";
   return on && !preview;
