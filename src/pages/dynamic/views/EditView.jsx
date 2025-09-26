@@ -36,7 +36,7 @@ function useGlobalEditMode() {
 export default function EditView({ /* edit (ignored) */ children }) {
   const editMode = useGlobalEditMode();
   return editMode ? (
-    <Box sx={{ border: "2px dotted #888", borderRadius: 1, p: 2, width: "100%" }}>
+    <Box sx={{ border: "2px dashed #888", borderRadius: 1, p: 2, width: "100%" }}>
       {children}
     </Box>
   ) : (

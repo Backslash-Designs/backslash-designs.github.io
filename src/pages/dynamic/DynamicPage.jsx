@@ -9,6 +9,8 @@ import ListSection from "./sections/ListSection.jsx";
 import { Container } from "@mui/material";
 import ColumnsSection from "./sections/ColumnsSection.jsx"; // new
 import ButtonSection from "./sections/ButtonSection.jsx";
+import SectionContainer from "./sections/SectionContainer.jsx"; // + add
+import { useLocation } from "react-router-dom"; // + add
 
 // Tiny, placeholder renderer. Expand with real generic components later.
 export function RenderSection({ section }) {
@@ -26,6 +28,13 @@ export function RenderSection({ section }) {
         case "button":
             return <ButtonSection {...props} />;
 
+        case "section": // + add
+            return (
+                <SectionContainer
+                    {...props}
+                    renderSection={(sub) => <RenderSection section={sub} />}
+                />
+            );
 
         case "columns":
             return (
@@ -52,6 +61,21 @@ export default function DynamicPage({ data }) {
     React.useEffect(() => {
         if (activeData?.name) document.title = activeData.name;
     }, [activeData?.name]);
+
+    // + hash scrolling (supports /path#AnchorId)
+    const location = useLocation();
+    React.useEffect(() => {
+        const id = location.hash?.slice(1);
+        if (!id) return;
+        const scroll = () => {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+        };
+        // try now and again shortly for late renders
+        scroll();
+        const t = setTimeout(scroll, 50);
+        return () => clearTimeout(t);
+    }, [location.hash]);
 
     return (
         <Box component="section" sx={{ width: '100%', boxSizing: 'border-box' }}>

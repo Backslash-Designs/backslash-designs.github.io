@@ -21,6 +21,18 @@
             }
         },
         {
+            "type": "section",
+            "props": {
+                "id": "Test",
+                "title": "Test",
+                "subtitle": "Anchor container example (works with #Test).",
+                
+                "sections": [
+                    { "type": "text", "props": { "body": "Nested content rendered inside the Test section.", "edit": true } }
+                ]
+            }
+        },
+        {
             "type": "list",
             "props": {
                 "title": "What’s next",
@@ -39,7 +51,7 @@
                 "gap": 2,
                 "itemSpacing": 1.25,
                 "withCards": true,
-                "edit": true,
+                
                 "columns": [
                     [
                         { "type": "text", "props": { "body": "Column 1 — intro text.", "edit": true } },

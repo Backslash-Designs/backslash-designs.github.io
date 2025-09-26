@@ -1,111 +1,253 @@
 {
   "pages": [
     {
-      "name": "Dynamic",
-      "path": "/dynamic",
+      "name": "Home",
+      "path": "/test/home",
       "version": "0.1.0",
-      "lastUpdated": "2025-09-24T00:00:00.000Z",
-      "description": "Primary dynamic page.",
+      "lastUpdated": "2025-09-26T00:00:00.000Z",
+      "description": "Site homepage rendered from JSON.",
       "sections": [
-        { "type": "hero", "props": { "title": "JSON-driven Demo", "subtitle": "Built from multi-page JSON.", "edit": true } },
-        { "type": "text", "props": { "body": "This instance is sourced from multi.pages.json instead of dynamic.page.json.", "edit": true } },
+        { "type": "hero", "props": { "title": "Backslash Designs", "subtitle": "Scalable | Reliable | Secure", "edit": true } },
         {
-            "type": "columns",
-            "props": {
-                "title": "Three-column Section (JSON-defined)",
-                "gap": 2,
-                "itemSpacing": 1.25,
-                "withCards": true,
-                "edit": true,
-                "columns": [
+          "type": "section",
+          "props": {
+            "id": "Sectors",
+            "title": "Sectors",
+            "sections": [
+              {
+                "type": "columns",
+                "props": {
+                  "gap": 2,
+                  "itemSpacing": 1.25,
+                  "withCards": true,
+                  "columns": [
                     [
-                        { "type": "hero", "props": { "title": "Dynamic", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
-                        {  "type": "button", "props": { "label": "Dynamic", "to": "/dynamic", "variant": "outlined", "size": "small", "edit": true } }
+                      { "type": "text", "props": { "body": "Modern, lightweight sites and apps—this site is an example.", "edit": true } },
+                      { "type":"button", "props": { "label": "Learn More", "to": "/test/about", "size": "small", "edit": true } }
                     ],
                     [
-                        { "type": "hero", "props": { "title": "Dynamic Alt", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
-                        {  "type": "button", "props": { "label": "Dynamic Alt", "to": "/dynamic-alt", "variant": "outlined", "size": "small", "edit": true } }
+                      { "type": "text", "props": { "body": "Robust, secure APIs and services to power your applications.", "edit": true } },
+                      { "type":"button", "props": { "label": "Our Services", "to": "/test/services", "size": "small", "edit": true } }
                     ],
                     [
-                        { "type": "hero", "props": { "title": "Dynamic Extra", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
-                        {  "type": "button", "props": { "label": "Dynamic Extra", "to": "/dynamic-extra", "variant": "outlined", "size": "small", "edit": true } }
+                      { "type": "text", "props": { "body": "Dynamic, data-driven pages that are easy to update and maintain.", "edit": true } },
+                      { "type":"button", "props": { "label": "See the Demo", "to": "/test/about#Team", "size": "small", "edit": true } }
                     ]
-                ]
-            }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "section",
+          "props": {
+            "id": "Features",
+            "title": "Features",
+            "subtitle": "What this demo includes",
+            
+            "sections": [
+              { "type": "text", "props": { "body": "- Multiple routes defined in JSON\n- Anchorable container sections\n- Columns with cards and CTAs\n- Consistent in-place editing flags", "edit": true } }
+            ]
+          }
+        },
+        {
+          "type": "columns",
+          "props": {
+            "title": "Quick Links",
+            "gap": 2,
+            "itemSpacing": 1.25,
+            "withCards": true,
+            "columns": [
+              [
+                { "type": "hero", "props": { "title": "Dynamic Pages", "subtitle": "Browse the dynamic demo pages.", "edit": true } },
+                { "type": "button", "props": { "label": "Dynamic", "to": "/test/dynamic", "variant": "outlined", "size": "small", "edit": true } }
+              ],
+              [
+                { "type": "hero", "props": { "title": "Services", "subtitle": "See what we offer.", "edit": true } },
+                { "type": "button", "props": { "label": "Services", "to": "/test/services", "variant": "outlined", "size": "small", "edit": true } }
+              ],
+              [
+                { "type": "hero", "props": { "title": "About", "subtitle": "Learn more about us.", "edit": true } },
+                { "type": "button", "props": { "label": "About", "to": "/test/about", "variant": "outlined", "size": "small", "edit": true } }
+              ]
+            ]
+          }
+        },
+        {
+          "type": "section",
+          "props": {
+            "id": "GetStarted",
+            "title": "Get Started",
+            "subtitle": "Jump into the examples below.",
+            "sections": [
+              { "type": "text", "props": { "body": "Use the buttons above to navigate. Each page demonstrates different section types.", "edit": true } },
+              { "type": "button", "props": { "label": "Learn About Us", "to": "/about#Team", "variant": "outlined", "size": "small", "edit": true } }
+            ]
+          }
         }
-
       ]
     },
+
     {
-      "name": "Dynamic Alt",
-      "path": "/dynamic-alt",
+      "name": "Services",
+      "path": "/test/services",
       "version": "0.1.0",
-      "lastUpdated": "2025-09-24T00:00:00.000Z",
-      "description": "Alternate sample page.",
+      "lastUpdated": "2025-09-26T00:00:00.000Z",
+      "description": "Services we provide.",
       "sections": [
-        { "type": "hero", "props": { "title": "Alt Page", "subtitle": "Second page from the multi JSON.", "edit": true } },
-        { "type": "text", "props": { "body": "Served through automatic route generation in App.jsx.", "edit": true } },
+        { "type": "hero", "props": { "title": "Services", "subtitle": "What we can do for you.", "edit": true } },
+        { "type": "text", "props": { "body": "Explore a few sample service offerings laid out using sections and columns.", "edit": true } },
         {
-            "type": "columns",
-            "props": {
-                "title": "Three-column Section (JSON-defined)",
-                "gap": 2,
-                "itemSpacing": 1.25,
-                "withCards": true,
-                "edit": true,
-                "columns": [
+          "type": "section",
+          "props": {
+            "id": "Offerings",
+            "title": "Offerings",
+            "subtitle": "Three example services.",
+            "sections": [
+              {
+                "type": "columns",
+                "props": {
+                  "title": "Service Cards",
+                  "gap": 2,
+                  "itemSpacing": 1.25,
+                  "withCards": true,
+                  "columns": [
                     [
-                        { "type": "hero", "props": { "title": "Dynamic", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
-                        {  "type": "button", "props": { "label": "Dynamic", "to": "/dynamic", "variant": "outlined", "size": "small", "edit": true } }
+                      { "type": "hero", "props": { "title": "Design", "subtitle": "UI/UX, branding, and design systems.", "edit": true } },
+                      { "type": "button", "props": { "label": "Request Design", "to": "/test/services#Offerings", "variant": "outlined", "size": "small", "edit": true } }
                     ],
                     [
-                        { "type": "hero", "props": { "title": "Dynamic Alt", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
-                        {  "type": "button", "props": { "label": "Dynamic Alt", "to": "/dynamic-alt", "variant": "outlined", "size": "small", "edit": true } }
+                      { "type": "hero", "props": { "title": "Development", "subtitle": "Web apps, static sites, and APIs.", "edit": true } },
+                      { "type": "button", "props": { "label": "Request Dev", "to": "/test/services#Offerings", "variant": "outlined", "size": "small", "edit": true } }
                     ],
                     [
-                        { "type": "hero", "props": { "title": "Dynamic Extra", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
-                        {  "type": "button", "props": { "label": "Dynamic Extra", "to": "/dynamic-extra", "variant": "outlined", "size": "small", "edit": true } }
+                      { "type": "hero", "props": { "title": "Consulting", "subtitle": "Architecture, audits, and guidance.", "edit": true } },
+                      { "type": "button", "props": { "label": "Request Consult", "to": "/test/services#Offerings", "variant": "outlined", "size": "small", "edit": true } }
                     ]
-                ]
-            }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "section",
+          "props": {
+            "id": "WhyUs",
+            "title": "Why Choose Us",
+            "subtitle": "What makes this stack useful.",
+            
+            "sections": [
+              { "type": "text", "props": { "body": "- JSON-driven layout for rapid iteration\n- Reusable components mapped by type\n- Easy to extend with new section types later", "edit": true } }
+            ]
+          }
+        },
+        {
+          "type": "columns",
+          "props": {
+            "title": "Navigate",
+            "gap": 2,
+            "itemSpacing": 1.25,
+            "withCards": true,
+            "columns": [
+              [
+                { "type": "hero", "props": { "title": "Home", "subtitle": "Back to the start.", "edit": true } },
+                { "type": "button", "props": { "label": "Home", "to": "/test/home", "variant": "outlined", "size": "small", "edit": true } }
+              ],
+              [
+                { "type": "hero", "props": { "title": "Dynamic Alt", "subtitle": "Another dynamic page.", "edit": true } },
+                { "type": "button", "props": { "label": "Dynamic Alt", "to": "/test/about", "variant": "outlined", "size": "small", "edit": true } }
+              ],
+              [
+                { "type": "hero", "props": { "title": "About", "subtitle": "Learn more.", "edit": true } },
+                { "type": "button", "props": { "label": "About", "to": "/test/about", "variant": "outlined", "size": "small", "edit": true } }
+              ]
+            ]
+          }
         }
       ]
     },
-    {
-        "name": "Dynamic Extra",
-        "path": "/dynamic-extra",
-        "version": "0.1.0",
-        "lastUpdated": "2025-09-24T00:00:00.000Z",
-        "description": "Extra sample page.",
-        "sections": [
-            { "type": "hero", "props": { "title": "Extra Page", "subtitle": "Third page from the multi JSON.", "edit": true } },
-            { "type": "text", "props": { "body": "Also served through automatic route generation in App.jsx.", "edit": true } },
-            {
-            "type": "columns",
-            "props": {
-                "title": "Three-column Section (JSON-defined)",
-                "gap": 2,
-                "itemSpacing": 1.25,
-                "withCards": true,
-                "edit": true,
-                "columns": [
-                    [
-                        { "type": "hero", "props": { "title": "Dynamic", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
-                        {  "type": "button", "props": { "label": "Dynamic", "to": "/dynamic", "variant": "outlined", "size": "small", "edit": true } }
-                    ],
-                    [
-                        { "type": "hero", "props": { "title": "Dynamic Alt", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
-                        {  "type": "button", "props": { "label": "Dynamic Alt", "to": "/dynamic-alt", "variant": "outlined", "size": "small", "edit": true } }
-                    ],
-                    [
-                        { "type": "hero", "props": { "title": "Dynamic Extra", "subtitle": "Built from data, ready for runtime editing later.", "edit": true } },
-                        {  "type": "button", "props": { "label": "Dynamic Extra", "to": "/dynamic-extra", "variant": "outlined", "size": "small", "edit": true } }
-                    ]
-                ]
-            }
-        }
 
-        ]
+    {
+      "name": "About",
+      "path": "/test/about",
+      "version": "0.1.0",
+      "lastUpdated": "2025-09-26T00:00:00.000Z",
+      "description": "About this project.",
+      "sections": [
+        { "type": "hero", "props": { "title": "About", "subtitle": "A bit of background.", "edit": true } },
+        { "type": "text", "props": { "body": "This demo shows how pages, sections, and content can be configured via JSON to power a small site.", "edit": true } },
+        {
+          "type": "section",
+          "props": {
+            "id": "Mission",
+            "title": "Mission",
+            "subtitle": "Why this exists.",
+            
+            "sections": [
+              { "type": "text", "props": { "body": "Enable non-developers to iterate on content structure rapidly, while developers maintain a clean component library.", "edit": true } }
+            ]
+          }
+        },
+        {
+          "type": "section",
+          "props": {
+            "id": "Team",
+            "title": "Team",
+            "subtitle": "People behind the project.",
+            
+            "sections": [
+              {
+                "type": "columns",
+                "props": {
+                  "title": "Team Cards",
+                  "gap": 2,
+                  "itemSpacing": 1.25,
+                  "withCards": true,
+                  "columns": [
+                    [
+                      { "type": "hero", "props": { "title": "Dev", "subtitle": "Builds components.", "edit": true } },
+                      { "type": "text", "props": { "body": "Focus: React, routing, and dynamic rendering.", "edit": true } }
+                    ],
+                    [
+                      { "type": "hero", "props": { "title": "Designer", "subtitle": "Crafts experience.", "edit": true } },
+                      { "type": "text", "props": { "body": "Focus: UX, accessibility, and aesthetics.", "edit": true } }
+                    ],
+                    [
+                      { "type": "hero", "props": { "title": "Editor", "subtitle": "Maintains content.", "edit": true } },
+                      { "type": "text", "props": { "body": "Focus: Structure, clarity, and accuracy.", "edit": true } }
+                    ]
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "columns",
+          "props": {
+            "title": "More",
+            "gap": 2,
+            "itemSpacing": 1.25,
+            "withCards": true,
+            "columns": [
+              [
+                { "type": "hero", "props": { "title": "Home", "subtitle": "Go back home.", "edit": true } },
+                { "type": "button", "props": { "label": "Home", "to": "/test/home", "variant": "outlined", "size": "small", "edit": true } }
+              ],
+              [
+                { "type": "hero", "props": { "title": "Services", "subtitle": "See services.", "edit": true } },
+                { "type": "button", "props": { "label": "Services", "to": "/test/services", "variant": "outlined", "size": "small", "edit": true } }
+              ],
+              [
+                { "type": "hero", "props": { "title": "Dynamic", "subtitle": "Demo page.", "edit": true } },
+                { "type": "button", "props": { "label": "Dynamic", "to": "/test/dynamic", "variant": "outlined", "size": "small", "edit": true } }
+              ]
+            ]
+          }
+        }
+      ]
     }
   ]
 }

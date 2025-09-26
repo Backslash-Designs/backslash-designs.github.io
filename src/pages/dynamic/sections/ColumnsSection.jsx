@@ -10,6 +10,7 @@ import HeroSection from "./HeroSection.jsx";
 import TextSection from "./TextSection.jsx";
 import ListSection from "./ListSection.jsx";
 import ButtonSection from "./ButtonSection.jsx";
+import SectionContainer from "./SectionContainer.jsx"; // + add
 
 function DefaultRenderer({ section }) {
     const { type, props = {} } = section || {};
@@ -22,6 +23,13 @@ function DefaultRenderer({ section }) {
             return <ListSection {...props} />;
         case "button":
             return <ButtonSection {...props} />;
+        case "section": // + add
+            return (
+                <SectionContainer
+                    {...props}
+                    renderSection={(sub) => <DefaultRenderer section={sub} />}
+                />
+            );
         default:
             return (
                 <Paper variant="outlined" sx={{ p: 2 }}>
@@ -70,7 +78,7 @@ export default function ColumnsSection({
         renderSection ||
         ((sub) => {
             // Pass edit prop to nested sections if possible
-            if (sub && typeof sub === 'object' && sub.type && ['hero','text','list'].includes(sub.type)) {
+            if (sub && typeof sub === 'object' && sub.type && ['hero','text','list','button','section'].includes(sub.type)) {
                 return <DefaultRenderer section={{...sub, props: {...sub.props, edit}}} />;
             }
             return <DefaultRenderer section={sub} />;
