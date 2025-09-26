@@ -7,31 +7,56 @@
       "lastUpdated": "2025-09-26T00:00:00.000Z",
       "description": "Site homepage rendered from JSON.",
       "sections": [
-        { "type": "hero", "props": { "title": "Backslash Designs", "subtitle": "Scalable | Reliable | Secure", "edit": true } },
+        { "type": "hero", "props": { "title": "Backslash Designs", "subtitle": "Scalable | Reliable | Secure" } },
         {
           "type": "section",
           "props": {
             "id": "Sectors",
-            "title": "Sectors",
+            "title": "Our Sectors",
             "sections": [
               {
                 "type": "columns",
                 "props": {
                   "gap": 2,
                   "itemSpacing": 1.25,
-                  "withCards": true,
+                  "withCards": false,
                   "columns": [
                     [
-                      { "type": "text", "props": { "body": "Modern, lightweight sites and apps—this site is an example.", "edit": true } },
-                      { "type":"button", "props": { "label": "Learn More", "to": "/test/about", "size": "small", "edit": true } }
+                      {
+                        "type": "card",
+                        "props": {
+                          "title": "Live Broadcast & Pro A/V",
+                          "subtitle": "Live event production, streaming, and broadcast solutions.",
+                          "elevation": 1,
+                          "actions": [
+                            { "label": "Learn more", "to": "/sectors#broadcast", "size": "small" }
+                          ]
+                        }
+                      }
                     ],
                     [
-                      { "type": "text", "props": { "body": "Robust, secure APIs and services to power your applications.", "edit": true } },
-                      { "type":"button", "props": { "label": "Our Services", "to": "/test/services", "size": "small", "edit": true } }
+                      {
+                        "type": "card",
+                        "props": {
+                          "title": "Mental Health & Clinical Practices",
+                          "subtitle": "Clinical IT, charting, and secure workflows for practices.",
+                          "actions": [
+                            { "label": "Learn more", "to": "/sectors#mental-health", "variant": "outlined", "size": "small" }
+                          ]
+                        }
+                      }
                     ],
                     [
-                      { "type": "text", "props": { "body": "Dynamic, data-driven pages that are easy to update and maintain.", "edit": true } },
-                      { "type":"button", "props": { "label": "See the Demo", "to": "/test/about#Team", "size": "small", "edit": true } }
+                      {
+                        "type": "card",
+                        "props": {
+                          "title": "Non-Profit Organizations",
+                          "subtitle": "Affordable, mission-driven IT for non-profits and charities.",
+                          "actions": [
+                            { "label": "Learn more", "to": "/sectors#non-profit", "variant": "outlined", "size": "small" }
+                          ]
+                        }
+                      }
                     ]
                   ]
                 }
@@ -47,7 +72,7 @@
             "subtitle": "What this demo includes",
             
             "sections": [
-              { "type": "text", "props": { "body": "- Multiple routes defined in JSON\n- Anchorable container sections\n- Columns with cards and CTAs\n- Consistent in-place editing flags", "edit": true } }
+              { "type": "text", "props": { "body": "- Multiple routes defined in JSON\n- Anchorable container sections\n- Columns with cards and CTAs\n- Consistent in-place editing flags" } }
             ]
           }
         },
@@ -60,16 +85,16 @@
             "withCards": true,
             "columns": [
               [
-                { "type": "hero", "props": { "title": "Dynamic Pages", "subtitle": "Browse the dynamic demo pages.", "edit": true } },
-                { "type": "button", "props": { "label": "Dynamic", "to": "/test/dynamic", "variant": "outlined", "size": "small", "edit": true } }
+                { "type": "hero", "props": { "title": "Dynamic Pages", "subtitle": "Browse the dynamic demo pages." } },
+                { "type": "button", "props": { "label": "Dynamic", "to": "/test/dynamic", "variant": "outlined", "size": "small" } }
               ],
               [
-                { "type": "hero", "props": { "title": "Services", "subtitle": "See what we offer.", "edit": true } },
-                { "type": "button", "props": { "label": "Services", "to": "/test/services", "variant": "outlined", "size": "small", "edit": true } }
+                { "type": "hero", "props": { "title": "Services", "subtitle": "See what we offer." } },
+                { "type": "button", "props": { "label": "Services", "to": "/test/services", "variant": "outlined", "size": "small" } }
               ],
               [
-                { "type": "hero", "props": { "title": "About", "subtitle": "Learn more about us.", "edit": true } },
-                { "type": "button", "props": { "label": "About", "to": "/test/about", "variant": "outlined", "size": "small", "edit": true } }
+                { "type": "hero", "props": { "title": "About", "subtitle": "Learn more about us." } },
+                { "type": "button", "props": { "label": "About", "to": "/test/about", "variant": "outlined", "size": "small" } }
               ]
             ]
           }
@@ -81,8 +106,8 @@
             "title": "Get Started",
             "subtitle": "Jump into the examples below.",
             "sections": [
-              { "type": "text", "props": { "body": "Use the buttons above to navigate. Each page demonstrates different section types.", "edit": true } },
-              { "type": "button", "props": { "label": "Learn About Us", "to": "/about#Team", "variant": "outlined", "size": "small", "edit": true } }
+              { "type": "text", "props": { "body": "Use the buttons above to navigate. Each page demonstrates different section types." } },
+              { "type": "button", "props": { "label": "Learn About Us", "to": "/about#Team", "variant": "outlined", "size": "small" } }
             ]
           }
         }
@@ -96,8 +121,8 @@
       "lastUpdated": "2025-09-26T00:00:00.000Z",
       "description": "Services we provide.",
       "sections": [
-        { "type": "hero", "props": { "title": "Services", "subtitle": "What we can do for you.", "edit": true } },
-        { "type": "text", "props": { "body": "Explore a few sample service offerings laid out using sections and columns.", "edit": true } },
+        { "type": "hero", "props": { "title": "Services", "subtitle": "What we can do for you." } },
+        { "type": "text", "props": { "body": "Explore a few sample service offerings laid out using sections and columns." } },
         {
           "type": "section",
           "props": {
@@ -114,16 +139,16 @@
                   "withCards": true,
                   "columns": [
                     [
-                      { "type": "hero", "props": { "title": "Design", "subtitle": "UI/UX, branding, and design systems.", "edit": true } },
-                      { "type": "button", "props": { "label": "Request Design", "to": "/test/services#Offerings", "variant": "outlined", "size": "small", "edit": true } }
+                      { "type": "hero", "props": { "title": "Design", "subtitle": "UI/UX, branding, and design systems." } },
+                      { "type": "button", "props": { "label": "Request Design", "to": "/test/services#Offerings", "variant": "outlined", "size": "small" } }
                     ],
                     [
-                      { "type": "hero", "props": { "title": "Development", "subtitle": "Web apps, static sites, and APIs.", "edit": true } },
-                      { "type": "button", "props": { "label": "Request Dev", "to": "/test/services#Offerings", "variant": "outlined", "size": "small", "edit": true } }
+                      { "type": "hero", "props": { "title": "Development", "subtitle": "Web apps, static sites, and APIs." } },
+                      { "type": "button", "props": { "label": "Request Dev", "to": "/test/services#Offerings", "variant": "outlined", "size": "small" } }
                     ],
                     [
-                      { "type": "hero", "props": { "title": "Consulting", "subtitle": "Architecture, audits, and guidance.", "edit": true } },
-                      { "type": "button", "props": { "label": "Request Consult", "to": "/test/services#Offerings", "variant": "outlined", "size": "small", "edit": true } }
+                      { "type": "hero", "props": { "title": "Consulting", "subtitle": "Architecture, audits, and guidance." } },
+                      { "type": "button", "props": { "label": "Request Consult", "to": "/test/services#Offerings", "variant": "outlined", "size": "small" } }
                     ]
                   ]
                 }
@@ -139,7 +164,7 @@
             "subtitle": "What makes this stack useful.",
             
             "sections": [
-              { "type": "text", "props": { "body": "- JSON-driven layout for rapid iteration\n- Reusable components mapped by type\n- Easy to extend with new section types later", "edit": true } }
+              { "type": "text", "props": { "body": "- JSON-driven layout for rapid iteration\n- Reusable components mapped by type\n- Easy to extend with new section types later" } }
             ]
           }
         },
@@ -152,16 +177,16 @@
             "withCards": true,
             "columns": [
               [
-                { "type": "hero", "props": { "title": "Home", "subtitle": "Back to the start.", "edit": true } },
-                { "type": "button", "props": { "label": "Home", "to": "/test/home", "variant": "outlined", "size": "small", "edit": true } }
+                { "type": "hero", "props": { "title": "Home", "subtitle": "Back to the start." } },
+                { "type": "button", "props": { "label": "Home", "to": "/test/home", "variant": "outlined", "size": "small" } }
               ],
               [
-                { "type": "hero", "props": { "title": "Dynamic Alt", "subtitle": "Another dynamic page.", "edit": true } },
-                { "type": "button", "props": { "label": "Dynamic Alt", "to": "/test/about", "variant": "outlined", "size": "small", "edit": true } }
+                { "type": "hero", "props": { "title": "Dynamic Alt", "subtitle": "Another dynamic page." } },
+                { "type": "button", "props": { "label": "Dynamic Alt", "to": "/test/about", "variant": "outlined", "size": "small" } }
               ],
               [
-                { "type": "hero", "props": { "title": "About", "subtitle": "Learn more.", "edit": true } },
-                { "type": "button", "props": { "label": "About", "to": "/test/about", "variant": "outlined", "size": "small", "edit": true } }
+                { "type": "hero", "props": { "title": "About", "subtitle": "Learn more." } },
+                { "type": "button", "props": { "label": "About", "to": "/test/about", "variant": "outlined", "size": "small" } }
               ]
             ]
           }
@@ -176,8 +201,8 @@
       "lastUpdated": "2025-09-26T00:00:00.000Z",
       "description": "About this project.",
       "sections": [
-        { "type": "hero", "props": { "title": "About", "subtitle": "A bit of background.", "edit": true } },
-        { "type": "text", "props": { "body": "This demo shows how pages, sections, and content can be configured via JSON to power a small site.", "edit": true } },
+        { "type": "hero", "props": { "title": "About", "subtitle": "A bit of background." } },
+        { "type": "text", "props": { "body": "This demo shows how pages, sections, and content can be configured via JSON to power a small site." } },
         {
           "type": "section",
           "props": {
@@ -186,7 +211,7 @@
             "subtitle": "Why this exists.",
             
             "sections": [
-              { "type": "text", "props": { "body": "Enable non-developers to iterate on content structure rapidly, while developers maintain a clean component library.", "edit": true } }
+              { "type": "text", "props": { "body": "Enable non-developers to iterate on content structure rapidly, while developers maintain a clean component library." } }
             ]
           }
         },
@@ -207,16 +232,16 @@
                   "withCards": true,
                   "columns": [
                     [
-                      { "type": "hero", "props": { "title": "Dev", "subtitle": "Builds components.", "edit": true } },
-                      { "type": "text", "props": { "body": "Focus: React, routing, and dynamic rendering.", "edit": true } }
+                      { "type": "hero", "props": { "title": "Dev", "subtitle": "Builds components." } },
+                      { "type": "text", "props": { "body": "Focus: React, routing, and dynamic rendering." } }
                     ],
                     [
-                      { "type": "hero", "props": { "title": "Designer", "subtitle": "Crafts experience.", "edit": true } },
-                      { "type": "text", "props": { "body": "Focus: UX, accessibility, and aesthetics.", "edit": true } }
+                      { "type": "hero", "props": { "title": "Designer", "subtitle": "Crafts experience." } },
+                      { "type": "text", "props": { "body": "Focus: UX, accessibility, and aesthetics." } }
                     ],
                     [
-                      { "type": "hero", "props": { "title": "Editor", "subtitle": "Maintains content.", "edit": true } },
-                      { "type": "text", "props": { "body": "Focus: Structure, clarity, and accuracy.", "edit": true } }
+                      { "type": "hero", "props": { "title": "Editor", "subtitle": "Maintains content." } },
+                      { "type": "text", "props": { "body": "Focus: Structure, clarity, and accuracy." } }
                     ]
                   ]
                 }
@@ -233,16 +258,16 @@
             "withCards": true,
             "columns": [
               [
-                { "type": "hero", "props": { "title": "Home", "subtitle": "Go back home.", "edit": true } },
-                { "type": "button", "props": { "label": "Home", "to": "/test/home", "variant": "outlined", "size": "small", "edit": true } }
+                { "type": "hero", "props": { "title": "Home", "subtitle": "Go back home." } },
+                { "type": "button", "props": { "label": "Home", "to": "/test/home", "variant": "outlined", "size": "small" } }
               ],
               [
-                { "type": "hero", "props": { "title": "Services", "subtitle": "See services.", "edit": true } },
-                { "type": "button", "props": { "label": "Services", "to": "/test/services", "variant": "outlined", "size": "small", "edit": true } }
+                { "type": "hero", "props": { "title": "Services", "subtitle": "See services." } },
+                { "type": "button", "props": { "label": "Services", "to": "/test/services", "variant": "outlined", "size": "small" } }
               ],
               [
-                { "type": "hero", "props": { "title": "Dynamic", "subtitle": "Demo page.", "edit": true } },
-                { "type": "button", "props": { "label": "Dynamic", "to": "/test/dynamic", "variant": "outlined", "size": "small", "edit": true } }
+                { "type": "hero", "props": { "title": "Dynamic", "subtitle": "Demo page." } },
+                { "type": "button", "props": { "label": "Dynamic", "to": "/test/dynamic", "variant": "outlined", "size": "small" } }
               ]
             ]
           }

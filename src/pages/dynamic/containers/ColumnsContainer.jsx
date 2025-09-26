@@ -10,6 +10,7 @@ import HeroComponent from "../components/HeroComponent.jsx";
 import TextComponent from "../components/TextComponent.jsx";
 import ListComponent from "../components/ListComponent.jsx";
 import ButtonComponent from "../components/ButtonComponent.jsx";
+import CardComponent from "../components/CardComponent.jsx";
 import SectionContainer from "./SectionContainer.jsx";
 
 function DefaultRenderer({ section }) {
@@ -23,6 +24,8 @@ function DefaultRenderer({ section }) {
       return <ListComponent {...props} />;
     case "button":
       return <ButtonComponent {...props} />;
+    case "card":
+      return <CardComponent {...props} />;
     case "section":
       return (
         <SectionContainer
@@ -85,7 +88,7 @@ export default function ColumnsContainer({
         sub &&
         typeof sub === "object" &&
         sub.type &&
-        ["hero", "text", "list", "button", "section"].includes(sub.type)
+        ["hero", "text", "list", "button", "card", "section"].includes(sub.type)
       ) {
         return <DefaultRenderer section={{ ...sub, props: { ...sub.props, edit } }} />;
       }
