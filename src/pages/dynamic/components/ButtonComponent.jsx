@@ -3,18 +3,7 @@ import Button from "@mui/material/Button";
 import EditView from "../views/EditView.jsx";
 import { Link as RouterLink } from "react-router-dom";
 
-/**
- * ButtonSection
- * JSON props:
- * - label (string): visible text
- * - to (string): route path
- * - variant (string): MUI variant (contained | outlined | text) default 'contained'
- * - color (string): MUI color (primary | secondary | etc) default 'primary'
- * - size (string): small | medium | large
- * - fullWidth (boolean): stretch to container width
- * - edit (boolean): toggle edit affordances
- */
-export default function ButtonSection({
+export default function ButtonComponent({
   label = "Click",
   to = "/",
   variant = "contained",

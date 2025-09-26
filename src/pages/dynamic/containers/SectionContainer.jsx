@@ -5,17 +5,6 @@ import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import EditView from "../views/EditView.jsx";
 
-/**
- * SectionContainer
- * Props:
- * - id?: string              // anchor id; if omitted, slug is derived from title
- * - title: string
- * - subtitle?: string
- * - sections?: Section[]     // nested sections to render
- * - withCard?: boolean       // wrap group in an outlined Paper
- * - edit?: boolean
- * - renderSection?: (section) => ReactNode  // supplied by renderer to render nested sections
- */
 export default function SectionContainer({
   id,
   title,
@@ -39,7 +28,6 @@ export default function SectionContainer({
     <Box
       id={anchorId}
       sx={{
-        // make room for sticky header when scrolled into view
         scrollMarginTop: "var(--top-offset, 72px)",
         width: "100%",
         boxSizing: "border-box",
@@ -55,7 +43,6 @@ export default function SectionContainer({
           </Typography>
         )}
       </Box>
-
       <Stack spacing={1.5}>
         {Array.isArray(sections) &&
           sections.map((s, i) =>
@@ -64,7 +51,6 @@ export default function SectionContainer({
                 {renderSection(s)}
               </Box>
             ) : (
-              // Fallback: show raw type if no renderer is provided
               <Paper key={i} variant="outlined" sx={{ p: 2 }}>
                 <Typography variant="body2" sx={{ opacity: 0.7 }}>
                   Unsupported nested section (no renderer attached).
