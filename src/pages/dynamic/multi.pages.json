@@ -26,6 +26,7 @@
                         "type": "card",
                         "props": {
                           "title": "Live Broadcast & Pro A/V",
+                          "iconName": "Videocam",
                           "subtitle": "Live event production, streaming, and broadcast solutions.",
                           "elevation": 1,
                           "actions": [

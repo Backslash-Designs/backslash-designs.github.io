@@ -10,7 +10,7 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { submitQuoteRequest, submitWaitlistEmail } from "../../components/QuoteRequestHandler.jsx";
+import { submitQuoteRequest, submitWaitlistEmail } from "../../../components/QuoteRequestHandler.jsx";
 import { SERVICES } from "../services/ServicesPage.jsx";
 
 const TICKET_URL = "https://backslashdesigns.ITClientPortal.com/"; // replace with your ticket system URL

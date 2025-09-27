@@ -1,15 +1,15 @@
 import React, { useMemo } from "react";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
-import Home from "./pages/home/HomePage.jsx";
-import About from "./pages/about/AboutPage.jsx";
-import NotFound from "./pages/notfound/NotFoundPage.jsx";
-import Construction from "./pages/construction/ConstructionPage.jsx";
+import Home from "./pages/static/home/HomePage.jsx";
+import About from "./pages/static/about/AboutPage.jsx";
+import NotFound from "./pages/static/notfound/NotFoundPage.jsx";
+import Construction from "./pages/static/construction/ConstructionPage.jsx";
 import ColorModeProvider from "./theme/ColorModeProvider.jsx";
-import Contact from "./pages/contact/ContactPage.jsx"; 
-import { ServicesPage } from "./pages/services/ServicesPage.jsx"; 
-import SectorsPage from "./pages/sectors/SectorsPage.jsx";
-import SOSPage from "./pages/sos/SOSPage.jsx";
+import Contact from "./pages/static/contact/ContactPage.jsx"; 
+import { ServicesPage } from "./pages/static/services/ServicesPage.jsx"; 
+import SectorsPage from "./pages/static/sectors/SectorsPage.jsx";
+import SOSPage from "./pages/static/sos/SOSPage.jsx";
 import MultiDynamicPage from "./pages/dynamic/MultiDynamicPage.jsx";
 import { getPages } from "./pages/dynamic/pageRegistry.js";
 

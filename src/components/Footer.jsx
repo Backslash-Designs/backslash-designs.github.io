@@ -5,8 +5,8 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import { Link as RouterLink } from "react-router-dom";
-import { SECTORS } from "../pages/sectors/SectorsPage.jsx";
-import { SERVICES } from "../pages/services/ServicesPage.jsx";
+import { SECTORS } from "../pages/static/sectors/SectorsPage.jsx";
+import { SERVICES } from "../pages/static/services/ServicesPage.jsx";
 import { useTheme } from "@mui/material/styles";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -36,24 +36,24 @@ export default function Footer() {
         {/* === GRID LAYOUT (order matches mockup numbers on mobile) === */}
         <Box
           sx={{
-            display: "grid",
-            gap: { xs: 3, md: 4 },
-            gridTemplateAreas: {
-              xs: `"contact"
-                   "map_tb"
-                   "map_kel"
-                   "sitemap"
-                   "sectors"
-                   "services"`,
-              md: `"contact sitemap sectors services"
-                   "maps    sitemap sectors services"`,
-            },
-            gridTemplateColumns: {
-              xs: "1fr",
-              md: "minmax(320px, 520px) repeat(3, minmax(180px, 1fr))",
-            },
-            alignItems: "start",
-            mb: 2,
+              display: "grid",
+              gap: { xs: 3, md: 4 },
+              gridTemplateAreas: {
+                xs: `"contact"
+                    "map_tb"
+                    "map_kel"
+                    "sitemap"
+                    "sectors"
+                    "services"`,
+                md: `"contact sitemap sectors services"
+                    "maps    sitemap sectors services"`,
+              },
+              gridTemplateColumns: {
+                xs: "1fr",
+                md: "minmax(320px, 520px) repeat(3, minmax(180px, 1fr))",
+              },
+              alignItems: "start",
+              mb: 2,
           }}
         >
           {/* 1. Contact / Brand */}
