@@ -7,10 +7,17 @@ import ButtonComponent from "./components/ButtonComponent.jsx";
 import CardComponent from "./components/CardComponent.jsx";
 import SectionContainer from "./containers/SectionContainer.jsx";
 import ColumnsContainer from "./containers/ColumnsContainer.jsx";
-import { ensurePage } from "./pageRegistry.js";
+import { ensurePage, subscribe } from "../../services/DynamicPagesService.js";
 import { useLocation } from "react-router-dom"; // + add
 
 export default function MultiDynamicPage({ path, name, fallback }) {
+  // Trigger re-render on registry updates
+  const [ver, setVer] = React.useState(0);
+  React.useEffect(() => {
+    const unsub = subscribe(() => setVer((v) => v + 1));
+    return unsub;
+  }, []);
+
   const data = ensurePage({ path, name });
 
   React.useEffect(() => {

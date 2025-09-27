@@ -1,4 +1,4 @@
-import multi from "./multi.pages.json";
+import multi from "../pages/dynamic/multi.pages.json";
 
 const STORAGE_KEY = "dynamic.pages.v1";
 const isBrowser = typeof window !== "undefined" && typeof localStorage !== "undefined";
@@ -115,8 +115,7 @@ export function subscribe(listener) {
   return () => window.removeEventListener("dynamic-pages-change", handler);
 }
 
-// Re-export from the new client-side service (back-compat shim)
-export {
+export default {
   getPages,
   getPageByPath,
   getPageByName,
@@ -128,6 +127,4 @@ export {
   resetToFile,
   exportPages,
   subscribe,
-} from "../../servives/DynamicPagesService.js";
-export { default } from "../../servives/DynamicPagesService.js";
-
+};

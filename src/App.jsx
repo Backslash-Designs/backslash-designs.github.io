@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
 import Home from "./pages/static/home/HomePage.jsx";
@@ -11,7 +11,7 @@ import { ServicesPage } from "./pages/static/services/ServicesPage.jsx";
 import SectorsPage from "./pages/static/sectors/SectorsPage.jsx";
 import SOSPage from "./pages/static/sos/SOSPage.jsx";
 import MultiDynamicPage from "./pages/dynamic/MultiDynamicPage.jsx";
-import { getPages } from "./pages/dynamic/pageRegistry.js";
+import { getPages, subscribe } from "./services/DynamicPagesService.js";
 
 function shouldShowMaintenance() {
   const envFlag = String(import.meta.env.VITE_MAINTENANCE ?? "0").toLowerCase();
@@ -47,15 +47,17 @@ function shouldShowMaintenance() {
 export default function App() {
   const maintenance = useMemo(shouldShowMaintenance, []);
 
-  const dynamicPages = useMemo(() => getPages(), []);
+  // const dynamicPages = useMemo(() => getPages(), []);
+  const [dynamicPages, setDynamicPages] = React.useState(() => getPages());
+  React.useEffect(() => {
+    const unsub = subscribe(({ pages }) => setDynamicPages(pages));
+    return unsub;
+  }, []);
+
   const dynamicRoutes = useMemo(
     () =>
-      dynamicPages.map(p => (
-        <Route
-          key={p.path}
-          path={p.path}
-          element={<MultiDynamicPage path={p.path} />}
-        />
+      dynamicPages.map((p) => (
+        <Route key={p.path} path={p.path} element={<MultiDynamicPage path={p.path} />} />
       )),
     [dynamicPages]
   );
