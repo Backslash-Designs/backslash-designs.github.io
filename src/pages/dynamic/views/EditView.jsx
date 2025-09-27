@@ -36,7 +36,25 @@ function useGlobalEditMode() {
 export default function EditView({ /* edit (ignored) */ children }) {
   const editMode = useGlobalEditMode();
   return editMode ? (
-    <Box sx={{ border: "2px dashed #888", borderRadius: 1, p: 2, width: "100%" }}>
+    <Box
+      data-edit-view
+      sx={{
+        border: "2px dashed",
+        borderColor: "#888",
+        borderRadius: 1,
+        p: 2,
+        width: "100%",
+        position: "relative",
+        transition: "border-color 0.2s ease, transform 120ms ease, box-shadow 120ms ease",
+        willChange: "transform, box-shadow",
+        "&:hover:not(:has([data-edit-view]:hover))": {
+          borderColor: "primary.main",
+          transform: "scale(1.01)",
+          boxShadow: 3,
+          zIndex: 1,
+        },
+      }}
+    >
       {children}
     </Box>
   ) : (

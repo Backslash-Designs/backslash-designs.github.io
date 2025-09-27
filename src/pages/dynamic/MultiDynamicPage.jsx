@@ -1,6 +1,12 @@
 import React from "react";
 import { Box, Container, Paper, Typography } from "@mui/material";
-import { RenderSection } from "./DynamicPage.jsx";
+import HeroComponent from "./components/HeroComponent.jsx";
+import TextComponent from "./components/TextComponent.jsx";
+import ListComponent from "./components/ListComponent.jsx";
+import ButtonComponent from "./components/ButtonComponent.jsx";
+import CardComponent from "./components/CardComponent.jsx";
+import SectionContainer from "./containers/SectionContainer.jsx";
+import ColumnsContainer from "./containers/ColumnsContainer.jsx";
 import { ensurePage } from "./pageRegistry.js";
 import { useLocation } from "react-router-dom"; // + add
 
@@ -25,6 +31,45 @@ export default function MultiDynamicPage({ path, name, fallback }) {
     return () => clearTimeout(t);
   }, [location.hash]);
 
+  // Move RenderSection inside component (no export)
+  function RenderSection({ section }) {
+    const { type, props = {} } = section || {};
+    switch (type) {
+      case "hero":
+        return <HeroComponent {...props} />;
+      case "text":
+        return <TextComponent {...props} />;
+      case "list":
+        return <ListComponent {...props} />;
+      case "button":
+        return <ButtonComponent {...props} />;
+      case "card":
+        return <CardComponent {...props} />;
+      case "section":
+        return (
+          <SectionContainer
+            {...props}
+            renderSection={(sub) => <RenderSection section={sub} />}
+          />
+        );
+      case "columns":
+        return (
+          <ColumnsContainer
+            {...props}
+            renderSection={(sub) => <RenderSection section={sub} />}
+          />
+        );
+      default:
+        return (
+          <Paper variant="outlined" sx={{ p: 2 }}>
+            <Typography variant="body2" sx={{ opacity: 0.7 }}>
+              Unknown section type: {String(type)}
+            </Typography>
+          </Paper>
+        );
+    }
+  }
+
   if (!data) {
     return (
       fallback || (
@@ -48,7 +93,6 @@ export default function MultiDynamicPage({ path, name, fallback }) {
         {(data.sections || []).map((section, i) => {
           const fullBleed =
             section.type === "hero" && (section.props?.fullBleed ?? true);
-          if (fullBleed) return <RenderSection key={i} section={section} />;
           return (
             <Box
               key={i}

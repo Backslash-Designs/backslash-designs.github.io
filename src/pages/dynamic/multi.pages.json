@@ -40,9 +40,10 @@
                         "type": "card",
                         "props": {
                           "title": "Mental Health & Clinical Practices",
+                          "iconName": "LocalHospital",
                           "subtitle": "Clinical IT, charting, and secure workflows for practices.",
                           "actions": [
-                            { "label": "Learn more", "to": "/sectors#mental-health", "variant": "outlined", "size": "small" }
+                            { "label": "Learn more", "to": "/sectors#mental-health", "size": "small" }
                           ]
                         }
                       }
@@ -52,9 +53,10 @@
                         "type": "card",
                         "props": {
                           "title": "Non-Profit Organizations",
+                          "iconName": "VolunteerActivism",
                           "subtitle": "Affordable, mission-driven IT for non-profits and charities.",
                           "actions": [
-                            { "label": "Learn more", "to": "/sectors#non-profit", "variant": "outlined", "size": "small" }
+                            { "label": "Learn more", "to": "/sectors#non-profit", "size": "small" }
                           ]
                         }
                       }
