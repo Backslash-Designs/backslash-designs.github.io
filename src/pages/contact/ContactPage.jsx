@@ -12,6 +12,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { submitQuoteRequest, submitWaitlistEmail } from "../../components/QuoteRequestHandler.jsx";
 import { SERVICES } from "../services/ServicesPage.jsx";
+import ReCAPTCHA from "react-google-recaptcha"; // + add reCAPTCHA
 
 const TICKET_URL = "https://backslashdesigns.ITClientPortal.com/"; // replace with your ticket system URL
 const INTAKE_PAUSED = ["1", "true", "yes", "on"].includes(
@@ -39,6 +40,10 @@ export default function Contact() {
   const [waitlistErr, setWaitlistErr] = React.useState("");
   const [waitSubmitting, setWaitSubmitting] = React.useState(false);
 
+  // + reCAPTCHA state
+  const [recaptchaToken, setRecaptchaToken] = React.useState("");
+  const recaptchaRef = React.useRef(null);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
@@ -51,20 +56,22 @@ export default function Contact() {
     if (!form.email.trim()) er.email = "Email is required.";
     else if (!/^\S+@\S+\.\S+$/.test(form.email)) er.email = "Enter a valid email.";
     if (!form.message.trim()) er.message = "Please describe your needs.";
+    // + require reCAPTCHA for quote requests
+    if (!recaptchaToken) er.recaptcha = "Please verify you're human.";
     return er;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const er = validate();
-    // removed reCAPTCHA validation
+    // + reCAPTCHA validation restored
     if (Object.keys(er).length) {
       setErrors(er);
       return;
     }
     try {
       setSubmitting(true);
-      await submitQuoteRequest({ ...form }); // removed recaptchaToken
+      await submitQuoteRequest({ ...form, recaptchaToken }); // + include token
       setSnackSeverity("success");
       setSnackMsg("Thanks! We’ll be in touch shortly.");
       setSnackOpen(true);
@@ -77,6 +84,9 @@ export default function Contact() {
         budget: "",
         message: "",
       });
+      // + reset reCAPTCHA after successful submit
+      recaptchaRef.current?.reset();
+      setRecaptchaToken("");
     } catch (err) {
       console.error("Quote request failed:", err);
       setSnackSeverity("error");
@@ -295,8 +305,26 @@ export default function Contact() {
                   />
                 </Grid>
               </Grid>
-              {/* removed reCAPTCHA widget */}
-              <Stack direction="row" spacing={1.5} sx={{ mt: 2 }} alignItems="center">
+
+              {/* + reCAPTCHA widget */}
+              <Box sx={{ mt: 2, mb: 0.5 }}>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                  onChange={(token) => {
+                    setRecaptchaToken(token || "");
+                    setErrors((er) => ({ ...er, recaptcha: undefined }));
+                  }}
+                  onExpired={() => setRecaptchaToken("")}
+                />
+                {!!errors.recaptcha && (
+                  <Typography variant="caption" color="error" sx={{ display: "block", mt: 0.5 }}>
+                    {errors.recaptcha}
+                  </Typography>
+                )}
+              </Box>
+
+              <Stack direction="row" spacing={1.5} sx={{ mt: 1.5 }} alignItems="center">
                 <Button type="submit" variant="contained" color="primary" disabled={submitting}>
                   {submitting ? "Sending..." : "Request Quote"}
                 </Button>
