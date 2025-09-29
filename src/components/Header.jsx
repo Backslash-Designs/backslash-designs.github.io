@@ -15,7 +15,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Divider from "@mui/material/Divider";
-import { SERVICES } from "../pages/static/services/ServicesPage.jsx";
+import { SERVICES } from "../pages//services/ServicesPage.jsx";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import VideocamIcon from "@mui/icons-material/Videocam";

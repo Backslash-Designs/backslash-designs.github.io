@@ -12,7 +12,7 @@ import Collapse from "@mui/material/Collapse";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { SERVICES } from "../pages/static/services/ServicesPage.jsx";
+import { SERVICES } from "../pages//services/ServicesPage.jsx";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import VideocamIcon from "@mui/icons-material/Videocam";
