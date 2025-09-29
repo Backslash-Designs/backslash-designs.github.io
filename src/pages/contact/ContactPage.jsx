@@ -39,6 +39,9 @@ export default function Contact() {
   const [waitlistEmail, setWaitlistEmail] = React.useState("");
   const [waitlistErr, setWaitlistErr] = React.useState("");
   const [waitSubmitting, setWaitSubmitting] = React.useState(false);
+  // + add waitlist name support
+  const [waitlistName, setWaitlistName] = React.useState("");
+  const [waitlistNameErr, setWaitlistNameErr] = React.useState("");
 
   // + reCAPTCHA state
   const [recaptchaToken, setRecaptchaToken] = React.useState("");
@@ -100,18 +103,32 @@ export default function Contact() {
   // Waitlist submit (email only)
   const handleWaitlistSubmit = async (e) => {
     e.preventDefault();
+    // + validate name
+    if (!waitlistName.trim()) {
+      setWaitlistNameErr("Enter your name.");
+      return;
+    }
     if (!/^\S+@\S+\.\S+$/.test(waitlistEmail)) {
       setWaitlistErr("Enter a valid email.");
       return;
     }
+    // require reCAPTCHA for waitlist as well
+    if (!recaptchaToken) {
+      setErrors((er) => ({ ...er, recaptcha: "Please verify you're human." }));
+      return;
+    }
     try {
       setWaitSubmitting(true);
-      await submitWaitlistEmail(waitlistEmail);
+      await submitWaitlistEmail({ name: waitlistName, email: waitlistEmail, recaptchaToken }); // + include name
       setSnackSeverity("success");
       setSnackMsg("Thanks! We’ll notify you when we’re accepting new projects.");
       setSnackOpen(true);
+      setWaitlistName(""); // + reset name
+      setWaitlistNameErr("");
       setWaitlistEmail("");
       setWaitlistErr("");
+      recaptchaRef.current?.reset(); // reset reCAPTCHA
+      setRecaptchaToken("");
     } catch (err) {
       console.error("Waitlist signup failed:", err);
       setSnackSeverity("error");
@@ -178,7 +195,18 @@ export default function Contact() {
             </Typography>
 
             <Box component="form" noValidate onSubmit={handleWaitlistSubmit}>
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} alignItems="flex-start">
+              {/* Fields first */}
+              <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} alignItems="flex-start" sx={{ mb: 1.5 }}>
+                <TextField
+                  label="Full name"
+                  value={waitlistName}
+                  onChange={(e) => { setWaitlistName(e.target.value); setWaitlistNameErr(""); }}
+                  error={!!waitlistNameErr}
+                  helperText={waitlistNameErr}
+                  required
+                  sx={{ flex: 1, width: { xs: "100%", sm: "auto" } }}
+                  autoComplete="name"
+                />
                 <TextField
                   type="email"
                   label="Email address"
@@ -190,10 +218,30 @@ export default function Contact() {
                   sx={{ flex: 1, width: { xs: "100%", sm: "auto" } }}
                   autoComplete="email"
                 />
-                <Button type="submit" variant="contained" color="primary" sx={{ whiteSpace: "nowrap" }} disabled={waitSubmitting}>
-                  {waitSubmitting ? "Submitting..." : "Notify Me"}
-                </Button>
               </Stack>
+
+              {/* Move reCAPTCHA below the fields */}
+              <Box sx={{ mb: 1.5 }}>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                  onChange={(token) => {
+                    setRecaptchaToken(token || "");
+                    setErrors((er) => ({ ...er, recaptcha: undefined }));
+                  }}
+                  onExpired={() => setRecaptchaToken("")}
+                />
+                {!!errors.recaptcha && (
+                  <Typography variant="caption" color="error" sx={{ display: "block", mt: 0.5 }}>
+                    {errors.recaptcha}
+                  </Typography>
+                )}
+              </Box>
+
+              {/* Then the submit button */}
+              <Button type="submit" variant="contained" color="primary" sx={{ whiteSpace: "nowrap" }} disabled={waitSubmitting}>
+                {waitSubmitting ? "Submitting..." : "Notify Me"}
+              </Button>
             </Box>
           </Paper>
         ) : (
