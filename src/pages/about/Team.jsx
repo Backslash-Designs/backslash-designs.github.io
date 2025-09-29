@@ -8,10 +8,10 @@ import {
   GitHub as GitHubIcon,
   LinkedIn as LinkedInIcon,
   Instagram as InstagramIcon,
-  Twitter as TwitterIcon, // used for X
+  Twitter as TwitterIcon, // X
 } from "@mui/icons-material";
 
-// Store team members here
+/* ---------- Data ---------- */
 const TEAM = [
   {
     name: "Josiah Ledua",
@@ -21,7 +21,6 @@ const TEAM = [
       "Josiah Ledua is the founder of Backslash Designs, an IT solutions and managed services provider focused on delivering technology that grows with businesses while staying dependable and secure. With more than a decade of experience, he has supported non-profits, media organizations, and small businesses in areas such as Microsoft 365, cloud services, networking, and cybersecurity.",
       "He holds an Honors Bachelor of Science in Computer Science from Lakehead University and an Electronics Technologist Diploma from Confederation College. Guided by the core values of Scalability, Reliability, and Security, Josiah works to ensure that clients have IT systems they can trust to adapt, perform, and protect.",
     ],
-    // Optional social links: add any of these keys with URLs to show icons
     social: {
       x: "https://x.com/jbledua",
       instagram: "https://www.instagram.com/jbledua/",
@@ -31,7 +30,6 @@ const TEAM = [
   },
 ];
 
-// Map social keys to icons + labels
 const SOCIAL_ICONS = {
   x: { Icon: TwitterIcon, label: "X (Twitter)" },
   instagram: { Icon: InstagramIcon, label: "Instagram" },
@@ -39,7 +37,7 @@ const SOCIAL_ICONS = {
   github: { Icon: GitHubIcon, label: "GitHub" },
 };
 
-// Team component for About page
+/* ---------- Component ---------- */
 export default function Team() {
   return (
     <Box sx={{ mb: 5 }}>
@@ -48,88 +46,135 @@ export default function Team() {
       </Typography>
 
       {TEAM.map((m) => (
-        <Box
-          key={m.name}
-          sx={{
-            display: "flex",
-            alignItems: { xs: "stretch", sm: "flex-start" }, // was "center"
-            gap: 3,
-            flexDirection: { xs: "column", sm: "row" },
-            textAlign: { xs: "center", sm: "left" },
-            mb: 3,
-          }}
-        >
-          {/* Avatar */}
+        <Box key={m.name} sx={{ mb: 5, textAlign: "center" }}>
+          {/* Name + Title */}
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            {m.name}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 2, opacity: 0.95 }}>
+            {m.title}
+          </Typography>
+
+          {/* Photo + Bio (responsive) */}
           <Box
+            tabIndex={0}
             sx={{
-              width: { xs: "100%", sm: "50%" },
-              maxWidth: { xs: "340px", sm: "none" },
-              aspectRatio: "1 / 1",
+              width: "min(900px, 100%)",
+              mx: "auto",
+              position: { xs: "relative", sm: "static" },
+              display: { xs: "block", sm: "flex" },
+              alignItems: { sm: "stretch" },
+              gap: { sm: 2 },
               borderRadius: 2,
-              overflow: "hidden",
-              bgcolor: (t) => t.palette.action.hover,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              mb: { xs: 2, sm: 0 },
+              overflow: { xs: "hidden", sm: "visible" },
+              boxShadow: (t) => t.shadows[1],
+              // mobile: keep square image card
+              aspectRatio: { xs: "1 / 1", sm: "unset" },
+              "&:hover .overlay, &:focus-within .overlay": {
+                // only affects mobile because desktop has transform: none
+                transform: { xs: "translateX(0%)", sm: "none" },
+              },
+              "@media (prefers-reduced-motion: reduce)": {
+                "& .overlay": { transition: "none" },
+              },
             }}
           >
-            <img
-              src={m.photo}
-              alt={m.name}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
+            {/* Image */}
+            <Box
+              sx={{
+                position: "relative",
+                width: { xs: "100%", sm: "40%" },
+                minWidth: 0,
+                borderRadius: 2,
+                overflow: "hidden",
+                bgcolor: (t) => t.palette.action.hover,
               }}
-            />
-          </Box>
+            >
+              <img
+                src={m.photo}
+                alt={m.name}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            </Box>
 
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="h6" sx={{ fontWeight: 700 }}>
-              {m.name}
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1, opacity: 0.95 }}>
-              {m.title}
-            </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.95 }}>
-              {m.bio[0]}
-              <br />
-              <br />
-              {m.bio[1]}
-            </Typography>
+            {/* Bio panel — overlay on mobile, side-by-side on desktop */}
+            <Box
+              className="overlay"
+              role="region"
+              aria-label={`${m.name} bio`}
+              sx={{
+                position: { xs: "absolute", sm: "relative" },
+                top: { xs: 0, sm: "auto" },
+                right: { xs: 0, sm: "auto" },
+                height: { xs: "100%", sm: "auto" },
+                width: { xs: "100%", sm: "60%" },
+                bgcolor: (t) => t.palette.background.paper,
+                color: (t) => t.palette.text.primary,
+                boxShadow: { xs: (t) => t.shadows[6], sm: "none" },
+                borderLeft: { sm: (t) => `1px solid ${t.palette.divider}` },
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                justifyContent: "flex-start",
+                textAlign: "left",
+                // mobile starts off canvas; desktop is always visible
+                transform: { xs: "translateX(100%)", sm: "none" },
+                transition: { xs: "transform 320ms cubic-bezier(.2,.8,.2,1)", sm: "none" },
+                overflow: "auto",
+                borderRadius: { sm: 2 },
+              }}
+            >
+              <Box sx={{ maxWidth: 800 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>
+                  About {m.name.split(" ")[0]}
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.95 }}>
+                  {m.bio[0]}
+                </Typography>
+                <Typography variant="body2" sx={{ mt: 1.5, opacity: 0.95 }}>
+                  {m.bio[1]}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{ display: { xs: "block", sm: "none" }, mt: 1.5, opacity: 0.7 }}
+                >
+                  Tap outside this panel to close.
+                </Typography>
+              </Box>
 
-            {/* Social icons row */}
-            {m.social && Object.keys(m.social).length > 0 && (
-              <Stack
-                direction="row"
-                spacing={1}
-                sx={{ mt: 1.5, justifyContent: { xs: "center", sm: "flex-start" } }}
-              >
-                {Object.entries(m.social).map(([key, url]) => {
-                  if (!url) return null;
-                  const meta = SOCIAL_ICONS[key];
-                  if (!meta) return null;
-                  const { Icon, label } = meta;
-                  return (
-                    <Tooltip title={label} key={key}>
-                      <IconButton
-                        component="a"
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        size="small"
-                        aria-label={`${m.name} on ${label}`}
-                        sx={{ color: (t) => t.palette.text.secondary }}
-                      >
-                        <Icon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  );
-                })}
-              </Stack>
-            )}
+              {/* Social icons moved here, directly under the bio and beside the photo */}
+              {m.social && Object.keys(m.social).length > 0 && (
+                <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                  {Object.entries(m.social).map(([key, url]) => {
+                    if (!url) return null;
+                    const meta = SOCIAL_ICONS[key];
+                    if (!meta) return null;
+                    const { Icon, label } = meta;
+                    return (
+                      <Tooltip title={label} key={key}>
+                        <IconButton
+                          component="a"
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          size="small"
+                          aria-label={`${m.name} on ${label}`}
+                          sx={{ color: (t) => t.palette.text.secondary }}
+                        >
+                          <Icon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    );
+                  })}
+                </Stack>
+              )}
+            </Box>
           </Box>
         </Box>
       ))}
