@@ -13,6 +13,8 @@ import Alert from "@mui/material/Alert";
 import { submitQuoteRequest, submitWaitlistEmail } from "../../components/QuoteRequestHandler.jsx";
 import { SERVICES } from "../services/ServicesPage.jsx";
 import ReCAPTCHA from "react-google-recaptcha"; // + add reCAPTCHA
+import Checkbox from "@mui/material/Checkbox"; // + new
+import FormControlLabel from "@mui/material/FormControlLabel"; // + new
 
 const TICKET_URL = "https://backslashdesigns.ITClientPortal.com/"; // replace with your ticket system URL
 const INTAKE_PAUSED = ["1", "true", "yes", "on"].includes(
@@ -28,6 +30,7 @@ export default function Contact() {
     type: "",
     budget: "",
     message: "",
+    acceptMarketing: true, // + new default ON
   });
   const [errors, setErrors] = React.useState({});
   const [snackOpen, setSnackOpen] = React.useState(false);
@@ -39,17 +42,17 @@ export default function Contact() {
   const [waitlistEmail, setWaitlistEmail] = React.useState("");
   const [waitlistErr, setWaitlistErr] = React.useState("");
   const [waitSubmitting, setWaitSubmitting] = React.useState(false);
-  // + add waitlist name support
   const [waitlistName, setWaitlistName] = React.useState("");
   const [waitlistNameErr, setWaitlistNameErr] = React.useState("");
+  const [waitlistAcceptMarketing, setWaitlistAcceptMarketing] = React.useState(true); // + new default ON
 
   // + reCAPTCHA state
   const [recaptchaToken, setRecaptchaToken] = React.useState("");
   const recaptchaRef = React.useRef(null);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setForm((f) => ({ ...f, [name]: type === "checkbox" ? !!checked : value })); // + handle checkbox
     setErrors((er) => ({ ...er, [name]: undefined }));
   };
 
@@ -74,7 +77,7 @@ export default function Contact() {
     }
     try {
       setSubmitting(true);
-      await submitQuoteRequest({ ...form, recaptchaToken }); // + include token
+      await submitQuoteRequest({ ...form, recaptchaToken }); // includes acceptMarketing
       setSnackSeverity("success");
       setSnackMsg("Thanks! We’ll be in touch shortly.");
       setSnackOpen(true);
@@ -86,6 +89,7 @@ export default function Contact() {
         type: "",
         budget: "",
         message: "",
+        acceptMarketing: true, // + reset to default ON
       });
       // + reset reCAPTCHA after successful submit
       recaptchaRef.current?.reset();
@@ -100,7 +104,7 @@ export default function Contact() {
     }
   };
 
-  // Waitlist submit (email only)
+  // Waitlist submit
   const handleWaitlistSubmit = async (e) => {
     e.preventDefault();
     // + validate name
@@ -119,15 +123,21 @@ export default function Contact() {
     }
     try {
       setWaitSubmitting(true);
-      await submitWaitlistEmail({ name: waitlistName, email: waitlistEmail, recaptchaToken }); // + include name
+      await submitWaitlistEmail({
+        name: waitlistName,
+        email: waitlistEmail,
+        acceptMarketing: waitlistAcceptMarketing, // + include
+        recaptchaToken,
+      });
       setSnackSeverity("success");
       setSnackMsg("Thanks! We’ll notify you when we’re accepting new projects.");
       setSnackOpen(true);
-      setWaitlistName(""); // + reset name
+      setWaitlistName("");
       setWaitlistNameErr("");
       setWaitlistEmail("");
       setWaitlistErr("");
-      recaptchaRef.current?.reset(); // reset reCAPTCHA
+      setWaitlistAcceptMarketing(true); // + reset to default ON
+      recaptchaRef.current?.reset();
       setRecaptchaToken("");
     } catch (err) {
       console.error("Waitlist signup failed:", err);
@@ -220,7 +230,20 @@ export default function Contact() {
                 />
               </Stack>
 
-              {/* Move reCAPTCHA below the fields */}
+              {/* Marketing consent */}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="waitlistAcceptMarketing"
+                    checked={waitlistAcceptMarketing}
+                    onChange={(e) => setWaitlistAcceptMarketing(e.target.checked)}
+                  />
+                }
+                label="I agree to receive occasional updates about services and availability."
+                sx={{ mb: 1.5 }}
+              />
+
+              {/* reCAPTCHA below fields */}
               <Box sx={{ mb: 1.5 }}>
                 <ReCAPTCHA
                   ref={recaptchaRef}
@@ -238,7 +261,7 @@ export default function Contact() {
                 )}
               </Box>
 
-              {/* Then the submit button */}
+              {/* Submit */}
               <Button type="submit" variant="contained" color="primary" sx={{ whiteSpace: "nowrap" }} disabled={waitSubmitting}>
                 {waitSubmitting ? "Submitting..." : "Notify Me"}
               </Button>
@@ -354,8 +377,21 @@ export default function Contact() {
                 </Grid>
               </Grid>
 
-              {/* + reCAPTCHA widget */}
-              <Box sx={{ mt: 2, mb: 0.5 }}>
+              {/* Marketing consent */}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="acceptMarketing"
+                    checked={form.acceptMarketing}
+                    onChange={handleChange}
+                  />
+                }
+                label="I agree to receive occasional updates about services and availability."
+                sx={{ mt: 1.5 }}
+              />
+
+              {/* reCAPTCHA widget */}
+              <Box sx={{ mt: 1.5, mb: 0.5 }}>
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}

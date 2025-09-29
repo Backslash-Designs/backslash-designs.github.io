@@ -58,13 +58,25 @@ export async function submitWaitlistEmail(email, extra = {}) {
     throw new Error("VITE_N8N_WAITLIST_WEBHOOK_URL (or VITE_N8N_QUOTE_WEBHOOK_URL) is not configured.");
   }
 
+  // accept both submitWaitlistEmail(email, extra) and submitWaitlistEmail({ email, ... })
+  const input = (typeof email === "object" && email !== null)
+    ? email
+    : { email, ...extra };
+
+  if (!input.email || typeof input.email !== "string") {
+    throw new Error("Waitlist email is required.");
+  }
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 15000);
 
   try {
     const payload = {
-      email,
-      ...extra, // includes name, acceptMarketing, recaptchaToken
+      email: input.email,
+      ...(() => {
+        const { email: _e, ...rest } = input;
+        return rest;
+      })(), // includes name, acceptMarketing, recaptchaToken
       _type: "waitlist",
       _meta: {
         ts: new Date().toISOString(),
