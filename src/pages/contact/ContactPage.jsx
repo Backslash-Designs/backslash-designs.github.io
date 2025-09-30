@@ -10,7 +10,8 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { submitQuoteRequest, submitWaitlistEmail } from "../../components/QuoteRequestHandler.jsx";
+// CHANGED: use services/QuoteRequestService
+import { submitQuoteRequest, submitWaitlistEmail } from "../../services/QuoteRequestService.jsx";
 import { SERVICES } from "../services/ServicesPage.jsx";
 import ReCAPTCHA from "react-google-recaptcha"; // + add reCAPTCHA
 import Checkbox from "@mui/material/Checkbox"; // + new

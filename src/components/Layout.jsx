@@ -2,7 +2,8 @@ import React from "react";
 import { Outlet, Link as RouterLink, useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Header from "./Header.jsx";
-import SystemAnnouncements from "./SystemAnnouncements.jsx";
+// CHANGED: use services/SystemAnnouncementsService
+import SystemAnnouncements from "../services/SystemAnnouncementsService.jsx";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";

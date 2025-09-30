@@ -1,7 +1,8 @@
 import React from "react";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import AnnouncementBar from "./AnnouncementBar";
+// CHANGED: adjusted path after moving to services/
+import AnnouncementBar from "../components/AnnouncementBar";
 
 /**
  * Computes which system-wide announcements to show.
