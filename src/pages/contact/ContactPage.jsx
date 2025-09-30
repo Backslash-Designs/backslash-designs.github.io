@@ -164,7 +164,8 @@ export default function Contact() {
             p: { xs: 2, sm: 3 },
             mb: 3,
             display: "flex",
-            alignItems: "center",
+            flexDirection: { xs: "column", sm: "row" }, // stack on mobile
+            alignItems: { xs: "stretch", sm: "center" }, // stretch button on mobile
             justifyContent: "space-between",
             gap: 2,
             bgcolor: (t) => t.palette.action.hover,
@@ -187,7 +188,7 @@ export default function Contact() {
             variant="contained"
             color="primary"
             size="large"
-            sx={{ whiteSpace: "nowrap" }}
+            
           >
             Open Support Ticket
           </Button>

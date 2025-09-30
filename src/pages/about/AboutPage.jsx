@@ -1,10 +1,6 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-// Reuse the same array from the Home page
-// import { values } from "./Values.jsx";
-import { Values }from "./Values.jsx";
+import ValuesPage from "./Values.jsx";
 import Team from "./Team.jsx"; 
 import Mission from "./Mission.jsx"; 
 
@@ -21,12 +17,9 @@ export default function About() {
       <Box sx={{ maxWidth: 1100, mx: "auto" }}>
         {/* Mission section */}
         <Mission />
-
-        <Values summariesById={aboutSummaries} />
+        <ValuesPage summariesById={aboutSummaries} />
         {/* Team section */}
         <Team />
-
-    
       </Box>
     </Box>
   );
