@@ -25,7 +25,7 @@ const SECTORS = [
 ];
 
 // New: Drawer component that appears below the sticky top area
-function MobileNavDrawer({ open, onClose, topOffset = 0 }) {
+function MobileNavDrawer({ open, onClose }) {
   const [svcOpen, setSvcOpen] = React.useState(false);
   const toggleServices = () => setSvcOpen((v) => !v);
 
@@ -35,14 +35,15 @@ function MobileNavDrawer({ open, onClose, topOffset = 0 }) {
 
   return (
     <Drawer
-      anchor="left"
+      anchor="right"
       open={open}
       onClose={onClose}
       ModalProps={{ keepMounted: true }}
       PaperProps={{
         sx: {
-          top: topOffset,
-          height: `calc(100% - ${topOffset}px)`,
+          // Removed top offset so the drawer covers the header
+          top: 0,
+          height: "100%",
         },
       }}
     >
@@ -124,8 +125,18 @@ function MobileNavDrawer({ open, onClose, topOffset = 0 }) {
             <ListItemText primary="About" />
           </ListItemButton>
           <Divider />
-          <ListItemButton component={RouterLink} to="/contact" onClick={onClose}>
-            <ListItemText primary="Contact US" />
+          <ListItemButton
+            component={RouterLink}
+            to="/contact"
+            onClick={onClose}
+            sx={{
+              bgcolor: (t) => t.palette.primary.main,
+              color: (t) => t.palette.primary.contrastText,
+              "& .MuiListItemText-primary": { color: "inherit", fontWeight: 600 },
+              "&:hover": { bgcolor: (t) => t.palette.primary.dark },
+            }}
+          >
+            <ListItemText primary="Contact"/>
           </ListItemButton>
         </List>
       </Box>
@@ -205,7 +216,7 @@ export default function Layout() {
         <SystemAnnouncements />
         <Header onOpenMobileMenu={openMobileMenu} />
       </Box>
-      <MobileNavDrawer open={drawerOpen} onClose={closeMobileMenu} topOffset={topOffset} />
+      <MobileNavDrawer open={drawerOpen} onClose={closeMobileMenu} />
       <Outlet />
       <Footer />
     </Box>
