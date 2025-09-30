@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { keyframes } from "@emotion/react";
 import { useTheme } from "@mui/material/styles";
+import { Paper } from "@mui/material";
 
 /* ---------- Animations ---------- */
 const fadeIn = keyframes`
@@ -197,7 +198,7 @@ export default function Hero() {
   }, [skipIntro, taglineStart, TAGLINE.length, tagSpeed]);
 
   return (
-    <Box
+    <Paper
       component="section"
       sx={{
         // Shrink to half height when animations are done
@@ -304,6 +305,6 @@ export default function Hero() {
           <TypedText text={TAGLINE} delay={taglineStart} speed={tagSpeed} animate={!skipIntro} />
         </Typography>
       </Box>
-    </Box>
+    </Paper>
   );
 }
