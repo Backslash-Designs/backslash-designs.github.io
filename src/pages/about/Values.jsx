@@ -51,7 +51,7 @@ export const values = [
     },
 ];
 
-export default function ValuesSummary() {
+export function ValuesSummary() {
     return (
         <Box component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
         <Box sx={{ maxWidth: 1100, width: "100%", mx: "auto" }}>
@@ -96,4 +96,62 @@ export default function ValuesSummary() {
         </Box>
         </Box>
     );
+}
+
+// New: Detailed Values section (reused by About page)
+export default function ValuesPage({summariesById }) {
+  return (
+    <>
+      <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
+        About Our Values
+      </Typography>
+
+      {values.map(({ title, details = [], Icon, href }) => {
+        const id = (href && href.split("#")[1]) || title.toLowerCase().replace(/\s+/g, "-");
+        const summary = summariesById?.[id];
+
+        return (
+          <Box key={title} id={id} sx={{ mb: 3 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+              <Box
+                sx={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: "50%",
+                  display: "grid",
+                  placeItems: "center",
+                  bgcolor: (t) => t.palette.action.hover,
+                }}
+              >
+                <Icon fontSize="small" />
+              </Box>
+              <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                {title}
+              </Typography>
+            </Box>
+
+            {summary && (
+              <Typography variant="body2" sx={{ mb: 1, opacity: 0.95 }}>
+                {summary}
+              </Typography>
+            )}
+
+            <Stack spacing={0.75}>
+              {Array.isArray(details) ? (
+                details.map((p, i) => (
+                  <Typography key={i} variant="body2" sx={{ opacity: 0.95 }}>
+                    {p}
+                  </Typography>
+                ))
+              ) : (
+                <Typography variant="body2" sx={{ opacity: 0.95 }}>
+                  {details}
+                </Typography>
+              )}
+            </Stack>
+          </Box>
+        );
+      })}
+    </>
+  );
 }
