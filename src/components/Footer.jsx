@@ -280,9 +280,30 @@ export default function Footer() {
 
         <Divider sx={{ mb: 2 }} />
 
-        <Typography variant="caption" sx={{ opacity: 0.7 }}>
-          &copy; {new Date().getFullYear()} Backslash Designs. All rights reserved.
-        </Typography>
+        {/* Bottom row with copyright + Privacy Policy link */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 1,
+            flexWrap: "wrap",
+          }}
+        >
+          <Typography variant="caption" sx={{ opacity: 0.7 }}>
+            &copy; {new Date().getFullYear()} Backslash Designs. All rights reserved.
+          </Typography>
+          <Link
+            component={RouterLink}
+            to="/privacy"
+            underline="hover"
+            variant="caption"
+            color="inherit"
+            sx={{ opacity: 0.85 }}
+          >
+            Privacy Policy
+          </Link>
+        </Box>
       </Box>
     </Box>
   );

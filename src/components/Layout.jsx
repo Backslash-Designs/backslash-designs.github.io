@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, Link as RouterLink } from "react-router-dom";
+import { Outlet, Link as RouterLink, useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Header from "./Header.jsx";
 import SystemAnnouncements from "./SystemAnnouncements.jsx";
@@ -177,6 +177,12 @@ export default function Layout() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
+
+  // + scroll to top on route change (ignore hash-only changes)
+  const location = useLocation();
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [location.pathname]);
 
   return (
     <Box

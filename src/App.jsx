@@ -10,6 +10,7 @@ import Contact from "./pages//contact/ContactPage.jsx";
 import { ServicesPage } from "./pages//services/ServicesPage.jsx"; 
 import SectorsPage from "./pages//sectors/SectorsPage.jsx";
 import SOSPage from "./pages//sos/SOSPage.jsx";
+import PrivacyPage from "./pages/privacy/PrivacyPage.jsx";
 
 
 function shouldShowMaintenance() {
@@ -43,6 +44,7 @@ export default function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/sectors" element={<SectorsPage />} />
           <Route path="/sos" element={<SOSPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
