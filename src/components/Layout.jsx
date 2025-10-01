@@ -126,7 +126,7 @@ function MobileNavDrawer({ open, onClose }) {
           <ListItemButton component={RouterLink} to="/about" onClick={onClose}>
             <ListItemText primary="About" />
           </ListItemButton>
-           <ListItemButton component={RouterLink} to="/blog" onClick={onClose}>
+          <ListItemButton component={RouterLink} to="/blog" onClick={onClose}>
             <ListItemText primary="Blog" />
           </ListItemButton>
           <Divider />
