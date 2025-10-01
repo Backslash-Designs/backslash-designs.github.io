@@ -13,7 +13,7 @@ import {
 } from "@mui/icons-material";
 
 /* ---------- Data ---------- */
-const TEAM = [
+export const TEAM = [
   {
     name: "Josiah Ledua",
     title: "Founder, Backslash Designs",
