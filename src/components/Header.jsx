@@ -95,7 +95,7 @@ export default function Header({ onOpenMobileMenu }) {
 
                 {/* Reordered menu buttons */}
                 <Button color="inherit" component={RouterLink} to="/home" sx={{ display: { xs: "none", sm: "inline-flex" } }}>Home</Button>
-
+                
                 {/* Sectors dropdown (desktop only) */}
                 <Button
                     color="inherit"
@@ -175,6 +175,8 @@ export default function Header({ onOpenMobileMenu }) {
                 </Menu>
 
                 <Button color="inherit" component={RouterLink} to="/about" sx={{ display: { xs: "none", sm: "inline-flex" } }}>About</Button>
+                {/* NEW: Blog link (desktop) */}
+                <Button color="inherit" component={RouterLink} to="/blog" sx={{ display: { xs: "none", sm: "inline-flex" } }}>Blog</Button>
                 <Button color="primary" component={RouterLink} variant="contained" to="/contact" >Contact</Button>
                 <Tooltip title={`Switch to ${theme.palette.mode === "dark" ? "light" : "dark"} mode`}>
                 <IconButton

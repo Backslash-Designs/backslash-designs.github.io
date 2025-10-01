@@ -230,6 +230,9 @@ export default function Footer() {
             <Link component={RouterLink} to="/" underline="hover">
               Home
             </Link>
+            <Link component={RouterLink} to="/blog" underline="hover">
+              Blog
+            </Link>
             <Link component={RouterLink} to="/about" underline="hover">
               About
             </Link>
