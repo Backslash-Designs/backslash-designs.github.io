@@ -448,14 +448,42 @@ Response targets are documented per plan.
     const pagePosts = filteredPosts.slice(start, end);
 
     return (
-        <Box component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
+        <Box class="test" component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
         <Box sx={{ maxWidth: 900, mx: "auto" }}>
-            <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>
-            Blog
-            </Typography>
+        <Paper
+            component="section"
+            square
+            elevation={1}
+            sx={{
+                position: "relative",
+                left: "50%",
+                right: "50%",
+                ml: "-50vw",
+                mr: "-50vw",
+                width: "100vw",
+                bgcolor: "secondary.main",
+                py: { xs: 2, sm: 3 },
+                mb: 2,
+                borderTop: (t) => `1px solid ${t.palette.divider}`,
+                borderBottom: (t) => `1px solid ${t.palette.divider}`,
+                }}
+        >
+            <Box sx={{ px: { xs: 2, sm: 3 } }}>
+                <Box sx={{ maxWidth: 1100, mx: "auto" }}>
+                {/* ADDED: title inside the band */}
+                <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.75 }}>
+                    Blog
+                </Typography>
+                <Typography variant="body1" sx={{ opacity: 0.95 }}>
+                    Updates, notes, and announcements from Backslash Designs — release highlights,
+                    field tips, and what we’re working on.
+                </Typography>
+                </Box>
+            </Box>
+        </Paper>
 
-            {/* NEW: Filters toolbar */}
-            <Paper
+        {/* NEW: Filters toolbar */}
+        <Paper
             variant="outlined"
             sx={{
                 p: 1,
@@ -505,7 +533,7 @@ Response targets are documented per plan.
             </Box>
             </Paper>
 
-            {/* Top pagination */}
+            {/* Top pagination 
             <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1 }}>
             <Pagination
                 count={totalPages}
@@ -515,6 +543,7 @@ Response targets are documented per plan.
                 size="small"
             />
             </Box>
+                */}
 
             {/* Empty state */}
             {pagePosts.length === 0 ? (
