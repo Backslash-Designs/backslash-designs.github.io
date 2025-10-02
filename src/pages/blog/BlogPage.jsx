@@ -19,10 +19,11 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Avatar from "@mui/material/Avatar";
 import { TEAM } from "../about/Team.jsx";
 import BLOG_DB from "./blogs.json"; // NEW
+import { fetchBlogsJSON } from "../../services/blogsService.js"; // NEW
 
-// REPLACE the hardcoded POSTS with data mapped from blogs.json
-// export const POSTS = [ ... ];
-    export const POSTS = (BLOG_DB?.posts || []).map((p, i) => {
+// REPLACE the hardcoded POSTS with a mapper + fallback
+const mapDbToPosts = (db) =>
+  (db?.posts || []).map((p, i) => {
     const key = p.slug || p.file || `post-${i}`;
     const title = p.title || p.aliases || key;
     const date = p.posted_date || p.created_date || p.date || null;
@@ -35,74 +36,77 @@ import BLOG_DB from "./blogs.json"; // NEW
     const technologies = Array.isArray(p.technologies) ? p.technologies : [];
     const other = Array.isArray(p.other) ? p.other : Array.isArray(p.others) ? p.others : [];
     return { key, title, date, excerpt, contentMd, author, tags, values, vendors, technologies, other };
-    });
+  });
+
+// Fallback at build-time; remote (if available) will override inside component
+export const POSTS_FALLBACK = mapDbToPosts(BLOG_DB);
 
 // Map markdown elements to MUI components
-    const mdComponents = {
-    h1: ({ node, ...props }) => (
-        <Typography variant="h4" sx={{ fontWeight: 800, mt: 2, mb: 1 }} {...props} />
-    ),
-    h2: ({ node, ...props }) => (
-        <Typography variant="h5" sx={{ fontWeight: 700, mt: 2, mb: 1 }} {...props} />
-    ),
-    h3: ({ node, ...props }) => (
-        <Typography variant="h6" sx={{ fontWeight: 700, mt: 2, mb: 1 }} {...props} />
-    ),
-    p: ({ node, ...props }) => (
-        <Typography variant="body2" sx={{ mb: 1.25, opacity: 0.95 }} {...props} />
-    ),
-    a: ({ node, href, ...props }) => (
-        <Link href={href} target="_blank" rel="noopener noreferrer" {...props} />
-    ),
-    ul: ({ node, ...props }) => <Box component="ul" sx={{ pl: 3, mb: 1.25 }} {...props} />,
-    ol: ({ node, ...props }) => <Box component="ol" sx={{ pl: 3, mb: 1.25 }} {...props} />,
-    li: ({ node, ...props }) => (
-        <li>
-        <Typography variant="body2" component="span" sx={{ opacity: 0.95 }} {...props} />
-        </li>
-    ),
-    code: ({ inline, children, ...props }) =>
-        inline ? (
-        <Box
-            component="code"
-            sx={{
-            px: 0.5,
-            py: 0.1,
-            borderRadius: 0.5,
-            bgcolor: (t) => t.palette.action.hover,
-            fontFamily:
-                '"Hack", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
-            fontSize: "0.85em",
-            }}
-            {...props}
-        >
-            {children}
-        </Box>
-        ) : (
-        <Box
-            component="pre"
-            sx={{
-            p: 1.25,
-            borderRadius: 1,
-            overflowX: "auto",
-            bgcolor: (t) => t.palette.action.hover,
-            }}
-            {...props}
-        >
-            <Box
-            component="code"
-            sx={{
-                display: "block",
-                fontFamily:
-                '"Hack", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
-                fontSize: "0.9em",
-            }}
-            >
-            {children}
-            </Box>
-        </Box>
-        ),
-    };
+const mdComponents = {
+  h1: ({ node, ...props }) => (
+      <Typography variant="h4" sx={{ fontWeight: 800, mt: 2, mb: 1 }} {...props} />
+  ),
+  h2: ({ node, ...props }) => (
+      <Typography variant="h5" sx={{ fontWeight: 700, mt: 2, mb: 1 }} {...props} />
+  ),
+  h3: ({ node, ...props }) => (
+      <Typography variant="h6" sx={{ fontWeight: 700, mt: 2, mb: 1 }} {...props} />
+  ),
+  p: ({ node, ...props }) => (
+      <Typography variant="body2" sx={{ mb: 1.25, opacity: 0.95 }} {...props} />
+  ),
+  a: ({ node, href, ...props }) => (
+      <Link href={href} target="_blank" rel="noopener noreferrer" {...props} />
+  ),
+  ul: ({ node, ...props }) => <Box component="ul" sx={{ pl: 3, mb: 1.25 }} {...props} />,
+  ol: ({ node, ...props }) => <Box component="ol" sx={{ pl: 3, mb: 1.25 }} {...props} />,
+  li: ({ node, ...props }) => (
+      <li>
+      <Typography variant="body2" component="span" sx={{ opacity: 0.95 }} {...props} />
+      </li>
+  ),
+  code: ({ inline, children, ...props }) =>
+      inline ? (
+      <Box
+          component="code"
+          sx={{
+          px: 0.5,
+          py: 0.1,
+          borderRadius: 0.5,
+          bgcolor: (t) => t.palette.action.hover,
+          fontFamily:
+              '"Hack", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
+          fontSize: "0.85em",
+          }}
+          {...props}
+      >
+          {children}
+      </Box>
+      ) : (
+      <Box
+          component="pre"
+          sx={{
+          p: 1.25,
+          borderRadius: 1,
+          overflowX: "auto",
+          bgcolor: (t) => t.palette.action.hover,
+          }}
+          {...props}
+      >
+          <Box
+          component="code"
+          sx={{
+              display: "block",
+              fontFamily:
+              '"Hack", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
+              fontSize: "0.9em",
+          }}
+          >
+          {children}
+          </Box>
+      </Box>
+      ),
+};
 
 const PER_PAGE = 4;
 
@@ -118,159 +122,191 @@ const mdToPlain = (md = "") =>
         .replace(/\s+/g, " ")
         .trim();
 
-    function formatDate(iso) {
-        try {
-            return new Date(iso).toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            });
-        } catch {
-            return iso;
-        }
+function formatDate(iso) {
+    try {
+        return new Date(iso).toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        });
+    } catch {
+        return iso;
     }
+}
 
 export default function BlogPage() {
-    const location = useLocation();
-    const navigate = useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-    // NEW: derive initial filter state from URL (extended)
-    const sp0 = React.useMemo(() => new URLSearchParams(location.search), [location.search]);
-    const [query, setQuery] = React.useState(sp0.get("q") ?? "");
-    const [selectedTags, setSelectedTags] = React.useState(
-        (sp0.get("tags") || "").split(",").map((t) => t.trim()).filter(Boolean)
-    );
-    const [selectedAuthors, setSelectedAuthors] = React.useState(
-        (sp0.get("authors") || "").split(",").map((t) => t.trim()).filter(Boolean)
-    );
-    const [selectedValues, setSelectedValues] = React.useState(
-        (sp0.get("values") || "").split(",").map((t) => t.trim()).filter(Boolean)
-    );
-    const [selectedVendors, setSelectedVendors] = React.useState(
-        (sp0.get("vendors") || "").split(",").map((t) => t.trim()).filter(Boolean)
-    );
-    const [selectedTech, setSelectedTech] = React.useState(
-        (sp0.get("tech") || "").split(",").map((t) => t.trim()).filter(Boolean)
-    );
-    const [selectedOther, setSelectedOther] = React.useState(
-        (sp0.get("other") || "").split(",").map((t) => t.trim()).filter(Boolean)
-    );
-    const [sortBy, setSortBy] = React.useState(sp0.get("sort") || SORT_DEFAULT);
+  // NEW: optionally load blogs.json from a private GitHub repo at runtime.
+  // Note: No token is used in the browser; private repos will safely return null and we will fall back.
+  const GH_CFG = React.useMemo(
+    () => ({
+      owner: import.meta.env.VITE_BLOGS_OWNER,
+      repo: import.meta.env.VITE_BLOGS_REPO,
+      path: import.meta.env.VITE_BLOGS_PATH || "src/pages/blog/blogs.json",
+      ref: import.meta.env.VITE_BLOGS_REF || "main",
+    }),
+    []
+  );
+  const [remoteDb, setRemoteDb] = React.useState(null);
 
-    const [page, setPage] = React.useState(1);
-    const [expanded, setExpanded] = React.useState(null);
+  React.useEffect(() => {
+    // Skip if not configured
+    if (!GH_CFG.owner || !GH_CFG.repo || !GH_CFG.path) return;
+    let cancelled = false;
+    fetchBlogsJSON(GH_CFG)
+      .then((db) => {
+        if (!cancelled && db?.posts) setRemoteDb(db);
+      })
+      .catch(() => {
+        /* ignore and keep fallback */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [GH_CFG]);
+
+  // Use remote if available, otherwise fallback
+  const posts = React.useMemo(() => (remoteDb ? mapDbToPosts(remoteDb) : POSTS_FALLBACK), [remoteDb]);
+
+  // Derive initial filter state from URL (fix: define sp0 before using it)
+  const sp0 = React.useMemo(() => new URLSearchParams(location.search), [location.search]);
+
+  const [query, setQuery] = React.useState(sp0.get("q") ?? "");
+  const [selectedTags, setSelectedTags] = React.useState(
+    (sp0.get("tags") || "").split(",").map((t) => t.trim()).filter(Boolean)
+  );
+  const [selectedAuthors, setSelectedAuthors] = React.useState(
+    (sp0.get("authors") || "").split(",").map((t) => t.trim()).filter(Boolean)
+  );
+  const [selectedValues, setSelectedValues] = React.useState(
+    (sp0.get("values") || "").split(",").map((t) => t.trim()).filter(Boolean)
+  );
+  const [selectedVendors, setSelectedVendors] = React.useState(
+    (sp0.get("vendors") || "").split(",").map((t) => t.trim()).filter(Boolean)
+  );
+  const [selectedTech, setSelectedTech] = React.useState(
+    (sp0.get("tech") || "").split(",").map((t) => t.trim()).filter(Boolean)
+  );
+  const [selectedOther, setSelectedOther] = React.useState(
+    (sp0.get("other") || "").split(",").map((t) => t.trim()).filter(Boolean)
+  );
+  const [sortBy, setSortBy] = React.useState(sp0.get("sort") || SORT_DEFAULT);
+
+  const [page, setPage] = React.useState(1);
+  const [expanded, setExpanded] = React.useState(null);
 
   // Keep local filters in sync with URL edits/back/forward (extended)
-    React.useEffect(() => {
-        const sp = new URLSearchParams(location.search);
-        const q = sp.get("q") ?? "";
-        const tags = (sp.get("tags") || "").split(",").map((t) => t.trim()).filter(Boolean);
-        const authors = (sp.get("authors") || "").split(",").map((t) => t.trim()).filter(Boolean);
-        const values = (sp.get("values") || "").split(",").map((t) => t.trim()).filter(Boolean);
-        const vendors = (sp.get("vendors") || "").split(",").map((t) => t.trim()).filter(Boolean);
-        const tech = (sp.get("tech") || "").split(",").map((t) => t.trim()).filter(Boolean);
-        const other = (sp.get("other") || "").split(",").map((t) => t.trim()).filter(Boolean);
-        const sort = sp.get("sort") || SORT_DEFAULT;
+  React.useEffect(() => {
+      const sp = new URLSearchParams(location.search);
+      const q = sp.get("q") ?? "";
+      const tags = (sp.get("tags") || "").split(",").map((t) => t.trim()).filter(Boolean);
+      const authors = (sp.get("authors") || "").split(",").map((t) => t.trim()).filter(Boolean);
+      const values = (sp.get("values") || "").split(",").map((t) => t.trim()).filter(Boolean);
+      const vendors = (sp.get("vendors") || "").split(",").map((t) => t.trim()).filter(Boolean);
+      const tech = (sp.get("tech") || "").split(",").map((t) => t.trim()).filter(Boolean);
+      const other = (sp.get("other") || "").split(",").map((t) => t.trim()).filter(Boolean);
+      const sort = sp.get("sort") || SORT_DEFAULT;
 
-        if (q !== query) setQuery(q);
-        if (tags.join(",") !== selectedTags.join(",")) setSelectedTags(tags);
-        if (authors.join(",") !== selectedAuthors.join(",")) setSelectedAuthors(authors);
-        if (values.join(",") !== selectedValues.join(",")) setSelectedValues(values);
-        if (vendors.join(",") !== selectedVendors.join(",")) setSelectedVendors(vendors);
-        if (tech.join(",") !== selectedTech.join(",")) setSelectedTech(tech);
-        if (other.join(",") !== selectedOther.join(",")) setSelectedOther(other);
-        if (sort !== sortBy) setSortBy(sort);
-    }, [location.search]); // eslint-disable-line react-hooks/exhaustive-deps
+      if (q !== query) setQuery(q);
+      if (tags.join(",") !== selectedTags.join(",")) setSelectedTags(tags);
+      if (authors.join(",") !== selectedAuthors.join(",")) setSelectedAuthors(authors);
+      if (values.join(",") !== selectedValues.join(",")) setSelectedValues(values);
+      if (vendors.join(",") !== selectedVendors.join(",")) setSelectedVendors(vendors);
+      if (tech.join(",") !== selectedTech.join(",")) setSelectedTech(tech);
+      if (other.join(",") !== selectedOther.join(",")) setSelectedOther(other);
+      if (sort !== sortBy) setSortBy(sort);
+  }, [location.search]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // All unique vocabularies (alpha)
-    const allTags = React.useMemo(() => {
-        const set = new Set(); POSTS.forEach((p) => (p.tags || []).forEach((t) => set.add(t)));
-        return Array.from(set).sort((a, b) => a.localeCompare(b));
-    }, []);
-    const allAuthors = React.useMemo(() => {
-        const set = new Set(); POSTS.forEach((p) => p.author && set.add(p.author));
-        return Array.from(set).sort((a, b) => a.localeCompare(b));
-    }, []);
-    const allValues = React.useMemo(() => {
-        const set = new Set(); POSTS.forEach((p) => (p.values || []).forEach((t) => set.add(t)));
-        return Array.from(set).sort((a, b) => a.localeCompare(b));
-    }, []);
-    const allVendors = React.useMemo(() => {
-        const set = new Set(); POSTS.forEach((p) => (p.vendors || []).forEach((t) => set.add(t)));
-        return Array.from(set).sort((a, b) => a.localeCompare(b));
-    }, []);
-    const allTech = React.useMemo(() => {
-        const set = new Set(); POSTS.forEach((p) => (p.technologies || p.technology || p.tech || p.technos || p.tec || p.technologies || p.technologies)?.forEach?.((t) => set.add(t)));
-        // NOTE: our mapped posts always have p.technologies; above line is defensive
-        if (set.size === 0) POSTS.forEach((p) => (p.technologies || []).forEach((t) => set.add(t)));
-        return Array.from(set).sort((a, b) => a.localeCompare(b));
-    }, []);
-    const allOther = React.useMemo(() => {
-        const set = new Set(); POSTS.forEach((p) => (p.other || []).forEach((t) => set.add(t)));
-        return Array.from(set).sort((a, b) => a.localeCompare(b));
-    }, []);
+  // All unique vocabularies (alpha)
+  const allTags = React.useMemo(() => {
+    const set = new Set(); posts.forEach((p) => (p.tags || []).forEach((t) => set.add(t)));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [posts]);
+  const allAuthors = React.useMemo(() => {
+    const set = new Set(); posts.forEach((p) => p.author && set.add(p.author));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [posts]);
+  const allValues = React.useMemo(() => {
+    const set = new Set(); posts.forEach((p) => (p.values || []).forEach((t) => set.add(t)));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [posts]);
+  const allVendors = React.useMemo(() => {
+    const set = new Set(); posts.forEach((p) => (p.vendors || []).forEach((t) => set.add(t)));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [posts]);
+  const allTech = React.useMemo(() => {
+    const set = new Set(); posts.forEach((p) => (p.technologies || [])?.forEach?.((t) => set.add(t)));
+    if (set.size === 0) posts.forEach((p) => (p.technologies || []).forEach((t) => set.add(t)));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [posts]);
+  const allOther = React.useMemo(() => {
+    const set = new Set(); posts.forEach((p) => (p.other || []).forEach((t) => set.add(t)));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [posts]);
 
-    // Author lookup
-    const authorsByName = React.useMemo(() => {
-        const map = new Map();
-        TEAM.forEach((m) => map.set(m.name, m));
-        return map;
-    }, []);
-    const defaultAuthorName = TEAM[0]?.name;
+  // Author lookup
+  const authorsByName = React.useMemo(() => {
+      const map = new Map();
+      TEAM.forEach((m) => map.set(m.name, m));
+      return map;
+  }, []);
+  const defaultAuthorName = TEAM[0]?.name;
 
-    // Filter + sort (extended)
-    const filteredPosts = React.useMemo(() => {
-        const q = normalize(query);
-        const hasTags = selectedTags.length > 0;
-        const hasAuthors = selectedAuthors.length > 0;
-        const hasValues = selectedValues.length > 0;
-        const hasVendors = selectedVendors.length > 0;
-        const hasTech = selectedTech.length > 0;
-        const hasOther = selectedOther.length > 0;
+  // Filter + sort (extended)
+  const filteredPosts = React.useMemo(() => {
+      const q = normalize(query);
+      const hasTags = selectedTags.length > 0;
+      const hasAuthors = selectedAuthors.length > 0;
+      const hasValues = selectedValues.length > 0;
+      const hasVendors = selectedVendors.length > 0;
+      const hasTech = selectedTech.length > 0;
+      const hasOther = selectedOther.length > 0;
 
-        let list = POSTS.filter((p) => {
-        // search across multiple fields
-        const inTitle = normalize(p.title).includes(q);
-        const inExcerpt = normalize(p.excerpt).includes(q);
-        const inMd = normalize(mdToPlain(p.contentMd)).includes(q);
-        const inTags = (p.tags || []).some((t) => normalize(t).includes(q));
-        const inAuthor = normalize(p.author || defaultAuthorName || "").includes(q);
-        const inValues = (p.values || []).some((t) => normalize(t).includes(q));
-        const inVendors = (p.vendors || []).some((t) => normalize(t).includes(q));
-        const inTech = (p.technologies || []).some((t) => normalize(t).includes(q));
-        const inOther = (p.other || []).some((t) => normalize(t).includes(q));
-        const matchesSearch = !q || inTitle || inExcerpt || inMd || inTags || inAuthor || inValues || inVendors || inTech || inOther;
+      let list = posts.filter((p) => {
+      // search across multiple fields
+      const inTitle = normalize(p.title).includes(q);
+      const inExcerpt = normalize(p.excerpt).includes(q);
+      const inMd = normalize(mdToPlain(p.contentMd)).includes(q);
+      const inTags = (p.tags || []).some((t) => normalize(t).includes(q));
+      const inAuthor = normalize(p.author || defaultAuthorName || "").includes(q);
+      const inValues = (p.values || []).some((t) => normalize(t).includes(q));
+      const inVendors = (p.vendors || []).some((t) => normalize(t).includes(q));
+      const inTech = (p.technologies || []).some((t) => normalize(t).includes(q));
+      const inOther = (p.other || []).some((t) => normalize(t).includes(q));
+      const matchesSearch = !q || inTitle || inExcerpt || inMd || inTags || inAuthor || inValues || inVendors || inTech || inOther;
 
-        // tag filter (ANY-of per group)
-        const matchesTags = !hasTags || (p.tags || []).some((t) => selectedTags.includes(t));
-        const matchesAuthors = !hasAuthors || (p.author ? selectedAuthors.includes(p.author) : false);
-        const matchesValues = !hasValues || (p.values || []).some((t) => selectedValues.includes(t));
-        const matchesVendors = !hasVendors || (p.vendors || []).some((t) => selectedVendors.includes(t));
-        const matchesTech = !hasTech || (p.technologies || []).some((t) => selectedTech.includes(t));
-        const matchesOther = !hasOther || (p.other || []).some((t) => selectedOther.includes(t));
+      // tag filter (ANY-of per group)
+      const matchesTags = !hasTags || (p.tags || []).some((t) => selectedTags.includes(t));
+      const matchesAuthors = !hasAuthors || (p.author ? selectedAuthors.includes(p.author) : false);
+      const matchesValues = !hasValues || (p.values || []).some((t) => selectedValues.includes(t));
+      const matchesVendors = !hasVendors || (p.vendors || []).some((t) => selectedVendors.includes(t));
+      const matchesTech = !hasTech || (p.technologies || []).some((t) => selectedTech.includes(t));
+      const matchesOther = !hasOther || (p.other || []).some((t) => selectedOther.includes(t));
 
-        return matchesSearch && matchesTags && matchesAuthors && matchesValues && matchesVendors && matchesTech && matchesOther;
-        });
+      return matchesSearch && matchesTags && matchesAuthors && matchesValues && matchesVendors && matchesTech && matchesOther;
+      });
 
-        // sort
-        switch (sortBy) {
-        case "date-asc":
-            list = list.slice().sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
-            break;
-        case "title-asc":
-            list = list.slice().sort((a, b) => a.title.localeCompare(b.title));
-            break;
-        case "title-desc":
-            list = list.slice().sort((a, b) => b.title.localeCompare(a.title));
-            break;
-        case "date-desc":
-        default:
-            list = list.slice().sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-            break;
-        }
+      // sort
+      switch (sortBy) {
+      case "date-asc":
+          list = list.slice().sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+          break;
+      case "title-asc":
+          list = list.slice().sort((a, b) => a.title.localeCompare(b.title));
+          break;
+      case "title-desc":
+          list = list.slice().sort((a, b) => b.title.localeCompare(a.title));
+          break;
+      case "date-desc":
+      default:
+          list = list.slice().sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+          break;
+      }
 
     return list;
-  }, [query, selectedTags, selectedAuthors, selectedValues, selectedVendors, selectedTech, selectedOther, sortBy, defaultAuthorName]);
+  }, [posts, query, selectedTags, selectedAuthors, selectedValues, selectedVendors, selectedTech, selectedOther, sortBy, defaultAuthorName]);
 
   // total pages depends on current filters
   const totalPages = Math.max(1, Math.ceil(filteredPosts.length / PER_PAGE));
@@ -436,7 +472,7 @@ export default function BlogPage() {
   const pagePosts = filteredPosts.slice(start, end);
 
   return (
-    <Box class="test" component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
+    <Box className="test" component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
       <Box sx={{ maxWidth: 900, mx: "auto" }}>
         <Paper
           component="section"
