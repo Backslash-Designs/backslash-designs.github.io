@@ -24,6 +24,23 @@ jobs:
           node-version: 20
           cache: "npm"
       - run: npm install --no-audit --no-fund
+      # NEW: prefetch blogs.json from the private repo (uses token server-side)
+      - name: Prefetch blogs.json (private repo)
+        run: |
+          mkdir -p src/pages/blog
+          echo "Fetching ${VITE_BLOGS_OWNER}/${VITE_BLOGS_REPO}:${VITE_BLOGS_PATH}@${VITE_BLOGS_REF}"
+          curl -fsSL \
+            -H "Authorization: Bearer ${BLOGS_GH_TOKEN}" \
+            -H "Accept: application/vnd.github.raw" \
+            "https://api.github.com/repos/${VITE_BLOGS_OWNER}/${VITE_BLOGS_REPO}/contents/${VITE_BLOGS_PATH}?ref=${VITE_BLOGS_REF}" \
+            -o src/pages/blog/blogs.json \
+          || echo "Prefetch failed; using bundled src/pages/blog/blogs.json"
+        env:
+          BLOGS_GH_TOKEN: ${{ secrets.BLOGS_GH_TOKEN }}
+          VITE_BLOGS_OWNER: backslash-designs
+          VITE_BLOGS_REPO: Project-Backslash-Chronicle
+          VITE_BLOGS_PATH: index.json
+          VITE_BLOGS_REF: master
       - run: npm run build
         env:
           BLOGS_GH_TOKEN: ${{ secrets.BLOGS_GH_TOKEN }}

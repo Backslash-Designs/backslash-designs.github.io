@@ -152,8 +152,11 @@ export default function BlogPage() {
   const [remoteDb, setRemoteDb] = React.useState(null);
 
   React.useEffect(() => {
-    // Skip if not configured
+    // NEW: only attempt client-side fetch if explicitly enabled (for public repos)
+    const allowClientFetch = import.meta.env.VITE_BLOGS_CLIENT_FETCH === "1";
+    if (!allowClientFetch) return;
     if (!GH_CFG.owner || !GH_CFG.repo || !GH_CFG.path) return;
+
     let cancelled = false;
     fetchBlogsJSON(GH_CFG)
       .then((db) => {
@@ -162,11 +165,9 @@ export default function BlogPage() {
       .catch(() => {
         /* ignore and keep fallback */
       });
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [GH_CFG]);
-
+  
   // Use remote if available, otherwise fallback
   const posts = React.useMemo(() => (remoteDb ? mapDbToPosts(remoteDb) : POSTS_FALLBACK), [remoteDb]);
 
