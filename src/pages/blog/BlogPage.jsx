@@ -18,10 +18,8 @@ import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Avatar from "@mui/material/Avatar";
 import { TEAM } from "../about/Team.jsx";
-import BLOG_DB from "./blogs.json"; // NEW
-import { fetchBlogsJSON } from "../../services/blogsService.js"; // NEW
+import BLOG_DB from "./blogs.json"; 
 
-// REPLACE the hardcoded POSTS with a mapper + fallback
 const mapDbToPosts = (db) =>
   (db?.posts || []).map((p, i) => {
     const key = p.slug || p.file || `post-${i}`;
@@ -151,22 +149,6 @@ export default function BlogPage() {
   );
   const [remoteDb, setRemoteDb] = React.useState(null);
 
-  React.useEffect(() => {
-    // NEW: only attempt client-side fetch if explicitly enabled (for public repos)
-    const allowClientFetch = import.meta.env.VITE_BLOGS_CLIENT_FETCH === "1";
-    if (!allowClientFetch) return;
-    if (!GH_CFG.owner || !GH_CFG.repo || !GH_CFG.path) return;
-
-    let cancelled = false;
-    fetchBlogsJSON(GH_CFG)
-      .then((db) => {
-        if (!cancelled && db?.posts) setRemoteDb(db);
-      })
-      .catch(() => {
-        /* ignore and keep fallback */
-      });
-    return () => { cancelled = true; };
-  }, [GH_CFG]);
   
   // Use remote if available, otherwise fallback
   const posts = React.useMemo(() => (remoteDb ? mapDbToPosts(remoteDb) : POSTS_FALLBACK), [remoteDb]);
