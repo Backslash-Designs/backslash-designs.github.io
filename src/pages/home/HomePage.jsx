@@ -10,9 +10,9 @@ export default function Home() {
   return (
     <Box sx={{ width: "100%", justifySelf: "stretch", alignSelf: "stretch" }}>
       <Hero />
-      <SectorsSummary />
-      <ServicesSummary />
-      <ValuesSummary />
+      <SectorsSummary bgStyle="none" />
+      <ServicesSummary bgStyle="paper" />
+      <ValuesSummary bgStyle="none" />
     </Box>
   );
 }

@@ -122,10 +122,21 @@ export const SERVICES = [
   },
 ];
 
-/* Home: summary grid (keeps existing layout/behavior) */
-export default function ServicesSummary() {
+/* Home: summary grid (keeps existing layout/behavior)
+ * bgStyle: 'paper' | 'none' (default 'paper')
+ *   'paper' => wrap section in Paper (original look)
+ *   'none'  => plain Box container
+ */
+/**
+ * ServicesSummary
+ * @param {Object} props
+ * @param {'paper'|'none'} [props.bgStyle='paper'] - Background surface style for the section.
+ */
+export default function ServicesSummary({ bgStyle = 'paper' }) {
+  const isPaper = bgStyle === 'paper';
+  const Wrapper = isPaper ? Paper : Box;
   return (
-    <Paper component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
+    <Wrapper component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }} {...(isPaper ? {} : { variant: undefined })}>
       <Box sx={{ maxWidth: 1100, width: "100%", mx: "auto" }}>
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
           Our Services
@@ -167,7 +178,7 @@ export default function ServicesSummary() {
           ))}
         </Grid>
       </Box>
-    </Paper>
+    </Wrapper>
   );
 }
 

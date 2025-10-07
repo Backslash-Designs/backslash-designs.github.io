@@ -51,50 +51,58 @@ export const values = [
     },
 ];
 
-export function ValuesSummary() {
+/**
+ * ValuesSummary
+ * @param {Object} props
+ * @param {'paper'|'none'} [props.bgStyle='paper'] - Background surface style for the section.
+ */
+export function ValuesSummary({ bgStyle = 'paper' }) {
+    // bgStyle: 'paper' | 'none'
+    const isPaper = bgStyle === 'paper';
+    const Wrapper = isPaper ? Paper : Box;
     return (
-        <Box component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
-        <Box sx={{ maxWidth: 1100, width: "100%", mx: "auto" }}>
-            <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-            Our Values
-            </Typography>
-            <Grid container spacing={2} alignItems="stretch">
-            {values.map(({ title, description, details, Icon, href }) => (
-                <Grid key={title} item size={{ xs: 12, sm: 6, md: 4 }}>
-                <Paper variant="outlined" sx={{ height: "100%", p: 2 }}>
-                    <Stack spacing={1.25}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Box
-                        sx={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: "50%",
-                            display: "grid",
-                            placeItems: "center",
-                            bgcolor: (t) => t.palette.action.hover,
-                        }}
-                        >
-                        <Icon fontSize="small" />
-                        </Box>
-                        <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                        {title}
-                        </Typography>
-                    </Box>
-                    <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                        {description}
-                    </Typography>
-                    <Box>
-                        <Button size="small" component="a" href={href}>
-                        Learn more
-                        </Button>
-                    </Box>
-                    </Stack>
-                </Paper>
+        <Wrapper component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
+            <Box sx={{ maxWidth: 1100, width: "100%", mx: "auto" }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
+                    Our Values
+                </Typography>
+                <Grid container spacing={2} alignItems="stretch">
+                    {values.map(({ title, description, details, Icon, href }) => (
+                        <Grid key={title} item size={{ xs: 12, sm: 6, md: 4 }}>
+                            <Paper variant="outlined" sx={{ height: "100%", p: 2 }}>
+                                <Stack spacing={1.25}>
+                                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                        <Box
+                                            sx={{
+                                                width: 40,
+                                                height: 40,
+                                                borderRadius: "50%",
+                                                display: "grid",
+                                                placeItems: "center",
+                                                bgcolor: (t) => t.palette.action.hover,
+                                            }}
+                                        >
+                                            <Icon fontSize="small" />
+                                        </Box>
+                                        <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                            {title}
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                                        {description}
+                                    </Typography>
+                                    <Box>
+                                        <Button size="small" component="a" href={href}>
+                                            Learn more
+                                        </Button>
+                                    </Box>
+                                </Stack>
+                            </Paper>
+                        </Grid>
+                    ))}
                 </Grid>
-            ))}
-            </Grid>
-        </Box>
-        </Box>
+            </Box>
+        </Wrapper>
     );
 }
 
