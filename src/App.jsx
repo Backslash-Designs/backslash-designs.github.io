@@ -12,6 +12,7 @@ import SectorsPage from "./pages//sectors/SectorsPage.jsx";
 import SOSPage from "./pages//sos/SOSPage.jsx";
 import PrivacyPage from "./pages/privacy/PrivacyPage.jsx";
 import BlogPage from "./pages//blog/BlogPage.jsx";
+import BlogArticleFullPage from "./pages/blog/BlogArticleFullPage.jsx";
 
 
 function shouldShowMaintenance() {
@@ -47,6 +48,7 @@ export default function App() {
           <Route path="/sos" element={<SOSPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/article/:key" element={<BlogArticleFullPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

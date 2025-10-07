@@ -8,8 +8,11 @@ import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
-import ReactMarkdown from "react-markdown";
 import Pagination from "@mui/material/Pagination";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -17,9 +20,12 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Avatar from "@mui/material/Avatar";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 import { TEAM } from "../about/Team.jsx";
 import { useBlogsIndex } from "../../services/BlogsIndexService";
-import { POSTS_FALLBACK, mdComponents, mdToPlain, normalize, formatDate, mapRawEntriesToPosts } from "../../services/BlogContentService";
+import { POSTS_FALLBACK, mdToPlain, normalize, formatDate, mapRawEntriesToPosts } from "../../services/BlogContentService";
+import BlogArticleDialog from "./BlogArticleDialog";
 
 const PER_PAGE = 4;
 
@@ -29,6 +35,8 @@ const SORT_DEFAULT = "date-desc"; // "date-desc" | "date-asc" | "title-asc" | "t
 export default function BlogPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Load posts index (runtime) with fallback to bundled file
   const { loading: postsLoading, error: postsError, entries, source, reload } = useBlogsIndex();
@@ -67,6 +75,7 @@ export default function BlogPage() {
   const [sortBy, setSortBy] = React.useState(sp0.get("sort") || SORT_DEFAULT);
 
   const [page, setPage] = React.useState(1);
+  // expanded holds the key of the post currently opened in dialog (hash based)
   const [expanded, setExpanded] = React.useState(null);
 
   // Keep local filters in sync with URL edits/back/forward (extended)
@@ -192,29 +201,19 @@ export default function BlogPage() {
     if (p !== page) setPage(p);
   }, [location.search, totalPages]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Hash deep-linking: ensure correct page, then scroll and expand
+  // Hash deep-linking: ensure correct page, then open dialog (no scrolling)
   React.useEffect(() => {
     const hashKey = location.hash?.slice(1) || null;
     setExpanded(hashKey || null);
     if (!hashKey) return;
-
     const idx = filteredPosts.findIndex((p) => p.key === hashKey);
     if (idx === -1) return;
-
     const needPage = Math.floor(idx / PER_PAGE) + 1;
     if (needPage !== page) {
       const sp = new URLSearchParams(location.search);
       sp.set("page", String(needPage));
       navigate(`/blog?${sp.toString()}#${hashKey}`, { replace: true });
-      return;
     }
-
-    requestAnimationFrame(() => {
-      document.getElementById(hashKey)?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    });
   }, [location.hash, page, location.search, filteredPosts, navigate]);
 
   // Helpers to push URL updates (preserve hash when appropriate) — extended
@@ -253,6 +252,11 @@ export default function BlogPage() {
 
   // Open/close posts
   const openPost = (key) => {
+    if (isMobile) {
+      // On small screens go straight to full page view instead of dialog
+      navigate(`/blog/article/${key}`);
+      return;
+    }
     setExpanded(key);
     const sp = new URLSearchParams(location.search);
     sp.set("page", String(page));
@@ -542,93 +546,52 @@ export default function BlogPage() {
             <Button size="small" onClick={handleReset}>Clear filters</Button>
           </Paper>
         ) : (
-          <Stack spacing={2}>
+          <Grid container spacing={2}>
             {pagePosts.map((post) => {
-              const isOpen = expanded === post.key;
               const authorName = post.author || defaultAuthorName;
               const author = authorName ? authorsByName.get(authorName) : null;
-
               return (
-                <Paper
-                  key={post.key}
-                  id={post.key}
-                  variant="outlined"
-                  sx={{ p: { xs: 2, sm: 3 }, scrollMarginTop: "var(--top-offset, 72px)" }}
-                >
-                  <Stack spacing={1}>
-                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                      {post.title}
-                    </Typography>
-
-                    {/* Author + meta row */}
-                    <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: "wrap" }}>
-                      {!!author && (
-                        <Stack direction="row" spacing={0.75} alignItems="center" sx={{ mr: 0.5 }}>
-                          <Avatar
-                            src={author.photo}
-                            alt={author.name}
-                            sx={{ width: 24, height: 24 }}
-                          />
-                          <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                            {author.name}
-                          </Typography>
-                        </Stack>
-                      )}
-                      <Divider
-                        flexItem
-                        orientation="vertical"
-                        sx={{ mx: 0.5, display: { xs: "none", sm: "block" } }}
-                      />
-                      <Typography variant="caption" sx={{ opacity: 0.7 }}>
-                        {formatDate(post.date)}
+                <Grid key={post.key} item xs={12} sm={6} md={6} lg={4}>
+                  <Card variant="outlined" sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+                    <CardContent sx={{ pb: 1.5 }}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.75 }}>
+                        {post.title}
                       </Typography>
-                      <Divider flexItem orientation="vertical" sx={{ mx: 0.5 }} />
-                      <Stack direction="row" spacing={0.5}>
-                        {post.tags?.map((t) => (
-                          <Chip key={t} label={t} size="small" variant="outlined" />
-                        ))}
+                      <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: "wrap", mb: 0.75 }}>
+                        {!!author && (
+                          <Stack direction="row" spacing={0.75} alignItems="center" sx={{ mr: 0.5 }}>
+                            <Avatar src={author.photo} alt={author.name} sx={{ width: 24, height: 24 }} />
+                            <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                              {author.name}
+                            </Typography>
+                          </Stack>
+                        )}
+                        <Divider flexItem orientation="vertical" sx={{ mx: 0.5, display: { xs: "none", sm: "block" } }} />
+                        <Typography variant="caption" sx={{ opacity: 0.7 }}>
+                          {formatDate(post.date)}
+                        </Typography>
                       </Stack>
-                    </Stack>
-
-                    <Typography variant="body2" sx={{ opacity: 0.95 }}>
-                      {post.excerpt}
-                    </Typography>
-
-                    <Divider sx={{ my: 1 }} />
-
-                    {isOpen ? (
-                      <>
-                        <Box sx={{ "& *:first-of-type": { mt: 0 } }}>
-                          <ReactMarkdown components={mdComponents}>
-                            {post.contentMd}
-                          </ReactMarkdown>
-                        </Box>
-                        <Button
-                          size="small"
-                          onClick={closePost}
-                          sx={{ mt: 0.5 }}
-                          aria-expanded="true"
-                          aria-controls={`${post.key}-content`}
-                        >
-                          Show less
-                        </Button>
-                      </>
-                    ) : (
-                      <Button
-                        size="small"
-                        onClick={() => openPost(post.key)}
-                        sx={{ mt: 0.5 }}
-                        aria-expanded="false"
-                        aria-controls={`${post.key}-content`}
-                      >
-                        Read more
+                      <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                        {post.excerpt}
+                      </Typography>
+                      {post.tags?.length ? (
+                        <Stack direction="row" spacing={0.5} sx={{ flexWrap: "wrap", mt: 1 }}>
+                          {post.tags.map((t) => (
+                            <Chip key={t} label={t} size="small" variant="outlined" />
+                          ))}
+                        </Stack>
+                      ) : null}
+                    </CardContent>
+                    <CardActions sx={{ mt: "auto", pt: 0, px: 2, pb: 2 }}>
+                      <Button size="small" onClick={() => openPost(post.key)} aria-label={`Read article ${post.title}`}>
+                        Read article
                       </Button>
-                    )}
-                  </Stack>
-                </Paper>
+                    </CardActions>
+                  </Card>
+                </Grid>
               );
             })}
-          </Stack>
+          </Grid>
         )}
 
         {/* Bottom pagination */}
@@ -641,6 +604,20 @@ export default function BlogPage() {
             size="small"
           />
         </Box>
+        {/* Dialog for active post */}
+        {(() => {
+          const activePost = expanded ? filteredPosts.find(p => p.key === expanded) : null;
+          const authorName = activePost?.author || defaultAuthorName;
+          const author = authorName ? authorsByName.get(authorName) : null;
+          return (
+            <BlogArticleDialog
+              open={Boolean(activePost)}
+              post={activePost || null}
+              author={author || null}
+              onClose={closePost}
+            />
+          );
+        })()}
       </Box>
     </Box>
   );
