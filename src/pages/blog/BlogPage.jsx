@@ -18,7 +18,8 @@ import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Avatar from "@mui/material/Avatar";
 import { TEAM } from "../about/Team.jsx";
-import BLOG_DB from "./blogs.json"; 
+import BLOG_DB from "./blogs.json"; // build-time fallback
+import { useBlogsIndex } from "../../services/BlogsIndexService";
 
 const mapDbToPosts = (db) =>
   (db?.posts || []).map((p, i) => {
@@ -36,7 +37,7 @@ const mapDbToPosts = (db) =>
     return { key, title, date, excerpt, contentMd, author, tags, values, vendors, technologies, other };
   });
 
-// Fallback at build-time; remote (if available) will override inside component
+// Fallback at build-time; remote (if available) will override via service hook
 export const POSTS_FALLBACK = mapDbToPosts(BLOG_DB);
 
 // Map markdown elements to MUI components
@@ -136,22 +137,31 @@ export default function BlogPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // NEW: optionally load blogs.json from a private GitHub repo at runtime.
-  // Note: No token is used in the browser; private repos will safely return null and we will fall back.
-  const GH_CFG = React.useMemo(
-    () => ({
-      owner: import.meta.env.VITE_BLOGS_OWNER,
-      repo: import.meta.env.VITE_BLOGS_REPO,
-      path: import.meta.env.VITE_BLOGS_PATH || "src/pages/blog/blogs.json",
-      ref: import.meta.env.VITE_BLOGS_REF || "main",
-    }),
-    []
-  );
-  const [remoteDb, setRemoteDb] = React.useState(null);
-
-  
-  // Use remote if available, otherwise fallback
-  const posts = React.useMemo(() => (remoteDb ? mapDbToPosts(remoteDb) : POSTS_FALLBACK), [remoteDb]);
+  // Load posts index (runtime) with fallback to bundled file
+  const { loading: postsLoading, error: postsError, entries, source, reload } = useBlogsIndex();
+  const posts = React.useMemo(() => {
+    if (entries && entries.length) {
+      // entries is expected to be array of raw post objects or an object with posts
+      const first = entries[0];
+      if (first && (first.title || first.slug || first.body)) {
+        // assume array of post objects already shaped like p
+        return entries.map((p, i) => ({
+          key: p.slug || p.file || `post-${i}`,
+            title: p.title || p.aliases || p.slug || `post-${i}`,
+            date: p.posted_date || p.created_date || p.date || null,
+            excerpt: p.summary || "",
+            contentMd: p.body || "",
+            author: Array.isArray(p.author) ? (p.author[0] || "") : (p.author || ""),
+            tags: Array.isArray(p.tags) ? p.tags : [],
+            values: Array.isArray(p.values) ? p.values : [],
+            vendors: Array.isArray(p.vendors) ? p.vendors : [],
+            technologies: Array.isArray(p.technologies) ? p.technologies : [],
+            other: Array.isArray(p.other) ? p.other : Array.isArray(p.others) ? p.others : [],
+        }));
+      }
+    }
+    return POSTS_FALLBACK;
+  }, [entries]);
 
   // Derive initial filter state from URL (fix: define sp0 before using it)
   const sp0 = React.useMemo(() => new URLSearchParams(location.search), [location.search]);
@@ -642,6 +652,20 @@ export default function BlogPage() {
         </Box>
             */}
 
+        {/* Runtime data status */}
+        {postsLoading && (
+          <Paper variant="outlined" sx={{ p: 2, textAlign: "center", mb: 2 }}>
+            <Typography variant="body2" sx={{ opacity: 0.85 }}>Loading posts…</Typography>
+          </Paper>
+        )}
+        {postsError && (
+          <Paper variant="outlined" color="error" sx={{ p: 2, textAlign: "center", mb: 2 }}>
+            <Typography variant="body2" sx={{ opacity: 0.9, mb: 1 }}>
+              Could not load latest posts (using fallback). {postsError.message}
+            </Typography>
+            <Button size="small" onClick={() => reload()}>Retry</Button>
+          </Paper>
+        )}
         {/* Empty state */}
         {pagePosts.length === 0 ? (
           <Paper variant="outlined" sx={{ p: 2, textAlign: "center" }}>
