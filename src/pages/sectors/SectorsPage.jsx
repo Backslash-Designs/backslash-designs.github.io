@@ -7,6 +7,7 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import Grid from "@mui/material/Grid";
+import WaveBackground from "../../components/WaveBackground";
 
 export const SECTORS = [
   {
@@ -98,58 +99,66 @@ export default function SectorsPage() {
 /**
  * SectorsSummary
  * @param {Object} props
- * @param {'paper'|'none'} [props.bgStyle='none'] - Background surface style for the section.
+ * @param {'paper'|'none'|'wave'} [props.bgStyle='none'] - Background surface style for the section.
  */
 export function SectorsSummary({ bgStyle = 'none' }) {
   const isPaper = bgStyle === 'paper';
+  const isWave = bgStyle === 'wave';
   const Wrapper = isPaper ? Paper : React.Fragment;
   const wrapperProps = isPaper
-    ? { sx: { px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }, component: 'section', variant: 'outlined' }
+    ? { sx: { px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 }, position: 'relative', overflow: 'hidden' }, component: 'section', variant: 'outlined' }
     : {};
   return (
     <Wrapper {...wrapperProps}>
-  <Box sx={{ maxWidth: 1100, mx: "auto", my: isPaper ? 0 : 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-          Our Sectors
-        </Typography>
-        <Grid container spacing={2} justifyContent="center">
-          {SECTORS.map(({ key, title, short, Icon, href }) => (
-            <Grid item key={key} xs="auto">
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  bgcolor: (t) => t.palette.action.hover,
-                  borderRadius: 2,
-                  px: 2,
-                  py: 1,
-                  minWidth: 220,
-                }}
-              >
-                <Icon fontSize="small" />
-                <Box>
-                  <Typography
-                    variant="subtitle1"
-                    component="a"
-                    href={href}
-                    sx={{
-                      fontWeight: 600,
-                      color: "inherit",
-                      textDecoration: "none",
-                      "&:hover": { textDecoration: "underline" },
-                    }}
-                  >
-                    {title}
-                  </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                    {short}
-                  </Typography>
+      <Box sx={{ position: 'relative' }}>
+        {isWave && (
+          <Box sx={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+            <WaveBackground />
+          </Box>
+        )}
+        <Box sx={{ maxWidth: 1100, mx: "auto", my: isPaper ? 0 : 4, position: 'relative', zIndex: 1 }}>
+          <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
+            Our Sectors
+          </Typography>
+          <Grid container spacing={2} justifyContent="center">
+            {SECTORS.map(({ key, title, short, Icon, href }) => (
+              <Grid item key={key} xs="auto">
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    bgcolor: (t) => t.palette.action.hover,
+                    borderRadius: 2,
+                    px: 2,
+                    py: 1,
+                    minWidth: 220,
+                  }}
+                >
+                  <Icon fontSize="small" />
+                  <Box>
+                    <Typography
+                      variant="subtitle1"
+                      component="a"
+                      href={href}
+                      sx={{
+                        fontWeight: 600,
+                        color: "inherit",
+                        textDecoration: "none",
+                        "&:hover": { textDecoration: "underline" },
+                      }}
+                    >
+                      {title}
+                    </Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                      {short}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Box>
     </Wrapper>
   );
