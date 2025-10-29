@@ -8,6 +8,7 @@ import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import Grid from "@mui/material/Grid";
 import WaveBackground from "../../components/WaveBackground";
+import ParticleBackground from "../../components/ParticleBackground";
 
 export const SECTORS = [
   {
@@ -99,21 +100,27 @@ export default function SectorsPage() {
 /**
  * SectorsSummary
  * @param {Object} props
- * @param {'paper'|'none'|'wave'} [props.bgStyle='none'] - Background surface style for the section.
+ * @param {'paper'|'none'|'wave'|'particles'} [props.bgStyle='none'] - Background surface style for the section.
  */
 export function SectorsSummary({ bgStyle = 'none' }) {
+  const sectionRef = React.useRef(null);
   const isPaper = bgStyle === 'paper';
   const isWave = bgStyle === 'wave';
+  const isParticles = bgStyle === 'particles';
   const Wrapper = isPaper ? Paper : React.Fragment;
   const wrapperProps = isPaper
     ? { sx: { px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 }, position: 'relative', overflow: 'hidden' }, component: 'section', variant: 'outlined' }
     : {};
   return (
     <Wrapper {...wrapperProps}>
-      <Box sx={{ position: 'relative' }}>
-        {isWave && (
+      <Box ref={sectionRef} sx={{ position: 'relative', minHeight: '50vh' }}>
+        {(isWave || isParticles) && (
           <Box sx={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-            <WaveBackground />
+            {isWave ? (
+              <WaveBackground />
+            ) : (
+              <ParticleBackground fixed clipToRef={sectionRef} />
+            )}
           </Box>
         )}
         <Box sx={{ maxWidth: 1100, mx: "auto", my: isPaper ? 0 : 4, position: 'relative', zIndex: 1 }}>

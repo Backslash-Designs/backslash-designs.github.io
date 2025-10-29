@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import SecurityIcon from "@mui/icons-material/Security";
+import ParticleBackground from "../../components/ParticleBackground";
 
 export const values = [
     {
@@ -54,15 +55,22 @@ export const values = [
 /**
  * ValuesSummary
  * @param {Object} props
- * @param {'paper'|'none'} [props.bgStyle='paper'] - Background surface style for the section.
+ * @param {'paper'|'none'|'particles'} [props.bgStyle='paper'] - Background surface style for the section.
  */
 export function ValuesSummary({ bgStyle = 'paper' }) {
-    // bgStyle: 'paper' | 'none'
+    // bgStyle: 'paper' | 'none' | 'particles'
+    const sectionRef = React.useRef(null);
     const isPaper = bgStyle === 'paper';
+    const isParticles = bgStyle === 'particles';
     const Wrapper = isPaper ? Paper : Box;
     return (
-        <Wrapper component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
-            <Box sx={{ maxWidth: 1100, width: "100%", mx: "auto" }}>
+        <Wrapper ref={sectionRef} component="section" sx={{ position: 'relative', minHeight: '50vh', overflow: 'hidden', px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
+            {isParticles && (
+                <Box sx={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+                    <ParticleBackground fixed clipToRef={sectionRef} />
+                </Box>
+            )}
+            <Box sx={{ maxWidth: 1100, width: "100%", mx: "auto", position: 'relative', zIndex: 1 }}>
                 <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
                     Our Values
                 </Typography>
