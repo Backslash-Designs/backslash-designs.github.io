@@ -13,6 +13,7 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
+import CardMedia from "@mui/material/CardMedia";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -25,6 +26,7 @@ import { useTheme } from "@mui/material/styles";
 import { TEAM } from "../about/Team.jsx";
 import { useBlogsIndex } from "../../services/BlogsIndexService";
 import { POSTS_FALLBACK, mdToPlain, normalize, formatDate, mapRawEntriesToPosts } from "../../services/BlogContentService";
+import { useCoverImage } from "../../services/BlogCoverImageService";
 import BlogArticleDialog from "./BlogArticleDialog";
 
 const PER_PAGE = 4;
@@ -552,42 +554,7 @@ export default function BlogPage() {
               const author = authorName ? authorsByName.get(authorName) : null;
               return (
                 <Grid key={post.key} item xs={12} sm={6} md={6} lg={4}>
-                  <Card variant="outlined" sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-                    <CardContent sx={{ pb: 1.5 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.75 }}>
-                        {post.title}
-                      </Typography>
-                      <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: "wrap", mb: 0.75 }}>
-                        {!!author && (
-                          <Stack direction="row" spacing={0.75} alignItems="center" sx={{ mr: 0.5 }}>
-                            <Avatar src={author.photo} alt={author.name} sx={{ width: 24, height: 24 }} />
-                            <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                              {author.name}
-                            </Typography>
-                          </Stack>
-                        )}
-                        <Divider flexItem orientation="vertical" sx={{ mx: 0.5, display: { xs: "none", sm: "block" } }} />
-                        <Typography variant="caption" sx={{ opacity: 0.7 }}>
-                          {formatDate(post.date)}
-                        </Typography>
-                      </Stack>
-                      <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                        {post.excerpt}
-                      </Typography>
-                      {post.tags?.length ? (
-                        <Stack direction="row" spacing={0.5} sx={{ flexWrap: "wrap", mt: 1 }}>
-                          {post.tags.map((t) => (
-                            <Chip key={t} label={t} size="small" variant="outlined" />
-                          ))}
-                        </Stack>
-                      ) : null}
-                    </CardContent>
-                    <CardActions sx={{ mt: "auto", pt: 0, px: 2, pb: 2 }}>
-                      <Button size="small" onClick={() => openPost(post.key)} aria-label={`Read article ${post.title}`}>
-                        Read article
-                      </Button>
-                    </CardActions>
-                  </Card>
+                  <PostCard post={post} author={author} onOpen={openPost} />
                 </Grid>
               );
             })}
@@ -620,5 +587,81 @@ export default function BlogPage() {
         })()}
       </Box>
     </Box>
+  );
+}
+
+// Card component with cover image resolution
+function PostCard({ post, author, onOpen }) {
+  const { url: coverUrl, loading: coverLoading, isFallback } = useCoverImage(post.cover);
+
+  return (
+    <Card variant="outlined" sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      {/* Cover image area */}
+      <Box sx={{ position: "relative" }}>
+        {coverLoading ? (
+          <Box
+            sx={{
+              height: 0,
+              pt: "56.25%", // 16:9
+              bgcolor: "action.hover",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 12,
+              color: "text.secondary",
+            }}
+          >
+            Loading image…
+          </Box>
+        ) : (
+          <CardMedia
+            component="img"
+            image={coverUrl || "/backslash-logo.png"}
+            alt={post.title}
+            sx={{
+              height: 0,
+              pt: "56.25%",
+              objectFit: "cover",
+              opacity: isFallback ? 0.9 : 1,
+              borderBottom: (t) => `1px solid ${t.palette.divider}`,
+            }}
+          />
+        )}
+      </Box>
+      <CardContent sx={{ pb: 1.5 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.75 }}>
+          {post.title}
+        </Typography>
+        <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: "wrap", mb: 0.75 }}>
+          {!!author && (
+            <Stack direction="row" spacing={0.75} alignItems="center" sx={{ mr: 0.5 }}>
+              <Avatar src={author.photo} alt={author.name} sx={{ width: 24, height: 24 }} />
+              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                {author.name}
+              </Typography>
+            </Stack>
+          )}
+          <Divider flexItem orientation="vertical" sx={{ mx: 0.5, display: { xs: "none", sm: "block" } }} />
+          <Typography variant="caption" sx={{ opacity: 0.7 }}>
+            {formatDate(post.date)}
+          </Typography>
+        </Stack>
+        <Typography variant="body2" sx={{ opacity: 0.85 }}>
+          {post.excerpt}
+        </Typography>
+        {post.tags?.length ? (
+          <Stack direction="row" spacing={0.5} sx={{ flexWrap: "wrap", mt: 1 }}>
+            {post.tags.map((t) => (
+              <Chip key={t} label={t} size="small" variant="outlined" />
+            ))}
+          </Stack>
+        ) : null}
+      </CardContent>
+      <CardActions sx={{ mt: "auto", pt: 0, px: 2, pb: 2 }}>
+        <Button size="small" onClick={() => onOpen(post.key)} aria-label={`Read article ${post.title}`}>
+          Read article
+        </Button>
+      </CardActions>
+    </Card>
   );
 }

@@ -23,7 +23,8 @@ export const mapDbToPosts = (db) =>
     const vendors = Array.isArray(p.vendors) ? p.vendors : [];
     const technologies = Array.isArray(p.technologies) ? p.technologies : [];
     const other = Array.isArray(p.other) ? p.other : Array.isArray(p.others) ? p.others : [];
-    return { key, title, date, excerpt, contentMd, author, tags, values, vendors, technologies, other };
+    const cover = p.cover || null;
+    return { key, title, date, excerpt, contentMd, author, tags, values, vendors, technologies, other, cover };
   });
 
 // Used when remote runtime index returns an array of raw post-like objects
@@ -41,6 +42,7 @@ export const mapRawEntriesToPosts = (entries) => {
     vendors: Array.isArray(p.vendors) ? p.vendors : [],
     technologies: Array.isArray(p.technologies) ? p.technologies : [],
     other: Array.isArray(p.other) ? p.other : Array.isArray(p.others) ? p.others : [],
+    cover: p.cover || null,
   }));
 };
 
