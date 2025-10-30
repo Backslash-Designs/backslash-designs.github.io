@@ -11,15 +11,16 @@ import { darken, lighten } from "@mui/material/styles";
  * - density: higher value = fewer particles (area / density = count)
  * - speed: base drift speed of particles
  */
-export default function ParticleBackground({ density = 14000, speed = 0.8, fixed = false, clipToRef = null, zIndex = 0, hoverRadius = 50, hoverStrength = 1, inertiaDecay = 0.94 }) {
+export default function ParticleBackground({ density = 14000, speed = 0.8, fixed = false, clipToRef = null, zIndex = 0, hoverRadius = 50, hoverStrength = 1, inertiaDecay = 0.94, parallaxFactor = -0.1 }) {
   const theme = useTheme();
   const canvasRef = useRef(null);
   const rafRef = useRef(0);
   const ctxRef = useRef(null);
-  const stateRef = useRef({ DPR: 1, W: 0, H: 0, LINK_DIST: 0, MAX_SPEED: 0, P: [] });
+  const stateRef = useRef({ DPR: 1, W: 0, H: 0, LINK_DIST: 0, MAX_SPEED: 0, P: [], parallaxOffsetY: 0 });
   const reduceMotionRef = useRef(false);
   const resizeObserverRef = useRef(null);
   const clipObserverRef = useRef(null);
+  const scrollHandlerRef = useRef(null);
   const colorRef = useRef({ fill: [120,220,255], line: [80,190,220] });
   const mouseRef = useRef({ x: 0, y: 0, active: false, lastX: 0, lastY: 0, lastT: 0, impulseX: 0, impulseY: 0 });
 
@@ -123,6 +124,14 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
       draw(true);
     };
 
+    // Update parallax offset from window scroll (only meaningful when fixed)
+    const updateParallax = () => {
+      if (!fixed) return;
+      const DPR = stateRef.current.DPR || 1;
+      const sy = (window.scrollY || window.pageYOffset || 0);
+      stateRef.current.parallaxOffsetY = (parallaxFactor || 0) * sy * DPR;
+    };
+
     const updateClip = () => {
       if (!clipToRef || !clipToRef.current) {
         if (canvas.style.clipPath) canvas.style.clipPath = '';
@@ -155,6 +164,11 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
         mouseRef.current.impulseY = 0;
       }
 
+      // Parallax offset (in canvas pixels). We tile vertically to avoid gaps.
+      const parallaxActive = !!(fixed && !reduceMotionRef.current && parallaxFactor);
+      const offY = parallaxActive ? (((stateRef.current.parallaxOffsetY || 0) % H) + H) % H : 0;
+
+      // Physics update once per frame
       for (const p of P) {
         if (!reduceMotionRef.current) {
           // base drift + inertial component from mouse impulses
@@ -179,7 +193,13 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
           const mx = mouseRef.current.x;
           const my = mouseRef.current.y;
           const dx = p.x - mx;
-          const dy = p.y - my;
+          // Map pointer Y into particle space, accounting for vertical tiling when parallax is active
+          const baseY = parallaxActive ? (my + offY) : my;
+          let dy = p.y - baseY;
+          if (parallaxActive) {
+            // choose the closest wrapped distance in Y (toroidal wrap)
+            if (dy > H / 2) dy -= H; else if (dy < -H / 2) dy += H;
+          }
           const d = Math.hypot(dx, dy);
           if (d > 0 && d < HOVER_DIST) {
             const falloff = 1 - d / HOVER_DIST; // 0..1
@@ -188,30 +208,46 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
             p.ivy += impulseY * falloff;
           }
         }
-
-        const a = 0.35 + 0.25 * Math.sin(p.tw);
-        ctx2d.beginPath();
-        ctx2d.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        const frgb = colorRef.current.fill;
-        ctx2d.fillStyle = `rgba(${frgb[0]},${frgb[1]},${frgb[2]},${a})`;
-        ctx2d.fill();
       }
 
-      ctx2d.lineWidth = 0.7 * stateRef.current.DPR;
-      for (let i = 0; i < P.length; i++) {
-        for (let j = i + 1; j < P.length; j++) {
-          const dx = P[i].x - P[j].x, dy = P[i].y - P[j].y;
-          const d = Math.hypot(dx, dy);
-          if (d < LINK_DIST) {
-            const a = (1 - d / LINK_DIST) * 0.35;
-            const lrgb = colorRef.current.line;
-            ctx2d.strokeStyle = `rgba(${lrgb[0]},${lrgb[1]},${lrgb[2]},${a})`;
-            ctx2d.beginPath();
-            ctx2d.moveTo(P[i].x, P[i].y);
-            ctx2d.lineTo(P[j].x, P[j].y);
-            ctx2d.stroke();
+      // Helper to render one tiled pass at the current transform
+      const renderPass = () => {
+        for (const p of P) {
+          const a = 0.35 + 0.25 * Math.sin(p.tw);
+          ctx2d.beginPath();
+          ctx2d.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          const frgb = colorRef.current.fill;
+          ctx2d.fillStyle = `rgba(${frgb[0]},${frgb[1]},${frgb[2]},${a})`;
+          ctx2d.fill();
+        }
+        ctx2d.lineWidth = 0.7 * stateRef.current.DPR;
+        for (let i = 0; i < P.length; i++) {
+          for (let j = i + 1; j < P.length; j++) {
+            const dx = P[i].x - P[j].x, dy = P[i].y - P[j].y;
+            const d = Math.hypot(dx, dy);
+            if (d < LINK_DIST) {
+              const a = (1 - d / LINK_DIST) * 0.35;
+              const lrgb = colorRef.current.line;
+              ctx2d.strokeStyle = `rgba(${lrgb[0]},${lrgb[1]},${lrgb[2]},${a})`;
+              ctx2d.beginPath();
+              ctx2d.moveTo(P[i].x, P[i].y);
+              ctx2d.lineTo(P[j].x, P[j].y);
+              ctx2d.stroke();
+            }
           }
         }
+      };
+
+      // Primary pass
+      if (parallaxActive && offY) { ctx2d.save(); ctx2d.translate(0, -offY); }
+      renderPass();
+      if (parallaxActive && offY) {
+        ctx2d.restore();
+        // Secondary pass to fill the gap created by translation wrap
+        ctx2d.save();
+        ctx2d.translate(0, -offY + H);
+        renderPass();
+        ctx2d.restore();
       }
 
       if (!singlePass) {
@@ -223,7 +259,9 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
     const parent = canvas.parentElement;
     if (fixed) {
       window.addEventListener('resize', handleResize, { passive: true });
-      window.addEventListener('scroll', updateClip, { passive: true });
+      const onScroll = () => { updateClip(); updateParallax(); };
+      scrollHandlerRef.current = onScroll;
+      window.addEventListener('scroll', onScroll, { passive: true });
       if (window.ResizeObserver && clipToRef && clipToRef.current) {
         clipObserverRef.current = new ResizeObserver(() => updateClip());
         clipObserverRef.current.observe(clipToRef.current);
@@ -295,6 +333,7 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
 
     handleResize();
     updateClip();
+    updateParallax();
     rafRef.current = requestAnimationFrame(() => draw(false));
 
     return () => {
@@ -306,7 +345,11 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
         window.removeEventListener('resize', handleResize);
       }
       if (fixed) {
-        window.removeEventListener('scroll', updateClip);
+        // Remove the scroll handler that bundled both updates
+        if (scrollHandlerRef.current) {
+          window.removeEventListener('scroll', scrollHandlerRef.current);
+          scrollHandlerRef.current = null;
+        }
         if (clipObserverRef.current && clipToRef && clipToRef.current) {
           try { clipObserverRef.current.unobserve(clipToRef.current); } catch (_) {}
           try { clipObserverRef.current.disconnect(); } catch (_) {}
@@ -321,7 +364,7 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
         mql && mql.removeListener && mql.removeListener(onMotionChange);
       }
     };
-  }, [density, speed, fixed, clipToRef, theme, hoverRadius, hoverStrength]);
+  }, [density, speed, fixed, clipToRef, theme, hoverRadius, hoverStrength, parallaxFactor]);
 
   return (
     <canvas
