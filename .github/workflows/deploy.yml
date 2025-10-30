@@ -24,17 +24,13 @@ jobs:
           node-version: 20
           cache: "npm"
       - run: npm install --no-audit --no-fund
-      # Load secrets from 1Password and export as environment variables for subsequent steps
       - name: Load secrets from 1Password
         uses: 1password/load-secrets-action@v3
         with:
           export-env: true
         env:
-          # This GitHub secret must contain your 1Password Service Account token
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          # Map the env var name to the 1Password item reference. Update the vault/item/field path.
-          BLOGS_GH_TOKEN: op://Project-Origin/project-backlslash-readonly/credential
-      # NEW: prefetch blogs.json from the private repo (uses token server-side)
+          BLOGS_GH_TOKEN: op://Project-Backslash/Project-Backslash-Chronicle_GitHub-ReadOnly/credential
       - name: Prefetch blogs.json (private repo)
         run: |
           mkdir -p src/pages/blog
