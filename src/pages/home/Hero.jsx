@@ -200,6 +200,7 @@ export default function Hero() {
   return (
     <Paper
       component="section"
+      elevation={0}
       sx={{
         // Shrink to half height when animations are done
         minHeight: {
@@ -209,6 +210,8 @@ export default function Hero() {
         display: "grid",
         placeItems: "center",
         px: 2,
+        // Disable MUI dark-mode overlay to ensure color matches AppBar
+        backgroundImage: "none",
         backgroundColor: bgToSecondary
           ? theme.palette.secondary.main
           : theme.palette.background.paper,

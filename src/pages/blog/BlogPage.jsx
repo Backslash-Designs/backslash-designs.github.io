@@ -350,12 +350,12 @@ export default function BlogPage() {
   const pagePosts = filteredPosts.slice(start, end);
 
   return (
-    <Box className="test" component="section" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 3, sm: 4 } }}>
+    <Box className="test" component="section" sx={{ px: { xs: 2, sm: 3 }, pt: 0, pb: { xs: 3, sm: 4 } }}>
       <Box sx={{ maxWidth: 900, mx: "auto" }}>
         <Paper
           component="section"
           square
-          elevation={1}
+          elevation={0}
           sx={{
             position: "relative",
             left: "50%",
@@ -363,10 +363,13 @@ export default function BlogPage() {
             ml: "-50vw",
             mr: "-50vw",
             width: "100vw",
+            // Match AppBar color in dark mode by disabling elevation overlay
+            backgroundImage: "none",
             bgcolor: "secondary.main",
             py: { xs: 2, sm: 3 },
             mb: 2,
-            borderTop: (t) => `1px solid ${t.palette.divider}`,
+            // Remove top border to eliminate a visible seam under the Navbar
+            borderTop: 'none',
             borderBottom: (t) => `1px solid ${t.palette.divider}`,
           }}
         >

@@ -10,7 +10,7 @@ export default function Mission() {
       component="section"
       id="mission"
       square
-      elevation={1}
+      elevation={0}
       sx={{
         position: "relative",
         left: "50%",
@@ -18,6 +18,8 @@ export default function Mission() {
         ml: "-50vw",
         mr: "-50vw",
         width: "100vw",
+        // Ensure no dark-mode overlay so this matches the AppBar color
+        backgroundImage: "none",
         bgcolor: "secondary.main",
         py: 4,
         mb: 4,
