@@ -28,6 +28,7 @@ import { useBlogsIndex } from "../../services/BlogsIndexService";
 import { POSTS_FALLBACK, mdToPlain, normalize, formatDate, mapRawEntriesToPosts } from "../../services/BlogContentService";
 import { useCoverImage } from "../../services/BlogCoverImageService";
 import BlogArticleDialog from "./BlogArticleDialog";
+import ParticleBackground from "../../components/ParticleBackground";
 
 const PER_PAGE = 4;
 
@@ -39,6 +40,7 @@ export default function BlogPage() {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const sectionRef = React.useRef(null);
 
   // Load posts index (runtime) with fallback to bundled file
   const { loading: postsLoading, error: postsError, entries, source, reload } = useBlogsIndex();
@@ -350,7 +352,19 @@ export default function BlogPage() {
   const pagePosts = filteredPosts.slice(start, end);
 
   return (
-    <Box className="test" component="section" sx={{ px: { xs: 2, sm: 3 }, pt: 0, pb: { xs: 3, sm: 4 } }}>
+    <Box
+      component="section"
+      ref={sectionRef}
+      sx={{
+        px: { xs: 2, sm: 3 },
+        pt: 0,
+        pb: { xs: 3, sm: 4 },
+        position: "relative",
+        zIndex: 1, // ensure content renders above the clipped fixed canvas
+      }}
+    >
+      {/* Fixed canvas background clipped to this section */}
+      <ParticleBackground fixed clipToRef={sectionRef} zIndex={0} />
       <Box sx={{ maxWidth: 900, mx: "auto" }}>
         <Paper
           component="section"
@@ -397,6 +411,9 @@ export default function BlogPage() {
             gridTemplateColumns: { xs: "1fr", sm: "1fr auto auto auto" },
             gap: 1,
             alignItems: "center",
+            // Force fully opaque surface regardless of theme overlays
+            bgcolor: (t) => t.vars ? `rgba(${t.vars.palette.background.paperChannel} / 1)` : t.palette.background.paper,
+            backgroundImage: 'none',
           }}
         >
           <TextField
@@ -598,9 +615,25 @@ function PostCard({ post, author, onOpen }) {
   const { url: coverUrl, loading: coverLoading, isFallback } = useCoverImage(post.cover);
 
   return (
-    <Card variant="outlined" sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+    <Card
+      variant="outlined"
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        // Fully opaque card surface
+        bgcolor: (t) => t.vars ? `rgba(${t.vars.palette.background.paperChannel} / 1)` : t.palette.background.paper,
+        backgroundImage: 'none',
+      }}
+    >
       {/* Cover image area */}
-      <Box sx={{ position: "relative" }}>
+      <Box
+        sx={{
+          position: "relative",
+          // Ensure media area also has solid background in case of transparent images
+          bgcolor: (t) => t.vars ? `rgba(${t.vars.palette.background.paperChannel} / 1)` : t.palette.background.paper,
+        }}
+      >
         {coverLoading ? (
           <Box
             sx={{

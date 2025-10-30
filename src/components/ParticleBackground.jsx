@@ -11,7 +11,7 @@ import { darken, lighten } from "@mui/material/styles";
  * - density: higher value = fewer particles (area / density = count)
  * - speed: base drift speed of particles
  */
-export default function ParticleBackground({ density = 14000, speed = 0.8, fixed = false, clipToRef = null, zIndex = 0 }) {
+export default function ParticleBackground({ density = 14000, speed = 0.8, fixed = false, clipToRef = null, zIndex = 0, hoverRadius = 50, hoverStrength = 1, inertiaDecay = 0.94 }) {
   const theme = useTheme();
   const canvasRef = useRef(null);
   const rafRef = useRef(0);
@@ -21,6 +21,7 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
   const resizeObserverRef = useRef(null);
   const clipObserverRef = useRef(null);
   const colorRef = useRef({ fill: [120,220,255], line: [80,190,220] });
+  const mouseRef = useRef({ x: 0, y: 0, active: false, lastX: 0, lastY: 0, lastT: 0, impulseX: 0, impulseY: 0 });
 
   // Parse CSS color (#rgb/#rrggbb/rgb/rgba) into [r,g,b]
   const toRgb = (c) => {
@@ -94,6 +95,8 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
         vy: (Math.random() - 0.5) * speed * DPR,
         r: (Math.random() * 1.6 + 0.6) * DPR,
         tw: Math.random() * Math.PI * 2,
+        ivx: 0,
+        ivy: 0,
       }));
 
       stateRef.current = {
@@ -103,6 +106,9 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
         P,
         LINK_DIST: 120 * DPR,
         MAX_SPEED: 0.07 * DPR,
+        HOVER_DIST: Math.max(20, hoverRadius) * DPR,
+        INERTIA_DECAY: Math.min(0.995, Math.max(0.85, inertiaDecay)),
+        IMPULSE_MAX: 1.2 * DPR,
       };
     };
 
@@ -120,6 +126,7 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
     const updateClip = () => {
       if (!clipToRef || !clipToRef.current) {
         if (canvas.style.clipPath) canvas.style.clipPath = '';
+        // Without a clip target, mouse containment will rely on the canvas rect
         return;
       }
       const rect = clipToRef.current.getBoundingClientRect();
@@ -133,21 +140,53 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
     };
 
     const draw = (singlePass = false) => {
-      const { W, H, P, LINK_DIST, MAX_SPEED } = stateRef.current;
+      const { W, H, P, LINK_DIST, MAX_SPEED, HOVER_DIST, DPR, INERTIA_DECAY, IMPULSE_MAX } = stateRef.current;
       if (!ctxRef.current || !W || !H) return;
       const ctx2d = ctxRef.current;
       ctx2d.clearRect(0, 0, W, H);
 
+      // Snapshot current impulse and consume it this frame
+      let impulseX = 0, impulseY = 0;
+      if (!reduceMotionRef.current && mouseRef.current.active) {
+        impulseX = mouseRef.current.impulseX || 0;
+        impulseY = mouseRef.current.impulseY || 0;
+        // consume so it applies once; inertia continues via per-particle ivx/ivy decay
+        mouseRef.current.impulseX = 0;
+        mouseRef.current.impulseY = 0;
+      }
+
       for (const p of P) {
         if (!reduceMotionRef.current) {
-          p.x += p.vx; p.y += p.vy;
+          // base drift + inertial component from mouse impulses
+          p.x += p.vx + p.ivx; p.y += p.vy + p.ivy;
           if (p.x < -10) p.x = W + 10; else if (p.x > W + 10) p.x = -10;
           if (p.y < -10) p.y = H + 10; else if (p.y > H + 10) p.y = -10;
           p.vx += (Math.random() - 0.5) * 0.002;
           p.vy += (Math.random() - 0.5) * 0.002;
           const s = Math.hypot(p.vx, p.vy);
           if (s > MAX_SPEED) { p.vx *= MAX_SPEED / s; p.vy *= MAX_SPEED / s; }
+          // decay inertial velocity over time to create sliding that slows down
+          p.ivx *= INERTIA_DECAY;
+          p.ivy *= INERTIA_DECAY;
+          const is = Math.hypot(p.ivx, p.ivy);
+          if (is > IMPULSE_MAX) { p.ivx *= IMPULSE_MAX / is; p.ivy *= IMPULSE_MAX / is; }
+          if (Math.abs(p.ivx) < 0.0002) p.ivx = 0;
+          if (Math.abs(p.ivy) < 0.0002) p.ivy = 0;
           p.tw += 0.006;
+        }
+        // Apply one-shot impulse based on mouse movement vector
+        if (!reduceMotionRef.current && mouseRef.current.active && (impulseX !== 0 || impulseY !== 0)) {
+          const mx = mouseRef.current.x;
+          const my = mouseRef.current.y;
+          const dx = p.x - mx;
+          const dy = p.y - my;
+          const d = Math.hypot(dx, dy);
+          if (d > 0 && d < HOVER_DIST) {
+            const falloff = 1 - d / HOVER_DIST; // 0..1
+            // impulse direction is along mouse movement
+            p.ivx += impulseX * falloff;
+            p.ivy += impulseY * falloff;
+          }
         }
 
         const a = 0.35 + 0.25 * Math.sin(p.tw);
@@ -196,6 +235,64 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
       window.addEventListener('resize', handleResize, { passive: true });
     }
 
+    // Pointer tracking (respect clip area if provided)
+    const getContainmentRect = () => {
+      if (clipToRef && clipToRef.current) return clipToRef.current.getBoundingClientRect();
+      return canvas.getBoundingClientRect();
+    };
+    const onPointerMove = (e) => {
+      const rect = getContainmentRect();
+      const x = e.clientX, y = e.clientY;
+      const inside = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+      mouseRef.current.active = inside;
+      if (inside) {
+        const DPR = stateRef.current.DPR || 1;
+        const cx = (x - rect.left) * DPR;
+        const cy = (y - rect.top) * DPR;
+        // compute mouse velocity and derive an impulse vector
+        const now = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+        const lastT = mouseRef.current.lastT || now;
+        const dt = Math.max(8, now - lastT); // ms, clamp to avoid huge values
+        const lastX = mouseRef.current.lastX || cx;
+        const lastY = mouseRef.current.lastY || cy;
+        const mdx = cx - lastX;
+        const mdy = cy - lastY;
+        const vx = mdx / dt; // px per ms in canvas space
+        const vy = mdy / dt;
+        // scale impulse by strength and DPR, cap to avoid extreme kicks
+        const scale = Math.max(0, hoverStrength) * 18; // tune: 18 gives a nice feel
+        let ix = vx * scale;
+        let iy = vy * scale;
+        const mag = Math.hypot(ix, iy);
+        const cap = stateRef.current.IMPULSE_MAX || (1.2 * DPR);
+        if (mag > cap) { ix *= cap / mag; iy *= cap / mag; }
+        mouseRef.current.impulseX = ix;
+        mouseRef.current.impulseY = iy;
+        // update cursor position and history
+        mouseRef.current.x = cx;
+        mouseRef.current.y = cy;
+        mouseRef.current.lastX = cx;
+        mouseRef.current.lastY = cy;
+        mouseRef.current.lastT = now;
+      }
+    };
+    const onTouchMove = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      const t = e.touches[0];
+      onPointerMove(t);
+    };
+    const onPointerLeaveWindow = (e) => {
+      // When leaving the window entirely, deactivate
+      if (e.relatedTarget == null) {
+        mouseRef.current.active = false;
+        mouseRef.current.impulseX = 0;
+        mouseRef.current.impulseY = 0;
+      }
+    };
+    window.addEventListener('mousemove', onPointerMove, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('mouseout', onPointerLeaveWindow, { passive: true });
+
     handleResize();
     updateClip();
     rafRef.current = requestAnimationFrame(() => draw(false));
@@ -215,13 +312,16 @@ export default function ParticleBackground({ density = 14000, speed = 0.8, fixed
           try { clipObserverRef.current.disconnect(); } catch (_) {}
         }
       }
+      window.removeEventListener('mousemove', onPointerMove);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('mouseout', onPointerLeaveWindow);
       try {
         mql && mql.removeEventListener && mql.removeEventListener('change', onMotionChange);
       } catch (_) {
         mql && mql.removeListener && mql.removeListener(onMotionChange);
       }
     };
-  }, [density, speed, fixed, clipToRef, theme]);
+  }, [density, speed, fixed, clipToRef, theme, hoverRadius, hoverStrength]);
 
   return (
     <canvas
