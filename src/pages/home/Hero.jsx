@@ -253,8 +253,9 @@ export default function Hero() {
             }}
           >
             <Box sx={{ textAlign: "left" }}>
-              {/* Line 1: Backslash */}
+              {/* Line 1: Backslash (semantic h1) */}
               <Typography
+                component="h1"
                 variant="h2"
                 sx={{
                   fontSize: { xs: 26, sm: 36, md: 80 },
@@ -274,8 +275,9 @@ export default function Hero() {
                 />
               </Typography>
 
-              {/* Line 2: rotating words */}
+              {/* Line 2: rotating words (semantic h2) */}
               <Typography
+                component="h2"
                 variant="h3"
                 sx={{
                   fontSize: { xs: 24, sm: 30, md: 40 },
@@ -301,6 +303,7 @@ export default function Hero() {
 
         {/* Tagline centered below */}
         <Typography
+          component="h3"
           variant="h5"
           align="center"
           sx={{ fontWeight: 500, opacity: 0.9, mt: { xs: 2, sm: 3 } }}
